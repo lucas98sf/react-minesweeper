@@ -15,19 +15,23 @@ code {
 }
 
 .board {
-	border: 3px solid darkslateblue;
+	border: 1px solid darkslateblue;
 }
 
 button {
 	color: blueviolet;
 	width: 60px;
 	height: 60px;
+	vertical-align: middle;
+	font-size: 30px;
 }
 
 @media only screen and (max-width: 768px) {
-	/* For mobile phones: */
 	button {
+		color: blueviolet;
 		width: 30px;
 		height: 30px;
+		vertical-align: middle;
+		font-size: 15px;
 	}
 }
