@@ -26,6 +26,16 @@ button {
 	font-size: 30px;
 }
 
+.zero {
+	background-color: gray;
+}
+
+.bomb {
+	max-height: -webkit-fill-available;
+	font-size: 0px;
+	background-color: red;
+}
+
 @media only screen and (max-width: 768px) {
 	button {
 		color: blueviolet;

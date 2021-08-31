@@ -1,12 +1,25 @@
+export enum Value {
+	zero,
+	one,
+	two,
+	three,
+	four,
+	five,
+	six,
+	seven,
+	eight,
+	bomb,
+}
+
 export interface Square {
 	hasBomb: boolean;
 	state: {
 		visible: boolean;
-		value: number;
+		value: Value;
 	};
 }
 
 export interface Bomb {
-	x: number,
-	y: number
+	r: number;
+	c: number;
 }

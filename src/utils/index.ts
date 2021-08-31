@@ -7,7 +7,7 @@ export const generateSquares = () => {
 		const randomCoord = (MAX: number) => (Math.random() * MAX) << 0;
 
 		for (let i = 0; i < NUM_BOMBS; i++) {
-			const newBomb = { x: randomCoord(MAX_HEIGHT), y: randomCoord(MAX_WIDTH) };
+			const newBomb = { r: randomCoord(MAX_HEIGHT), c: randomCoord(MAX_WIDTH) };
 			const notInBombs = !bombs.some((bomb) => bomb === newBomb);
 			notInBombs ? bombs.push(newBomb) : i--;
 		}
@@ -17,10 +17,10 @@ export const generateSquares = () => {
 	const bombs = generateBombs(),
 		squares: Square[][] = [];
 
-	for (let x = 0; x < MAX_HEIGHT; x++) {
+	for (let i = 0; i < MAX_HEIGHT; i++) {
 		const row: Square[] = [];
-		for (let y = 0; y < MAX_WIDTH; y++) {
-			const bomb = bombs.some((bomb) => bomb.x === x && bomb.y === y);
+		for (let j = 0; j < MAX_WIDTH; j++) {
+			const bomb = bombs.some((bomb) => bomb.r === i && bomb.c === j);
 			const square: Square = {
 				hasBomb: bomb,
 				state: {
@@ -37,25 +37,25 @@ export const generateSquares = () => {
 
 export const getSquareNumber = (
 	squares: Square[][],
-	clickedSquareX: number,
-	clickedSquareY: number
+	clickedSquareR: number,
+	clickedSquareC: number
 ): number => {
-	const isAround = (x: number, y: number): boolean => {
+	const isAround = (r: number, c: number): boolean => {
 		if (
-			([clickedSquareX - 1, clickedSquareX + 1].includes(x) &&
-				[clickedSquareY - 1, clickedSquareY + 1].includes(y)) || //corners
-			(clickedSquareX === x && [clickedSquareY - 1, clickedSquareY + 1].includes(y)) || //up or down
-			(clickedSquareY === y && [clickedSquareX - 1, clickedSquareX + 1].includes(x)) //right or left
+			([clickedSquareR - 1, clickedSquareR + 1].includes(r) &&
+				[clickedSquareC - 1, clickedSquareC + 1].includes(c)) || //corners
+			(clickedSquareR === r && [clickedSquareC - 1, clickedSquareC + 1].includes(r)) || //up or down
+			(clickedSquareC === c && [clickedSquareR - 1, clickedSquareR + 1].includes(c)) //right or left
 		)
 			return true;
 		else return false;
 	};
 
 	let bombCount = 0;
-	squares.forEach((rows, x) => {
-		rows.forEach((_, y) => {
-			const square: Square = squares[x][y];
-			if (isAround(x, y) && square.hasBomb) {
+	squares.forEach((rows, r) => {
+		rows.forEach((coloumns, c) => {
+			const square: Square = squares[r][c];
+			if (isAround(r, c) && square.hasBomb) {
 				bombCount++;
 			}
 		});
