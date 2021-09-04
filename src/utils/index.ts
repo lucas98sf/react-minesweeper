@@ -1,9 +1,9 @@
 import { NUM_BOMBS, MAX_HEIGHT, MAX_WIDTH } from "../config/constants";
-import { Square, Bomb } from "../types";
+import { ISquare, IBomb } from "../interfaces";
 
 export const generateSquares = () => {
 	const generateBombs = () => {
-		const bombs: Bomb[] = [];
+		const bombs: IBomb[] = [];
 		const randomCoord = (MAX: number) => (Math.random() * MAX) << 0;
 
 		for (let i = 0; i < NUM_BOMBS; i++) {
@@ -15,13 +15,13 @@ export const generateSquares = () => {
 	};
 
 	const bombs = generateBombs(),
-		squares: Square[][] = [];
+		squares: ISquare[][] = [];
 
 	for (let i = 0; i < MAX_HEIGHT; i++) {
-		const row: Square[] = [];
+		const row: ISquare[] = [];
 		for (let j = 0; j < MAX_WIDTH; j++) {
 			const bomb = bombs.some((bomb) => bomb.r === i && bomb.c === j);
-			const square: Square = {
+			const square: ISquare = {
 				hasBomb: bomb,
 				state: {
 					visible: false,
@@ -36,30 +36,35 @@ export const generateSquares = () => {
 };
 
 export const getSquareNumber = (
-	squares: Square[][],
+	squares: ISquare[][],
 	clickedSquareR: number,
 	clickedSquareC: number
 ): number => {
-	const isAround = (r: number, c: number): boolean => {
-		if (
-			([clickedSquareR - 1, clickedSquareR + 1].includes(r) &&
-				[clickedSquareC - 1, clickedSquareC + 1].includes(c)) || //corners
-			(clickedSquareR === r && [clickedSquareC - 1, clickedSquareC + 1].includes(c)) || //up or down
-			(clickedSquareC === c && [clickedSquareR - 1, clickedSquareR + 1].includes(r)) //right or left
-		)
-			return true;
-		else return false;
-	};
-
 	let bombCount = 0;
 	squares.forEach((rows, r) => {
-		rows.forEach((coloumns, c) => {
-			const square: Square = squares[r][c];
-			if (isAround(r, c) && square.hasBomb) {
+		rows.forEach((columns, c) => {
+			const square: ISquare = squares[r][c];
+			if (squareIsAround(r, clickedSquareR, c, clickedSquareC) && square.hasBomb) {
 				bombCount++;
 			}
 		});
 	});
 
 	return bombCount;
+};
+
+export const squareIsAround = (
+	r: number,
+	clickedSquareR: number,
+	c: number,
+	clickedSquareC: number
+): boolean => {
+	if (
+		([clickedSquareR - 1, clickedSquareR + 1].includes(r) &&
+			[clickedSquareC - 1, clickedSquareC + 1].includes(c)) || //corners
+		(clickedSquareR === r && [clickedSquareC - 1, clickedSquareC + 1].includes(c)) || //up or down
+		(clickedSquareC === c && [clickedSquareR - 1, clickedSquareR + 1].includes(r)) //right or left
+	)
+		return true;
+	else return false;
 };

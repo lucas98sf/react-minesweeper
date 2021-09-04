@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 // import ReactDOM from "react-dom";
-import { Square, Value } from "../types";
+import { ISquare, ISquareProps, Value } from "../interfaces";
+import { generateSquares, getSquareNumber, squareIsAround } from "../utils";
 import { Bomb } from "./Bomb";
-import { generateSquares, getSquareNumber } from "../utils";
+import { Square } from "./Square";
 
 function Board() {
 	const [squares, setSquares] = useState(generateSquares());
@@ -10,21 +11,36 @@ function Board() {
 
 	useEffect(() => {});
 
-	const handleClick = (e: React.MouseEvent<HTMLElement>, r: number, c: number) => {
+	const handleClick = (
+		e: React.MouseEvent<HTMLElement>,
+		clickedSquareR: number,
+		clickedSquareC: number
+	) => {
 		if (e.button === 0) {
 			//left click
-			const newSquares: Square[][] = squares.slice();
-			const square: Square = newSquares[r][c];
+			const newSquares: ISquare[][] = squares.slice();
+			const square: ISquare = newSquares[clickedSquareR][clickedSquareC];
 
 			if (!square.state.visible) {
-				square.state.value = square.hasBomb ? 9 : getSquareNumber(squares, r, c);
+				square.state.value = square.hasBomb
+					? 9
+					: getSquareNumber(squares, clickedSquareR, clickedSquareC);
 				square.state.visible = true;
 			}
 
 			setSquares(newSquares);
 		}
 		if (e.button === 1) {
-			//middle click
+			squares.forEach((rows, r) => {
+				rows.forEach((columns, c) => {
+					const clickedSquare: ISquare = squares[clickedSquareR][clickedSquareC];
+					if (squareIsAround(r, clickedSquareR, c, clickedSquareC) && clickedSquare.state.visible) {
+						//TODO: verify if there's no non find bomb around
+						const leftClick = { ...e, button: 0 };
+						handleClick(leftClick, r, c);
+					}
+				});
+			});
 		}
 		if (e.button === 2) {
 			//right click
@@ -32,21 +48,20 @@ function Board() {
 	};
 
 	const board = squares.map((rows, r) => {
-		const row = rows.map((coloumns, c) => {
-			const square: Square = squares[r][c];
-			return (
-				<button
-					className={square.state.visible ? `square ${Value[square.state.value]}` : "square"}
-					onClick={(e) => handleClick(e, r, c)}
-					onAuxClick={(e) => handleClick(e, r, c)}
-				>
-					{square.state.visible && square.hasBomb ? (
+		const row = rows.map((columns, c) => {
+			const square: ISquare = squares[r][c];
+			const props: ISquareProps = {
+				className: square.state.visible ? `square ${Value[square.state.value]}` : "square",
+				onClick: (e: React.MouseEvent<HTMLElement>) => handleClick(e, r, c),
+				onAuxClick: (e: React.MouseEvent<HTMLElement>) => handleClick(e, r, c),
+				content:
+					square.state.visible && square.hasBomb ? (
 						<Bomb />
-					) : (
-						!square.hasBomb && (square.state.value || null)
-					)}
-				</button>
-			);
+					) : !square.hasBomb && square.state.value ? (
+						square.state.value
+					) : null,
+			};
+			return <Square {...props} />;
 		});
 		return <div className="row">{row}</div>;
 	});
