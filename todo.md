@@ -1,4 +1,4 @@
-- [X] socket.io
+- [ ] socket.io
 - [ ] time
 - [ ] flags and flag counter
 - [ ] gameover
