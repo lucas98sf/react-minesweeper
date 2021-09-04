@@ -1,0 +1,5 @@
+- [X] socket.io
+- [ ] time
+- [ ] flags and flag counter
+- [ ] gameover
+- [ ] middleclick logic
