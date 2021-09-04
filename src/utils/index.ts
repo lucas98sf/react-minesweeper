@@ -44,8 +44,8 @@ export const getSquareNumber = (
 		if (
 			([clickedSquareR - 1, clickedSquareR + 1].includes(r) &&
 				[clickedSquareC - 1, clickedSquareC + 1].includes(c)) || //corners
-			(clickedSquareR === r && [clickedSquareC - 1, clickedSquareC + 1].includes(r)) || //up or down
-			(clickedSquareC === c && [clickedSquareR - 1, clickedSquareR + 1].includes(c)) //right or left
+			(clickedSquareR === r && [clickedSquareC - 1, clickedSquareC + 1].includes(c)) || //up or down
+			(clickedSquareC === c && [clickedSquareR - 1, clickedSquareR + 1].includes(r)) //right or left
 		)
 			return true;
 		else return false;
