@@ -1,9 +1,9 @@
 import { NUM_BOMBS, MAX_HEIGHT, MAX_WIDTH } from "../config/constants";
-import { ISquare, IBomb } from "../interfaces";
+import { SquareState, BombCoords } from "../types";
 
 export const generateSquares = () => {
 	const generateBombs = () => {
-		const bombs: IBomb[] = [];
+		const bombs: BombCoords[] = [];
 		const randomCoord = (MAX: number) => (Math.random() * MAX) << 0;
 
 		for (let i = 0; i < NUM_BOMBS; i++) {
@@ -15,13 +15,13 @@ export const generateSquares = () => {
 	};
 
 	const bombs = generateBombs(),
-		squares: ISquare[][] = [];
+		squares: SquareState[][] = [];
 
 	for (let i = 0; i < MAX_HEIGHT; i++) {
-		const row: ISquare[] = [];
+		const row: SquareState[] = [];
 		for (let j = 0; j < MAX_WIDTH; j++) {
 			const bomb = bombs.some((bomb) => bomb.r === i && bomb.c === j);
-			const square: ISquare = {
+			const square: SquareState = {
 				hasBomb: bomb,
 				state: {
 					visible: false,
@@ -36,14 +36,14 @@ export const generateSquares = () => {
 };
 
 export const getSquareNumber = (
-	squares: ISquare[][],
+	squares: SquareState[][],
 	clickedSquareR: number,
 	clickedSquareC: number
 ): number => {
 	let bombCount = 0;
 	squares.forEach((rows, r) => {
 		rows.forEach((columns, c) => {
-			const square: ISquare = squares[r][c];
+			const square: SquareState = squares[r][c];
 			if (squareIsAround(r, clickedSquareR, c, clickedSquareC) && square.hasBomb) {
 				bombCount++;
 			}

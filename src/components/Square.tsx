@@ -1,6 +1,6 @@
-import { ISquareProps } from "../interfaces";
+import { SquareProps } from "../types";
 
-export function Square(props: ISquareProps) {
+export function Square(props: SquareProps) {
 	const { className, onClick, onAuxClick, content } = props;
 	return (
 		<button className={className} onClick={onClick} onAuxClick={onAuxClick}>

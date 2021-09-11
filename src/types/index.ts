@@ -13,22 +13,24 @@ export enum Value {
 	bomb,
 }
 
-export type content = React.ReactElement | Value | null
-export interface ISquareProps {
+export type content = React.ReactElement | Value | null;
+
+export type SquareProps = {
 	className: string;
 	onClick: React.MouseEventHandler<HTMLButtonElement>;
 	onAuxClick: React.MouseEventHandler<HTMLButtonElement>;
 	content: content;
-}
-export interface ISquare {
+};
+
+export type SquareState = {
 	hasBomb: boolean;
 	state: {
 		visible: boolean;
 		value: Value;
 	};
-}
+};
 
-export interface IBomb {
+export type BombCoords = {
 	r: number;
 	c: number;
-}
+};

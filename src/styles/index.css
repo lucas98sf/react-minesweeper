@@ -31,7 +31,8 @@ button {
 }
 
 .bomb {
-	max-height: -webkit-fill-available;
+	max-width: -webkit-fill-available;
+	max-width: -moz-available;
 	font-size: 0px;
 	background-color: red;
 }
