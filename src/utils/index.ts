@@ -24,6 +24,7 @@ export const generateSquares = () => {
 			const square: SquaresState = {
 				hasBomb: bomb,
 				state: {
+					flagged: false,
 					visible: false,
 					value: bomb ? 9 : 0,
 				},

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 // import ReactDOM from "react-dom";
-import { SquaresState, SquareProps, Value } from "../types";
+import { SquaresState, SquareProps, Value, content } from "../types";
 import { generateSquares, getSquareNumber, squareIsAround } from "../utils";
 import { Bomb } from "./Bomb";
 import { Square } from "./Square";
+import { Flag } from "./Flag";
 
 function Board() {
 	const [squares, setSquares] = useState(generateSquares());
@@ -21,7 +22,7 @@ function Board() {
 			const newSquares: SquaresState[][] = squares.slice();
 			const square: SquaresState = newSquares[clickedSquareR][clickedSquareC];
 
-			if (!square.state.visible) {
+			if (!square.state.visible && !square.state.flagged) {
 				square.state.value = square.hasBomb
 					? 9
 					: getSquareNumber(squares, clickedSquareR, clickedSquareC);
@@ -31,6 +32,7 @@ function Board() {
 			setSquares(newSquares);
 		}
 		if (e.button === 1) {
+			//middle click
 			squares.forEach((rows, r) => {
 				rows.forEach((columns, c) => {
 					const clickedSquare: SquaresState = squares[clickedSquareR][clickedSquareC];
@@ -44,7 +46,23 @@ function Board() {
 		}
 		if (e.button === 2) {
 			//right click
+			const newSquares: SquaresState[][] = squares.slice();
+			const square: SquaresState = newSquares[clickedSquareR][clickedSquareC];
+			if (!square.state.visible) {
+				if (!square.state.flagged) {
+					square.state.flagged = true;
+				} else square.state.flagged = false;
+
+				setSquares(newSquares);
+			}
 		}
+	};
+
+	const getContent = (square: SquaresState): content => {
+		if (square.state.visible) {
+			if (square.state.value) return square.hasBomb ? <Bomb /> : square.state.value;
+			else return null;
+		} else return square.state.flagged ? <Flag /> : null;
 	};
 
 	const board = squares.map((rows, r) => {
@@ -54,12 +72,7 @@ function Board() {
 				className: square.state.visible ? `square ${Value[square.state.value]}` : "square",
 				onClick: (e: React.MouseEvent<HTMLElement>) => handleClick(e, r, c),
 				onAuxClick: (e: React.MouseEvent<HTMLElement>) => handleClick(e, r, c),
-				content:
-					square.state.visible && square.hasBomb ? (
-						<Bomb />
-					) : !square.hasBomb && square.state.value ? (
-						square.state.value
-					) : null,
+				content: getContent(square),
 			};
 			return <Square {...props} />;
 		});
