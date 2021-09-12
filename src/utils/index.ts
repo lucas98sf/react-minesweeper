@@ -1,5 +1,5 @@
 import { NUM_BOMBS, MAX_HEIGHT, MAX_WIDTH } from "../config/constants";
-import { SquareState, BombCoords } from "../types";
+import { SquaresState, BombCoords } from "../types";
 
 export const generateSquares = () => {
 	const generateBombs = () => {
@@ -15,13 +15,13 @@ export const generateSquares = () => {
 	};
 
 	const bombs = generateBombs(),
-		squares: SquareState[][] = [];
+		squares: SquaresState[][] = [];
 
 	for (let i = 0; i < MAX_HEIGHT; i++) {
-		const row: SquareState[] = [];
+		const row: SquaresState[] = [];
 		for (let j = 0; j < MAX_WIDTH; j++) {
 			const bomb = bombs.some((bomb) => bomb.r === i && bomb.c === j);
-			const square: SquareState = {
+			const square: SquaresState = {
 				hasBomb: bomb,
 				state: {
 					visible: false,
@@ -36,14 +36,14 @@ export const generateSquares = () => {
 };
 
 export const getSquareNumber = (
-	squares: SquareState[][],
+	squares: SquaresState[][],
 	clickedSquareR: number,
 	clickedSquareC: number
 ): number => {
 	let bombCount = 0;
 	squares.forEach((rows, r) => {
 		rows.forEach((columns, c) => {
-			const square: SquareState = squares[r][c];
+			const square: SquaresState = squares[r][c];
 			if (squareIsAround(r, clickedSquareR, c, clickedSquareC) && square.hasBomb) {
 				bombCount++;
 			}

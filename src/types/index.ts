@@ -22,7 +22,7 @@ export type SquareProps = {
 	content: content;
 };
 
-export type SquareState = {
+export type SquaresState = {
 	hasBomb: boolean;
 	state: {
 		visible: boolean;

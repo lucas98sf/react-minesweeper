@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 // import ReactDOM from "react-dom";
-import { SquareState, SquareProps, Value } from "../types";
+import { SquaresState, SquareProps, Value } from "../types";
 import { generateSquares, getSquareNumber, squareIsAround } from "../utils";
 import { Bomb } from "./Bomb";
 import { Square } from "./Square";
@@ -18,8 +18,8 @@ function Board() {
 	) => {
 		if (e.button === 0) {
 			//left click
-			const newSquares: SquareState[][] = squares.slice();
-			const square: SquareState = newSquares[clickedSquareR][clickedSquareC];
+			const newSquares: SquaresState[][] = squares.slice();
+			const square: SquaresState = newSquares[clickedSquareR][clickedSquareC];
 
 			if (!square.state.visible) {
 				square.state.value = square.hasBomb
@@ -33,7 +33,7 @@ function Board() {
 		if (e.button === 1) {
 			squares.forEach((rows, r) => {
 				rows.forEach((columns, c) => {
-					const clickedSquare: SquareState = squares[clickedSquareR][clickedSquareC];
+					const clickedSquare: SquaresState = squares[clickedSquareR][clickedSquareC];
 					if (squareIsAround(r, clickedSquareR, c, clickedSquareC) && clickedSquare.state.visible) {
 						//TODO: verify if there's no non find bomb around
 						const leftClick = { ...e, button: 0 };
@@ -48,8 +48,8 @@ function Board() {
 	};
 
 	const board = squares.map((rows, r) => {
-		const row = rows.map((columns, c) => {
-			const square: SquareState = squares[r][c];
+		const row = rows.map((column, c) => {
+			const square: SquaresState = squares[r][c];
 			const props: SquareProps = {
 				className: square.state.visible ? `square ${Value[square.state.value]}` : "square",
 				onClick: (e: React.MouseEvent<HTMLElement>) => handleClick(e, r, c),
