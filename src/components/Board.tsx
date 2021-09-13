@@ -8,7 +8,10 @@ import { Flag } from "./Flag";
 
 function Board() {
 	const [squares, setSquares] = useState(generateSquares());
-	document.addEventListener("contextmenu", (e) => e.preventDefault()); //dont show context menu
+	document.addEventListener("contextmenu", (e) => {
+		const target = e.target as HTMLElement;
+		if (target?.tagName !== "BODY") e.preventDefault();
+	}); //dont show context menu
 
 	useEffect(() => {});
 
