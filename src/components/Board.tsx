@@ -49,6 +49,15 @@ function Board () {
 			//middle click
 			const clickedSquare: SquareState = squares[clickedSquareR][clickedSquareC];
 			if (!clickedSquare.state.visible) return;
+			let flagsAround = 0;
+			squares.forEach((rows, r) => {
+				rows.forEach((columns, c) => {
+					if (squareIsAround(r, c, clickedSquareR, clickedSquareC) && squares[r][c].state.flagged)
+						flagsAround++;
+				});
+			});
+			const squareValue = clickedSquare.state.value as Number
+			if (squareValue !== 0 && !(squareValue === flagsAround)) return;
 			squares.forEach((rows, r) => {
 				rows.forEach((columns, c) => {
 					const square: SquareState = squares[r][c];
