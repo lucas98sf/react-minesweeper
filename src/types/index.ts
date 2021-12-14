@@ -10,7 +10,7 @@ export enum Value {
 	six,
 	seven,
 	eight,
-	bomb,
+	bomb
 }
 
 export type content = React.ReactElement | Value | null;
@@ -22,9 +22,10 @@ export type SquareProps = {
 	content: content;
 };
 
-export type SquaresState = {
+export type SquareState = {
 	hasBomb: boolean;
 	state: {
+		flagged: boolean;
 		visible: boolean;
 		value: Value;
 	};
