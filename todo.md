@@ -2,4 +2,6 @@
 - [ ] time
 - [ ] flags and flag counter
 - [ ] gameover
-- [ ] middleclick logic
+- [ ] gamewin
+- [X] middleclick logic
+- [ ] configuration screen

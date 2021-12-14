@@ -23,6 +23,7 @@ button {
 	height: 60px;
 	vertical-align: middle;
 	font-size: 30px;
+	font-weight: bold;
 	background-color: lightgrey;
 	box-shadow: inset -3px -3px grey, inset 3px 3px white;
 	margin: 1px;
@@ -52,7 +53,7 @@ button {
 }
 
 .four {
-	color: darkblue;
+	color: midnightblue;
 	background-color: darkgrey;
 	box-shadow: 0px 0px;
 }
@@ -85,16 +86,21 @@ button {
 	max-width: -webkit-fill-available;
 	max-width: -moz-available;
 	font-size: 0px;
-	background-color: red;
+	background-color: lightcoral;
 	box-shadow: 0px 0px;
+}
+
+.flag {
+	max-width: -webkit-fill-available;
+	max-width: -moz-available;
+	font-size: 0px;
 }
 
 @media only screen and (max-width: 768px) {
 	button {
-		color: blueviolet;
 		width: 30px;
 		height: 30px;
-		vertical-align: middle;
-		font-size: 15px;
+		font-size: 18px;
+		box-shadow: inset -2px -2px grey, inset 2px 2px white;
 	}
 }
