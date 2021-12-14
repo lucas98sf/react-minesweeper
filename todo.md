@@ -5,3 +5,4 @@
 - [ ] gamewin
 - [X] middleclick logic
 - [ ] configuration screen
+- [ ] prevent first click to be in a bomb
