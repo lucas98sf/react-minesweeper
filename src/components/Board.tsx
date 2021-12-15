@@ -1,30 +1,47 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 // import ReactDOM from "react-dom";
 import { SquareState, SquareProps, Value, mouseClick, Coords, content } from "../types";
-import { generateSquares, getSquareNumber, squareIsAround, flagsAroundSquare } from "../utils";
+import { renderSquares, generateSquaresValues, getSquareNumber, squareIsAround, flagsAroundSquare } from "../utils";
 import { Bomb } from "./Bomb";
 import { Square } from "./Square";
 import { Flag } from "./Flag";
 
 function Board () {
-	const [squares, setSquares] = useState(generateSquares());
-	type FirstClick = { coords: Coords, event: React.MouseEvent<HTMLElement> } | null;
-	const [firstClick, setFirstClick] = useState(null as FirstClick);
+	type Click = {
+		button: mouseClick,
+		coords: Coords
+	} | null;
+	const [click, setClick] = useState(null as Click);
+	const [squares, setSquares] = useState(renderSquares());
+	const isFirstClick = useRef(true);
 
 	document.addEventListener("contextmenu", (e) => {
 		const target = e.target as HTMLElement;
 		if (target?.tagName !== "BODY") e.preventDefault();
-	}); //dont show context menu
+	}); //dont show context menu on right click
 
 	useEffect(() => {
-		if (firstClick) {
-			setSquares(generateSquares(firstClick.coords));
-			// handleClick({ ...firstClick.event, button: mouseClick.left },
-			// 	firstClick.coords.r,
-			// 	firstClick.coords.c);
-			//TODO: fix handleclick resetting board render
+		if (!click) return;
+		const { button, coords: { r, c } } = click;
+		if (isFirstClick.current && click)
+			setSquares(generateSquaresValues({ r, c }));
+		else
+			handleClick(button, r, c)
+		//TODO: fix this
+		// eslint-disable-next-line 
+	}, [click]);
+
+	useEffect(() => {
+		if (!click) return;
+		const { coords: { r, c } } = click;
+		if (isFirstClick.current) {
+			isFirstClick.current = false;
+			handleClick(mouseClick.left, r, c)
 		}
-	}, [firstClick]);
+		//TODO: fix this
+		// eslint-disable-next-line 
+	}, [squares]);
+
 
 	const revealSquare = (
 		square: SquareState,
@@ -40,17 +57,16 @@ function Board () {
 		return square.state;
 	};
 
-	const handleClick = (
-		e: React.MouseEvent<HTMLElement>,
+	function handleClick (
+		button: mouseClick,
 		clickedSquareR: number,
 		clickedSquareC: number
-	): void => {
+	): void {
 		const clickSquare =
 			(button: mouseClick, r: number, c: number) =>
-				handleClick({ ...e, button }, r, c);
+				handleClick(button, r, c);
 
-		if (e.button === mouseClick.left) {
-			if (!firstClick) setFirstClick({ coords: { r: clickedSquareR, c: clickedSquareC }, event: e });
+		if (button === mouseClick.left) {
 			const newSquares: SquareState[][] = squares.slice();
 			const square: SquareState = newSquares[clickedSquareR][clickedSquareC];
 			square.state = revealSquare(square, clickedSquareR, clickedSquareC);
@@ -62,7 +78,8 @@ function Board () {
 				clickSquare(mouseClick.middle, clickedSquareR, clickedSquareC);
 			}
 		}
-		if (e.button === mouseClick.middle) {
+
+		if (button === mouseClick.middle) {
 			const clickedSquare: SquareState = squares[clickedSquareR][clickedSquareC];
 			if (!clickedSquare.state.visible) return;
 			const flagsAround: number = flagsAroundSquare(clickedSquareR, clickedSquareC, squares);
@@ -78,7 +95,8 @@ function Board () {
 				});
 			});
 		}
-		if (e.button === mouseClick.right) {
+
+		if (button === mouseClick.right) {
 			const newSquares: SquareState[][] = squares.slice();
 			const square: SquareState = newSquares[clickedSquareR][clickedSquareC];
 			if (!square.state.visible) {
@@ -102,10 +120,12 @@ function Board () {
 			const square: SquareState = squares[r][c];
 			const props: SquareProps = {
 				className: square.state.visible ? `square ${Value[square.state.value]}` : "square",
-				onClick: (e: React.MouseEvent<HTMLElement>) =>
-					handleClick(e, r, c),
+				onClick: (e: React.MouseEvent<HTMLElement>) => setClick({
+					button: e.button,
+					coords: { r, c }
+				}),
 				onAuxClick: (e: React.MouseEvent<HTMLElement>) =>
-					handleClick(e, r, c),
+					handleClick(e.button, r, c),
 				content: getContent(square),
 			};
 			return <Square key={`${r}-${c}`} {...props} />;

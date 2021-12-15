@@ -1,14 +1,20 @@
 import { NUM_BOMBS, MAX_HEIGHT, MAX_WIDTH } from "../config/constants";
 import { SquareState, Coords } from "../types";
 
-const generateBombs = () => {
+const generateBombs = (firstClick: Coords) => {
 	const bombs: Coords[] = [];
 	const randomCoord = (MAX: number) => (Math.random() * MAX) << 0;
 
 	for (let i = 0; i < NUM_BOMBS; i++) {
-		const newBomb = { r: randomCoord(MAX_HEIGHT), c: randomCoord(MAX_WIDTH) };
-		const notInBombs = !bombs.some((bomb) => bomb === newBomb);
-		notInBombs ? bombs.push(newBomb) : i--;
+		const newBomb: Coords = {
+			r: randomCoord(MAX_HEIGHT),
+			c: randomCoord(MAX_WIDTH),
+		};
+		const validLocation =
+			!bombs.some((bomb) => bomb === newBomb) &&
+			!squareIsAround(newBomb.r, newBomb.c, firstClick.r, firstClick.c) &&
+			!(newBomb.r === firstClick.r && newBomb.c === firstClick.c);
+		validLocation ? bombs.push(newBomb) : i--;
 	}
 	return bombs;
 };
@@ -51,18 +57,28 @@ export const getSquareNumber = (
 	return bombCount;
 };
 
-export const generateSquares = (firstClick: Coords | null = null) => {
-	let bombs = generateBombs();
-	while (
-		firstClick &&
-		bombs.some(
-			(bomb) =>
-				squareIsAround(bomb.r, bomb.c, firstClick.r, firstClick.c) ||
-				(bomb.r === firstClick.r && bomb.c === firstClick.c)
-		)
-	) {
-		bombs = generateBombs();
+export const renderSquares = () => {
+	const squares: SquareState[][] = [];
+	for (let i = 0; i < MAX_HEIGHT; i++) {
+		const row: SquareState[] = [];
+		for (let j = 0; j < MAX_WIDTH; j++) {
+			const square: SquareState = {
+				hasBomb: false,
+				state: {
+					flagged: false,
+					visible: false,
+					value: 0,
+				},
+			};
+			row.push(square);
+		}
+		squares.push(row);
 	}
+	return squares;
+};
+
+export const generateSquaresValues = (firstClick: Coords) => {
+	let bombs = generateBombs(firstClick);
 
 	const squares: SquareState[][] = [];
 
