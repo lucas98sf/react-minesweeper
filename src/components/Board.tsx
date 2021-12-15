@@ -1,19 +1,30 @@
 import React, { useEffect, useState } from "react";
 // import ReactDOM from "react-dom";
-import { SquareState, SquareProps, Value, content } from "../types";
-import { generateSquares, getSquareNumber, squareIsAround } from "../utils";
+import { SquareState, SquareProps, Value, mouseClick, Coords, content } from "../types";
+import { generateSquares, getSquareNumber, squareIsAround, flagsAroundSquare } from "../utils";
 import { Bomb } from "./Bomb";
 import { Square } from "./Square";
 import { Flag } from "./Flag";
 
 function Board () {
 	const [squares, setSquares] = useState(generateSquares());
+	type FirstClick = { coords: Coords, event: React.MouseEvent<HTMLElement> } | null;
+	const [firstClick, setFirstClick] = useState(null as FirstClick);
+
 	document.addEventListener("contextmenu", (e) => {
 		const target = e.target as HTMLElement;
 		if (target?.tagName !== "BODY") e.preventDefault();
 	}); //dont show context menu
 
-	useEffect(() => { });
+	useEffect(() => {
+		if (firstClick) {
+			setSquares(generateSquares(firstClick.coords));
+			// handleClick({ ...firstClick.event, button: mouseClick.left },
+			// 	firstClick.coords.r,
+			// 	firstClick.coords.c);
+			//TODO: fix handleclick resetting board render
+		}
+	}, [firstClick]);
 
 	const revealSquare = (
 		square: SquareState,
@@ -33,29 +44,28 @@ function Board () {
 		e: React.MouseEvent<HTMLElement>,
 		clickedSquareR: number,
 		clickedSquareC: number
-	) => {
-		if (e.button === 0) {
-			//left click
+	): void => {
+		const clickSquare =
+			(button: mouseClick, r: number, c: number) =>
+				handleClick({ ...e, button }, r, c);
+
+		if (e.button === mouseClick.left) {
+			if (!firstClick) setFirstClick({ coords: { r: clickedSquareR, c: clickedSquareC }, event: e });
 			const newSquares: SquareState[][] = squares.slice();
 			const square: SquareState = newSquares[clickedSquareR][clickedSquareC];
 			square.state = revealSquare(square, clickedSquareR, clickedSquareC);
+
+			const isEmptySquare = square.state.value === Value.zero;
 			setSquares(newSquares);
-			if (square.state.value === Value.zero) {
+			if (isEmptySquare) {
 				// if its an empty square, middle click it to reveal all surrounding squares
-				handleClick({ ...e, button: 1 }, clickedSquareR, clickedSquareC);
+				clickSquare(mouseClick.middle, clickedSquareR, clickedSquareC);
 			}
 		}
-		if (e.button === 1) {
-			//middle click
+		if (e.button === mouseClick.middle) {
 			const clickedSquare: SquareState = squares[clickedSquareR][clickedSquareC];
 			if (!clickedSquare.state.visible) return;
-			let flagsAround = 0;
-			squares.forEach((rows, r) => {
-				rows.forEach((columns, c) => {
-					if (squareIsAround(r, c, clickedSquareR, clickedSquareC) && squares[r][c].state.flagged)
-						flagsAround++;
-				});
-			});
+			const flagsAround: number = flagsAroundSquare(clickedSquareR, clickedSquareC, squares);
 			const squareValue = clickedSquare.state.value as Number
 			if (squareValue !== 0 && !(squareValue === flagsAround)) return;
 			squares.forEach((rows, r) => {
@@ -63,20 +73,17 @@ function Board () {
 					const square: SquareState = squares[r][c];
 					if (squareIsAround(r, c, clickedSquareR, clickedSquareC) &&
 						!square.state.visible && !square.state.flagged) {
-						handleClick({ ...e, button: 0 }, r, c);
-						//left click the square
+						clickSquare(mouseClick.left, r, c);
 					}
 				});
 			});
 		}
-		if (e.button === 2) {
-			//right click
+		if (e.button === mouseClick.right) {
 			const newSquares: SquareState[][] = squares.slice();
 			const square: SquareState = newSquares[clickedSquareR][clickedSquareC];
 			if (!square.state.visible) {
-				if (!square.state.flagged) {
-					square.state.flagged = true;
-				} else square.state.flagged = false;
+				if (!square.state.flagged) square.state.flagged = true;
+				else square.state.flagged = false;
 
 				setSquares(newSquares);
 			}
@@ -95,13 +102,15 @@ function Board () {
 			const square: SquareState = squares[r][c];
 			const props: SquareProps = {
 				className: square.state.visible ? `square ${Value[square.state.value]}` : "square",
-				onClick: (e: React.MouseEvent<HTMLElement>) => handleClick(e, r, c),
-				onAuxClick: (e: React.MouseEvent<HTMLElement>) => handleClick(e, r, c),
+				onClick: (e: React.MouseEvent<HTMLElement>) =>
+					handleClick(e, r, c),
+				onAuxClick: (e: React.MouseEvent<HTMLElement>) =>
+					handleClick(e, r, c),
 				content: getContent(square),
 			};
-			return <Square {...props} />;
+			return <Square key={`${r}-${c}`} {...props} />;
 		});
-		return <div className="row">{row}</div>;
+		return <div key={r} className="row">{row}</div>;
 	});
 
 	return <div className="board">{board}</div>;
