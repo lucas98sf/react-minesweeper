@@ -1,5 +1,5 @@
 import { NUM_BOMBS, MAX_HEIGHT, MAX_WIDTH } from "../config/constants";
-import { SquareState, Coords } from "../types";
+import { SquareState, Coords, Value } from "../types";
 
 const generateBombs = (firstClick: Coords) => {
 	const bombs: Coords[] = [];
@@ -67,7 +67,7 @@ export const renderSquares = () => {
 				state: {
 					flagged: false,
 					visible: false,
-					value: 0,
+					value: Value.zero,
 				},
 			};
 			row.push(square);
@@ -91,7 +91,7 @@ export const generateSquaresValues = (firstClick: Coords) => {
 				state: {
 					flagged: false,
 					visible: false,
-					value: bomb ? 9 : 0,
+					value: bomb ? Value.bomb : Value.zero,
 				},
 			};
 			row.push(square);

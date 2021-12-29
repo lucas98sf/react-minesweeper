@@ -56,7 +56,7 @@ function Board () {
 	): SquareState["state"] => {
 		if (!square.state.visible && !square.state.flagged) {
 			square.state.value = square.hasBomb
-				? 9
+				? Value.bomb
 				: getSquareNumber(squares, clickedSquareR, clickedSquareC);
 			square.state.visible = true;
 		}
