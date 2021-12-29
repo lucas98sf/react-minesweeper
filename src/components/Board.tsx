@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 // import ReactDOM from "react-dom";
 import { SquareState, SquareProps, Value, mouseClick, Coords, content } from "../types";
-import { renderSquares, generateSquaresValues, getSquareNumber, squareIsAround, flagsAroundSquare } from "../utils";
+import {
+	renderSquares, generateSquaresValues, getSquareNumber,
+	squareIsAround, flagsAroundSquare, isGameLost, isGameWon
+} from "../utils";
 import { Bomb } from "./Bomb";
 import { Square } from "./Square";
 import { Flag } from "./Flag";
@@ -37,6 +40,9 @@ function Board () {
 		if (isFirstClick.current) {
 			isFirstClick.current = false;
 			handleClick(mouseClick.left, r, c)
+		} else {
+			if (isGameLost(squares)) return alert("Game Over");
+			if (isGameWon(squares)) return alert("You won!");
 		}
 		//TODO: fix this
 		// eslint-disable-next-line 

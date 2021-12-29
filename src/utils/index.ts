@@ -94,7 +94,6 @@ export const generateSquaresValues = (firstClick: Coords) => {
 					value: bomb ? 9 : 0,
 				},
 			};
-			// if (i === firstClick?.r && j === firstClick?.c) console.log(square);
 			row.push(square);
 		}
 		squares.push(row);
@@ -118,4 +117,22 @@ export const flagsAroundSquare = (
 		});
 	});
 	return flagsCount;
+};
+
+export const isGameLost = (squares: SquareState[][]): boolean => {
+	const clickedSquares = squares
+		.flat()
+		.filter((square) => square.state.visible);
+	return clickedSquares.some((square) => square.hasBomb);
+};
+
+export const isGameWon = (squares: SquareState[][]): boolean => {
+	const allSquaresRevealedOrFlagged = squares
+		.flat()
+		.every(
+			(square) =>
+				(square.state.visible && !square.hasBomb) ||
+				(square.state.flagged && square.hasBomb)
+		);
+	return allSquaresRevealedOrFlagged;
 };
