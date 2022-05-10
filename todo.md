@@ -2,8 +2,8 @@
 - [ ] timer
 - [ ] flag counter
 - [X] flags
-- [ ] gameover
-- [ ] gamewin
+- [X] gameover
+- [X] gamewin
 - [X] middleclick logic
 - [ ] configuration screen
 - [X] prevent first click to be in a bomb
