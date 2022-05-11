@@ -10,16 +10,16 @@ export enum Value {
 	six,
 	seven,
 	eight,
-	bomb
+	bomb,
 }
 
-export type content = React.ReactElement | Value | null;
+export type Content = React.ReactElement | Value | null;
 
 export type SquareProps = {
 	className: string;
 	onClick: React.MouseEventHandler<HTMLButtonElement>;
 	onAuxClick: React.MouseEventHandler<HTMLButtonElement>;
-	content: content;
+	content: Content;
 };
 
 export type SquareState = {
@@ -31,7 +31,15 @@ export type SquareState = {
 	};
 };
 
-export type BombCoords = {
+export type SquaresBoard = SquareState[][];
+
+export enum MouseButton {
+	left,
+	middle,
+	right,
+}
+
+export type SquareCoords = {
 	r: number;
 	c: number;
 };
