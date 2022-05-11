@@ -70,7 +70,7 @@ const flagsAroundSquare = (
 	return flagsCount;
 };
 
-export const renderEmptySquares = (): SquaresBoard => {
+export const generateEmptySquares = (): SquaresBoard => {
 	const squares: SquaresBoard = [];
 	for (let i = 0; i < MAX_HEIGHT; i++) {
 		const row: SquareState[] = [];
