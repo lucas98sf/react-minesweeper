@@ -1,29 +1,9 @@
 import { NUM_BOMBS, MAX_HEIGHT, MAX_WIDTH } from "../config/constants";
-import { SquareState, Coords, Value } from "../types";
+import { SquaresBoard, SquareState, SquareCoords, Value } from "../types";
 
-const generateBombs = (firstClick: Coords) => {
-	const bombs: Coords[] = [];
-	const randomCoord = (MAX: number) => (Math.random() * MAX) << 0;
-
-	for (let i = 0; i < NUM_BOMBS; i++) {
-		const newBomb: Coords = {
-			r: randomCoord(MAX_HEIGHT),
-			c: randomCoord(MAX_WIDTH),
-		};
-		const validLocation =
-			!bombs.some((bomb) => bomb === newBomb) &&
-			!squareIsAround(newBomb.r, newBomb.c, firstClick.r, firstClick.c) &&
-			!(newBomb.r === firstClick.r && newBomb.c === firstClick.c);
-		validLocation ? bombs.push(newBomb) : i--;
-	}
-	return bombs;
-};
-
-export const squareIsAround = (
-	r: number,
-	c: number,
-	clickedSquareR: number,
-	clickedSquareC: number
+const squareIsAround = (
+	{ r, c }: SquareCoords,
+	{ r: clickedSquareR, c: clickedSquareC }: SquareCoords
 ): boolean => {
 	if (
 		([clickedSquareR - 1, clickedSquareR + 1].includes(r) &&
@@ -37,19 +17,35 @@ export const squareIsAround = (
 	else return false;
 };
 
-export const getSquareNumber = (
-	squares: SquareState[][],
-	clickedSquareR: number,
-	clickedSquareC: number
-): number => {
+const generateBombs = (firstClick: SquareCoords): SquareCoords[] => {
+	const { r: clickedSquareR, c: clickedSquareC } = firstClick;
+
+	const bombs: SquareCoords[] = [];
+	const randomCoord = (MAX: number) => (Math.random() * MAX) << 0;
+	for (let i = 0; i < NUM_BOMBS; i++) {
+		const newBomb: SquareCoords = {
+			r: randomCoord(MAX_HEIGHT),
+			c: randomCoord(MAX_WIDTH),
+		};
+		const validLocation =
+			!bombs.some((bomb) => bomb.r === newBomb.r && bomb.c === newBomb.c) &&
+			!squareIsAround(newBomb, firstClick) &&
+			!(newBomb.r === clickedSquareR && newBomb.c === clickedSquareC);
+		validLocation ? bombs.push(newBomb) : --i;
+	}
+	console.log(bombs);
+	return bombs;
+};
+
+const getSquareValue = (
+	squares: SquaresBoard,
+	squareCoords: SquareCoords
+): Value => {
 	let bombCount = 0;
 	squares.forEach((rows, r) => {
 		rows.forEach((columns, c) => {
 			const square: SquareState = squares[r][c];
-			if (
-				squareIsAround(r, c, clickedSquareR, clickedSquareC) &&
-				square.hasBomb
-			) {
+			if (squareIsAround({ r, c }, squareCoords) && square.hasBomb) {
 				bombCount++;
 			}
 		});
@@ -57,8 +53,25 @@ export const getSquareNumber = (
 	return bombCount;
 };
 
-export const renderSquares = () => {
-	const squares: SquareState[][] = [];
+const flagsAroundSquare = (
+	squares: SquaresBoard,
+	clickedSquareCoords: SquareCoords
+): number => {
+	let flagsCount = 0;
+	squares.forEach((rows, r) => {
+		rows.forEach((columns, c) => {
+			if (
+				squareIsAround({ r, c }, clickedSquareCoords) &&
+				squares[r][c].state.flagged
+			)
+				flagsCount++;
+		});
+	});
+	return flagsCount;
+};
+
+export const renderEmptySquares = (): SquaresBoard => {
+	const squares: SquaresBoard = [];
 	for (let i = 0; i < MAX_HEIGHT; i++) {
 		const row: SquareState[] = [];
 		for (let j = 0; j < MAX_WIDTH; j++) {
@@ -77,56 +90,97 @@ export const renderSquares = () => {
 	return squares;
 };
 
-export const generateSquaresValues = (firstClick: Coords) => {
-	let bombs = generateBombs(firstClick);
+export const generateSquaresValues = (
+	firstClick: SquareCoords
+): SquaresBoard => {
+	const bombs = generateBombs(firstClick);
+	const squares: SquaresBoard = [];
 
-	const squares: SquareState[][] = [];
-
-	for (let i = 0; i < MAX_HEIGHT; i++) {
+	for (let r = 0; r < MAX_HEIGHT; r++) {
 		const row: SquareState[] = [];
-		for (let j = 0; j < MAX_WIDTH; j++) {
-			const bomb = bombs.some((bomb) => bomb.r === i && bomb.c === j);
+		for (let c = 0; c < MAX_WIDTH; c++) {
+			const hasBomb = bombs.some((bomb) => bomb.r === r && bomb.c === c);
+			const visible = r === firstClick.r && c === firstClick.c;
 			const square: SquareState = {
-				hasBomb: bomb,
+				hasBomb,
 				state: {
 					flagged: false,
-					visible: false,
-					value: bomb ? Value.bomb : Value.zero,
+					visible,
+					value: hasBomb ? Value.bomb : Value.zero,
 				},
 			};
 			row.push(square);
 		}
 		squares.push(row);
 	}
-	return squares;
+	const squaresAfterFirstClick = revealSurroundingSquares(squares, firstClick);
+	return squaresAfterFirstClick;
 };
 
-export const flagsAroundSquare = (
-	clickedSquareR: number,
-	clickedSquareC: number,
-	squares: SquareState[][]
-): number => {
-	let flagsCount = 0;
-	squares.forEach((rows, r) => {
-		rows.forEach((columns, c) => {
-			if (
-				squareIsAround(r, c, clickedSquareR, clickedSquareC) &&
-				squares[r][c].state.flagged
-			)
-				flagsCount++;
+export const revealSquare = (
+	squares: SquaresBoard,
+	clickedSquareCoords: SquareCoords
+): SquaresBoard => {
+	const { r, c } = clickedSquareCoords;
+	const clickedSquare = squares[r][c];
+
+	clickedSquare.state.value = clickedSquare.hasBomb
+		? Value.bomb
+		: getSquareValue(squares, clickedSquareCoords);
+	clickedSquare.state.visible = true;
+
+	const isEmptySquare = clickedSquare.state.value === Value.zero;
+	if (isEmptySquare) {
+		squares = revealSurroundingSquares(squares, clickedSquareCoords);
+	}
+	return [...squares];
+};
+
+export const revealSurroundingSquares = (
+	squares: SquaresBoard,
+	clickedSquareCoords: SquareCoords
+): SquaresBoard => {
+	const { r: clickedSquareR, c: clickedSquareC } = clickedSquareCoords;
+
+	const clickedSquare = squares[clickedSquareR][clickedSquareC];
+	const squareValue = clickedSquare.state.value as Number;
+	if (
+		squareValue === 0 ||
+		squareValue === flagsAroundSquare(squares, clickedSquareCoords)
+	) {
+		squares.forEach((rows, r) => {
+			rows.forEach((columns, c) => {
+				const square: SquareState = squares[r][c];
+				if (
+					squareIsAround({ r, c }, clickedSquareCoords) &&
+					!square.state.visible &&
+					!square.state.flagged
+				) {
+					squares = revealSquare(squares, { r, c });
+				}
+			});
 		});
-	});
-	return flagsCount;
+	}
+	return [...squares];
 };
 
-export const isGameLost = (squares: SquareState[][]): boolean => {
+export const toggleSquareFlag = (
+	squares: SquaresBoard,
+	{ r, c }: SquareCoords
+): SquaresBoard => {
+	const square: SquareState = squares[r][c];
+	square.state.flagged = !square.state.flagged;
+	return [...squares];
+};
+
+export const isGameLost = (squares: SquaresBoard): boolean => {
 	const clickedSquares = squares
 		.flat()
 		.filter((square) => square.state.visible);
 	return clickedSquares.some((square) => square.hasBomb);
 };
 
-export const isGameWon = (squares: SquareState[][]): boolean => {
+export const isGameWon = (squares: SquaresBoard): boolean => {
 	const allSquaresRevealedOrFlagged = squares
 		.flat()
 		.every(

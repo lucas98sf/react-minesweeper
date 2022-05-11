@@ -13,17 +13,6 @@ export enum Value {
 	bomb,
 }
 
-export enum MouseButton {
-	left,
-	middle,
-	right,
-}
-
-export type MouseClick = {
-	button: MouseButton;
-	coords: Coords;
-};
-
 export type Content = React.ReactElement | Value | null;
 
 export type SquareProps = {
@@ -42,7 +31,15 @@ export type SquareState = {
 	};
 };
 
-export type Coords = {
+export type SquaresBoard = SquareState[][];
+
+export enum MouseButton {
+	left,
+	middle,
+	right,
+}
+
+export type SquareCoords = {
 	r: number;
 	c: number;
 };

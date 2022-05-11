@@ -7,3 +7,4 @@
 - [X] middleclick logic
 - [ ] configuration screen
 - [X] prevent first click to be in a bomb
+- [ ] ensure game is always winnable without needing to take a guess
