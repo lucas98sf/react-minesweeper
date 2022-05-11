@@ -1,7 +1,10 @@
 - [ ] socket.io
-- [ ] time
-- [ ] flags and flag counter
-- [ ] gameover
-- [ ] gamewin
+- [ ] timer
+- [ ] flag counter
+- [X] flags
+- [X] gameover
+- [X] gamewin
 - [X] middleclick logic
 - [ ] configuration screen
+- [X] prevent first click to be in a bomb
+- [ ] ensure game is always winnable without needing to take a guess
