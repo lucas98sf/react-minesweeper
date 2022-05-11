@@ -9,20 +9,20 @@ import {
 	SquaresBoard,
 } from "../types";
 import {
-	renderEmptySquares,
+	generateEmptySquares,
 	generateSquaresValues,
 	revealSquare,
 	revealSurroundingSquares,
 	toggleSquareFlag,
 	isGameLost,
 	isGameWon,
-} from "../utils";
+} from "../functions/minesweeper";
 import { Bomb } from "./Bomb";
 import { Square } from "./Square";
 import { Flag } from "./Flag";
 
 function Board() {
-	const [squares, setSquares] = useState<SquaresBoard>(renderEmptySquares());
+	const [squares, setSquares] = useState<SquaresBoard>(generateEmptySquares());
 	const isFirstClick = useRef<boolean>(true);
 
 	document.addEventListener("contextmenu", (e) => {
