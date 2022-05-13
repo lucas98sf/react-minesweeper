@@ -40,6 +40,6 @@ export enum MouseButton {
 }
 
 export type SquareCoords = {
-	r: number;
-	c: number;
+	row: number;
+	col: number;
 };

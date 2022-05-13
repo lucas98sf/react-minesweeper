@@ -32,27 +32,27 @@ function Board() {
 
 	const handleClick = (
 		button: MouseButton,
-		clickedSquareCoords: SquareCoords
+		clickedCoords: SquareCoords
 	): void => {
-		const { r, c } = clickedSquareCoords;
-		const clickedSquare = squares[r][c];
+		const { row, col } = clickedCoords;
+		const clickedSquare = squares[row][col];
 		const { visible, flagged } = clickedSquare.state;
 
 		if (isFirstClick.current) {
 			isFirstClick.current = false;
-			return setSquares(generateSquaresValues(clickedSquareCoords));
+			return setSquares(generateSquaresValues(clickedCoords));
 		}
 
 		if (button === MouseButton.left && !(visible || flagged)) {
-			setSquares(revealSquare(squares, clickedSquareCoords));
+			setSquares(revealSquare(squares, clickedCoords));
 		}
 
 		if (button === MouseButton.middle && visible) {
-			setSquares(revealSurroundingSquares(squares, clickedSquareCoords));
+			setSquares(revealSurroundingSquares(squares, clickedCoords));
 		}
 
 		if (button === MouseButton.right && !visible) {
-			setSquares(toggleSquareFlag(squares, clickedSquareCoords));
+			setSquares(toggleSquareFlag(squares, clickedCoords));
 		}
 	};
 
@@ -70,24 +70,24 @@ function Board() {
 		return null;
 	};
 
-	const board = squares.map((rows, r) => {
-		const row = rows.map((column, c) => {
-			const square: SquareState = squares[r][c];
+	const board = squares.map((rows, row) => {
+		const generatedRow = rows.map((column, col) => {
+			const square: SquareState = squares[row][col];
 			const props: SquareProps = {
 				className: square.state.visible
 					? `square ${Value[square.state.value]}`
 					: "square",
 				onClick: (e: React.MouseEvent<HTMLElement>) =>
-					handleClick(e.button, { r, c }),
+					handleClick(e.button, { row, col }),
 				onAuxClick: (e: React.MouseEvent<HTMLElement>) =>
-					handleClick(e.button, { r, c }),
+					handleClick(e.button, { row, col }),
 				content: getContent(square),
 			};
-			return <Square key={`${r}-${c}`} {...props} />;
+			return <Square key={`${row}-${col}`} {...props} />;
 		});
 		return (
-			<div key={r} className="row">
-				{row}
+			<div key={row} className="row">
+				{generatedRow}
 			</div>
 		);
 	});
