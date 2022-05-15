@@ -1,4 +1,4 @@
-import React from "react";
+import { MouseEventHandler, ReactElement } from "react";
 
 export enum Value {
 	zero,
@@ -13,12 +13,12 @@ export enum Value {
 	bomb,
 }
 
-export type Content = React.ReactElement | Value | null;
+export type Content = ReactElement | Value | null;
 
 export type SquareProps = {
 	className: string;
-	onClick: React.MouseEventHandler<HTMLButtonElement>;
-	onAuxClick: React.MouseEventHandler<HTMLButtonElement>;
+	onClick: MouseEventHandler<HTMLButtonElement>;
+	onAuxClick: MouseEventHandler<HTMLButtonElement>;
 	content: Content;
 };
 
