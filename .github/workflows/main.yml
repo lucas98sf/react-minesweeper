@@ -50,8 +50,8 @@ jobs:
           name: production-files
           path: ./dist
 
-      - name: Deploy GitHub Pages site
-        uses: actions/deploy-pages@v1.2.4
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
