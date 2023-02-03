@@ -1,6 +1,9 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import "./styles/index.css";
-import Board from "./components/Board";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
 
-ReactDOM.render(<Board />, document.getElementById("root"));
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+);
