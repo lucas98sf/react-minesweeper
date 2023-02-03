@@ -1,0 +1,90 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: greyscale;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+.board {
+  background-color: grey;
+}
+
+button {
+  width: 60px;
+  height: 60px;
+  vertical-align: middle;
+  font-size: 30px;
+  font-weight: bold;
+  background-color: lightgrey;
+  box-shadow: inset -3px -3px grey, inset 3px 3px white;
+  margin: 1px;
+  border: 0px;
+}
+
+:is(.zero, .one, .two, .three, .four, .five, .six, .seven, .eight) {
+  background-color: darkgrey;
+  box-shadow: 0px 0px;
+}
+
+.one {
+  color: blue;
+}
+.two {
+  color: green;
+}
+
+.three {
+  color: red;
+}
+
+.four {
+  color: midnightblue;
+}
+
+.five {
+  color: maroon;
+}
+
+.six {
+  color: turquoise;
+}
+
+.seven {
+  color: black;
+}
+
+.eight {
+  color: grey;
+}
+
+.bomb {
+  max-width: -webkit-fill-available;
+  max-width: -moz-available;
+  font-size: 0px;
+  background-color: lightcoral;
+  box-shadow: 0px 0px;
+}
+
+.flag {
+  max-width: -webkit-fill-available;
+  max-width: -moz-available;
+  font-size: 0px;
+}
+
+@media only screen and (max-width: 768px) {
+  button {
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    box-shadow: inset -2px -2px grey, inset 2px 2px white;
+  }
+}
