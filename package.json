@@ -5,11 +5,10 @@
   "homepage": "https://lucas98sf.github.io/react-minesweeper",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
     "preview": "vite preview",
+    "build": "tsc && vite build",
     "lint": "eslint . --ext .ts,.tsx --fix && prettier --write .",
-    "predeploy": "pnpm run lint && pnpm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "pnpm run build && gh-pages -d dist"
   },
   "browserslist": {
     "production": [
