@@ -1,4 +1,4 @@
-import { SquareProps } from '../types';
+import { SquareProps } from '@/types';
 
 export function Square(props: SquareProps) {
   const { className, onClick, onAuxClick, content } = props;
