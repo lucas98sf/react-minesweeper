@@ -56,7 +56,6 @@ export const revealSquare = (squares: SquaresBoard, clickCoords: SquareCoords): 
 
   const clickedSquare = newSquares[clickedRow][clickedCol];
 
-  console.log(clickCoords, getSquareValue(newSquares, clickCoords));
   clickedSquare.state.value = clickedSquare.hasBomb
     ? Value.bomb
     : getSquareValue(newSquares, clickCoords);
