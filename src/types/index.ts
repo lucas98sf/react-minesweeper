@@ -27,7 +27,7 @@ export type SquareState = {
   state: {
     flagged: boolean;
     visible: boolean;
-    value: Value;
+    value: Value | null;
   };
 };
 

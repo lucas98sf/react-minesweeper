@@ -7,7 +7,7 @@ import {
   Content,
   SquareCoords,
   SquaresBoard,
-} from '../types';
+} from '@/types';
 import {
   generateEmptySquares,
   generateSquaresValues,
@@ -16,7 +16,7 @@ import {
   toggleSquareFlag,
   isGameLost,
   isGameWon,
-} from '../functions/minesweeper';
+} from '@/functions/minesweeper';
 import { Bomb } from './Bomb';
 import { Square } from './Square';
 import { Flag } from './Flag';
@@ -25,7 +25,7 @@ export function Board() {
   const [squares, setSquares] = useState<SquaresBoard>(generateEmptySquares());
   const isFirstClick = useRef<boolean>(true);
 
-  document.addEventListener('contextmenu', (e) => {
+  document.addEventListener('contextmenu', e => {
     const target = e.target as HTMLElement;
     if (target?.tagName !== 'BODY') e.preventDefault();
   }); //dont show context menu on right click
@@ -61,9 +61,7 @@ export function Board() {
   const getContent = (square: SquareState): Content => {
     const { visible, flagged, value } = square.state;
     if (flagged) return <Flag />;
-    if (visible) {
-      if (value) return square.hasBomb ? <Bomb /> : value;
-    }
+    if (visible && value) return square.hasBomb ? <Bomb /> : value;
     return null;
   };
 
@@ -71,7 +69,10 @@ export function Board() {
     const generatedRow = rows.map((column, col) => {
       const square: SquareState = squares[row][col];
       const props: SquareProps = {
-        className: square.state.visible ? `square ${Value[square.state.value]}` : 'square',
+        className:
+          square.state.visible && square.state.value !== null
+            ? `square ${Value[square.state.value]}`
+            : 'square',
         onClick: (e: React.MouseEvent<HTMLElement>) => handleClick(e.button, { row, col }),
         onAuxClick: (e: React.MouseEvent<HTMLElement>) => handleClick(e.button, { row, col }),
         content: getContent(square),
