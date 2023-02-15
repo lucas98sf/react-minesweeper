@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  SquareState,
+  Square as SquareType,
   SquareProps,
-  Value,
+  SquareValue,
   MouseButton,
   Content,
   SquareCoords,
@@ -27,7 +27,9 @@ export function Board() {
 
   document.addEventListener('contextmenu', e => {
     const target = e.target as HTMLElement;
-    if (target?.tagName !== 'BODY') e.preventDefault();
+    if (target?.tagName !== 'BODY') {
+      e.preventDefault();
+    }
   }); //dont show context menu on right click
 
   const handleClick = (button: MouseButton, clickedCoords: SquareCoords): void => {
@@ -35,6 +37,7 @@ export function Board() {
     const clickedSquare = squares[row][col];
     const { visible, flagged } = clickedSquare.state;
 
+    //TODO: move this logic to inside minesweeper.ts
     if (isFirstClick.current) {
       isFirstClick.current = false;
       return setSquares(generateSquaresValues(clickedCoords));
@@ -51,27 +54,36 @@ export function Board() {
     if (button === MouseButton.right && !visible) {
       setSquares(toggleSquareFlag(squares, clickedCoords));
     }
+    //--------------------
   };
 
   useEffect(() => {
-    if (isGameLost(squares)) return alert('Game Over');
-    if (isGameWon(squares)) return alert('You won!');
+    if (isGameLost(squares)) {
+      return alert('Game Over');
+    }
+    if (isGameWon(squares)) {
+      return alert('You won!');
+    }
   });
 
-  const getContent = (square: SquareState): Content => {
+  const getContent = (square: SquareType): Content => {
     const { visible, flagged, value } = square.state;
-    if (flagged) return <Flag />;
-    if (visible && value) return square.hasBomb ? <Bomb /> : value;
+    if (flagged) {
+      return <Flag />;
+    }
+    if (visible && value) {
+      return square.hasBomb ? <Bomb /> : value;
+    }
     return null;
   };
 
   const board = squares.map((rows, row) => {
     const generatedRow = rows.map((column, col) => {
-      const square: SquareState = squares[row][col];
+      const square: SquareType = squares[row][col];
       const props: SquareProps = {
         className:
           square.state.visible && square.state.value !== null
-            ? `square ${Value[square.state.value]}`
+            ? `square ${SquareValue[square.state.value]}`
             : 'square',
         onClick: (e: React.MouseEvent<HTMLElement>) => handleClick(e.button, { row, col }),
         onAuxClick: (e: React.MouseEvent<HTMLElement>) => handleClick(e.button, { row, col }),

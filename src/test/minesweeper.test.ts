@@ -6,10 +6,12 @@ import {
   toggleSquareFlag,
   isGameLost,
   isGameWon,
+  isBoardSolvable,
 } from '@/functions/minesweeper';
 import { describe, it, expect } from 'vitest';
+import * as mocks from './mocks';
 
-// all written by chatgpt btw
+// almost everything written by chatgpt btw
 
 describe('minesweeper logic', () => {
   describe('generateEmptySquares', () => {
@@ -96,7 +98,7 @@ describe('minesweeper logic', () => {
 
   describe('isGameWon', () => {
     it('returns true when all bombs are flagged or all squares are revealed', () => {
-      const squares = generateSquaresValues({ row: 0, col: 0 });
+      const squares = generateSquaresValues({ row: 3, col: 3 });
       const bombSquares = squares.flat().filter(square => square.hasBomb);
       const safeSquares = squares.flat().filter(square => !square.hasBomb);
       // flag all bombs
@@ -115,8 +117,14 @@ describe('minesweeper logic', () => {
   });
 
   describe('isBoardSolvable', () => {
-    it('should resolve an board with no guesses needed', () => {
-      // const squares = generateEmptySquares();
+    it('should return true when board is solvable', () => {
+      expect(isBoardSolvable(mocks.solvableBoard)).toBe(true);
+      expect(isBoardSolvable(mocks.solvableBoard2)).toBe(true);
+    });
+
+    it('should return false when board is not solvable', () => {
+      expect(isBoardSolvable(mocks.needGuessBoard)).toBe(false);
+      expect(isBoardSolvable(mocks.needGuessBoard2)).toBe(false);
     });
   });
 });
