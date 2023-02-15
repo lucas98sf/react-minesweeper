@@ -1,0 +1,3054 @@
+[
+  [
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 0,
+        "row": 0
+      },
+      "state": {
+        "flagged": false,
+        "value": 0,
+        "visible": true
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 1,
+        "row": 0
+      },
+      "state": {
+        "flagged": false,
+        "value": 0,
+        "visible": true
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 2,
+        "row": 0
+      },
+      "state": {
+        "flagged": false,
+        "value": 0,
+        "visible": true
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 3,
+        "row": 0
+      },
+      "state": {
+        "flagged": false,
+        "value": 0,
+        "visible": true
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 4,
+        "row": 0
+      },
+      "state": {
+        "flagged": false,
+        "value": 2,
+        "visible": true
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 5,
+        "row": 0
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 6,
+        "row": 0
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 7,
+        "row": 0
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 8,
+        "row": 0
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 9,
+        "row": 0
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 10,
+        "row": 0
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 11,
+        "row": 0
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 12,
+        "row": 0
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 13,
+        "row": 0
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 14,
+        "row": 0
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 15,
+        "row": 0
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 16,
+        "row": 0
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 17,
+        "row": 0
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    }
+  ],
+  [
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 0,
+        "row": 1
+      },
+      "state": {
+        "flagged": false,
+        "value": 1,
+        "visible": true
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 1,
+        "row": 1
+      },
+      "state": {
+        "flagged": false,
+        "value": 2,
+        "visible": true
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 2,
+        "row": 1
+      },
+      "state": {
+        "flagged": false,
+        "value": 2,
+        "visible": true
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 3,
+        "row": 1
+      },
+      "state": {
+        "flagged": false,
+        "value": 3,
+        "visible": true
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 4,
+        "row": 1
+      },
+      "state": {
+        "flagged": false,
+        "value": 4,
+        "visible": true
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 5,
+        "row": 1
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 6,
+        "row": 1
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 7,
+        "row": 1
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 8,
+        "row": 1
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 9,
+        "row": 1
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 10,
+        "row": 1
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 11,
+        "row": 1
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 12,
+        "row": 1
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 13,
+        "row": 1
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 14,
+        "row": 1
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 15,
+        "row": 1
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 16,
+        "row": 1
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 17,
+        "row": 1
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    }
+  ],
+  [
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 0,
+        "row": 2
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 1,
+        "row": 2
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 2,
+        "row": 2
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 3,
+        "row": 2
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 4,
+        "row": 2
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 5,
+        "row": 2
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 6,
+        "row": 2
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 7,
+        "row": 2
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 8,
+        "row": 2
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 9,
+        "row": 2
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 10,
+        "row": 2
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 11,
+        "row": 2
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 12,
+        "row": 2
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 13,
+        "row": 2
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 14,
+        "row": 2
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 15,
+        "row": 2
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 16,
+        "row": 2
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 17,
+        "row": 2
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    }
+  ],
+  [
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 0,
+        "row": 3
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 1,
+        "row": 3
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 2,
+        "row": 3
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 3,
+        "row": 3
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 4,
+        "row": 3
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 5,
+        "row": 3
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 6,
+        "row": 3
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 7,
+        "row": 3
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 8,
+        "row": 3
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 9,
+        "row": 3
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 10,
+        "row": 3
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 11,
+        "row": 3
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 12,
+        "row": 3
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 13,
+        "row": 3
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 14,
+        "row": 3
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 15,
+        "row": 3
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 16,
+        "row": 3
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 17,
+        "row": 3
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    }
+  ],
+  [
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 0,
+        "row": 4
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 1,
+        "row": 4
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 2,
+        "row": 4
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 3,
+        "row": 4
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 4,
+        "row": 4
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 5,
+        "row": 4
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 6,
+        "row": 4
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 7,
+        "row": 4
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 8,
+        "row": 4
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 9,
+        "row": 4
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 10,
+        "row": 4
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 11,
+        "row": 4
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 12,
+        "row": 4
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 13,
+        "row": 4
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 14,
+        "row": 4
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 15,
+        "row": 4
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 16,
+        "row": 4
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 17,
+        "row": 4
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    }
+  ],
+  [
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 0,
+        "row": 5
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 1,
+        "row": 5
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 2,
+        "row": 5
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 3,
+        "row": 5
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 4,
+        "row": 5
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 5,
+        "row": 5
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 6,
+        "row": 5
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 7,
+        "row": 5
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 8,
+        "row": 5
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 9,
+        "row": 5
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 10,
+        "row": 5
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 11,
+        "row": 5
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 12,
+        "row": 5
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 13,
+        "row": 5
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 14,
+        "row": 5
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 15,
+        "row": 5
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 16,
+        "row": 5
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 17,
+        "row": 5
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    }
+  ],
+  [
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 0,
+        "row": 6
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 1,
+        "row": 6
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 2,
+        "row": 6
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 3,
+        "row": 6
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 4,
+        "row": 6
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 5,
+        "row": 6
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 6,
+        "row": 6
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 7,
+        "row": 6
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 8,
+        "row": 6
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 9,
+        "row": 6
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 10,
+        "row": 6
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 11,
+        "row": 6
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 12,
+        "row": 6
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 13,
+        "row": 6
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 14,
+        "row": 6
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 15,
+        "row": 6
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 16,
+        "row": 6
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 17,
+        "row": 6
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    }
+  ],
+  [
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 0,
+        "row": 7
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 1,
+        "row": 7
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 2,
+        "row": 7
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 3,
+        "row": 7
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 4,
+        "row": 7
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 5,
+        "row": 7
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 6,
+        "row": 7
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 7,
+        "row": 7
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 8,
+        "row": 7
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 9,
+        "row": 7
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 10,
+        "row": 7
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 11,
+        "row": 7
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 12,
+        "row": 7
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 13,
+        "row": 7
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 14,
+        "row": 7
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 15,
+        "row": 7
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 16,
+        "row": 7
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 17,
+        "row": 7
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    }
+  ],
+  [
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 0,
+        "row": 8
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 1,
+        "row": 8
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 2,
+        "row": 8
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 3,
+        "row": 8
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 4,
+        "row": 8
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 5,
+        "row": 8
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 6,
+        "row": 8
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 7,
+        "row": 8
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 8,
+        "row": 8
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 9,
+        "row": 8
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 10,
+        "row": 8
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 11,
+        "row": 8
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 12,
+        "row": 8
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 13,
+        "row": 8
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 14,
+        "row": 8
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 15,
+        "row": 8
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 16,
+        "row": 8
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 17,
+        "row": 8
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    }
+  ],
+  [
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 0,
+        "row": 9
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 1,
+        "row": 9
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 2,
+        "row": 9
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 3,
+        "row": 9
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 4,
+        "row": 9
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 5,
+        "row": 9
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 6,
+        "row": 9
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 7,
+        "row": 9
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 8,
+        "row": 9
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 9,
+        "row": 9
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 10,
+        "row": 9
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 11,
+        "row": 9
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 12,
+        "row": 9
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 13,
+        "row": 9
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 14,
+        "row": 9
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 15,
+        "row": 9
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 16,
+        "row": 9
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 17,
+        "row": 9
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    }
+  ],
+  [
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 0,
+        "row": 10
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 1,
+        "row": 10
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 2,
+        "row": 10
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 3,
+        "row": 10
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 4,
+        "row": 10
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 5,
+        "row": 10
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 6,
+        "row": 10
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 7,
+        "row": 10
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 8,
+        "row": 10
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 9,
+        "row": 10
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 10,
+        "row": 10
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 11,
+        "row": 10
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 12,
+        "row": 10
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 13,
+        "row": 10
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 14,
+        "row": 10
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 15,
+        "row": 10
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 16,
+        "row": 10
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 17,
+        "row": 10
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    }
+  ],
+  [
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 0,
+        "row": 11
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 1,
+        "row": 11
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 2,
+        "row": 11
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 3,
+        "row": 11
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 4,
+        "row": 11
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 5,
+        "row": 11
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 6,
+        "row": 11
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 7,
+        "row": 11
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 8,
+        "row": 11
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 9,
+        "row": 11
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 10,
+        "row": 11
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 11,
+        "row": 11
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 12,
+        "row": 11
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 13,
+        "row": 11
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 14,
+        "row": 11
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 15,
+        "row": 11
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 16,
+        "row": 11
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 17,
+        "row": 11
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    }
+  ],
+  [
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 0,
+        "row": 12
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 1,
+        "row": 12
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 2,
+        "row": 12
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 3,
+        "row": 12
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 4,
+        "row": 12
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 5,
+        "row": 12
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 6,
+        "row": 12
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 7,
+        "row": 12
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 8,
+        "row": 12
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 9,
+        "row": 12
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 10,
+        "row": 12
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 11,
+        "row": 12
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 12,
+        "row": 12
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 13,
+        "row": 12
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 14,
+        "row": 12
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 15,
+        "row": 12
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 16,
+        "row": 12
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 17,
+        "row": 12
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    }
+  ],
+  [
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 0,
+        "row": 13
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 1,
+        "row": 13
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 2,
+        "row": 13
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 3,
+        "row": 13
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 4,
+        "row": 13
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 5,
+        "row": 13
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": true,
+      "position": {
+        "col": 6,
+        "row": 13
+      },
+      "state": {
+        "flagged": false,
+        "value": 9,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 7,
+        "row": 13
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 8,
+        "row": 13
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 9,
+        "row": 13
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 10,
+        "row": 13
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 11,
+        "row": 13
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 12,
+        "row": 13
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 13,
+        "row": 13
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 14,
+        "row": 13
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 15,
+        "row": 13
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 16,
+        "row": 13
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    },
+    {
+      "hasBomb": false,
+      "position": {
+        "col": 17,
+        "row": 13
+      },
+      "state": {
+        "flagged": false,
+        "value": null,
+        "visible": false
+      }
+    }
+  ]
+]

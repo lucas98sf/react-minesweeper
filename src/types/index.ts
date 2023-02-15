@@ -1,6 +1,6 @@
 import { MouseEventHandler, ReactElement } from 'react';
 
-export enum Value {
+export enum SquareValue {
   zero,
   one,
   two,
@@ -13,7 +13,7 @@ export enum Value {
   bomb,
 }
 
-export type Content = ReactElement | Value | null;
+export type Content = ReactElement | SquareValue | null;
 
 export type SquareProps = {
   className: string;
@@ -22,16 +22,17 @@ export type SquareProps = {
   content: Content;
 };
 
-export type SquareState = {
+export type Square = {
   hasBomb: boolean;
+  position: SquareCoords;
   state: {
     flagged: boolean;
     visible: boolean;
-    value: Value | null;
+    value: SquareValue | null;
   };
 };
 
-export type SquaresBoard = SquareState[][];
+export type SquaresBoard = Square[][];
 
 export enum MouseButton {
   left,
