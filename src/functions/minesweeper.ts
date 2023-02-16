@@ -2,51 +2,40 @@ import { NUM_BOMBS, MAX_HEIGHT, MAX_WIDTH } from '@/config/constants';
 import { SquaresBoard, Square, SquareCoords, SquareValue } from '@/types';
 
 //TODO: organize this file
-export const generateEmptySquares = (): SquaresBoard => {
-  const squares: SquaresBoard = [];
-
-  for (let i = 0; i < MAX_HEIGHT; i++) {
-    const row: Square[] = [];
-    for (let j = 0; j < MAX_WIDTH; j++) {
-      const square: Square = {
+export const generateEmptySquares = () =>
+  Array.from({ length: MAX_HEIGHT }, (__row, rowIndex) =>
+    Array.from(
+      { length: MAX_WIDTH },
+      (__col, colIndex): Square => ({
         hasBomb: false,
-        position: { row: i, col: j },
+        position: { row: rowIndex, col: colIndex },
         state: {
           flagged: false,
           visible: false,
           value: null,
         },
-      };
-      row.push(square);
-    }
-    squares.push(row);
-  }
-
-  return squares;
-};
+      }),
+    ),
+  );
 
 export const generateSquaresValues = (firstClick: SquareCoords): SquaresBoard => {
   const bombs = generateBombs(firstClick);
-  const squares: SquaresBoard = [];
+  const squares: SquaresBoard = Array.from({ length: MAX_HEIGHT }, (__row, rowIndex) =>
+    Array.from({ length: MAX_WIDTH }, (__col, colIndex) => {
+      const hasBomb = bombs.some(bomb => bomb.row === rowIndex && bomb.col === colIndex);
 
-  for (let r = 0; r < MAX_HEIGHT; r++) {
-    const row: Square[] = [];
-    for (let c = 0; c < MAX_WIDTH; c++) {
-      const hasBomb = bombs.some(bomb => bomb.row === r && bomb.col === c);
-      const visible = firstClick.row === r && firstClick.col === c;
-      const square: Square = {
+      return {
         hasBomb,
-        position: { row: r, col: c },
+        position: { row: rowIndex, col: colIndex },
         state: {
           flagged: false,
-          visible,
+          visible: rowIndex === firstClick.row && colIndex === firstClick.col,
           value: hasBomb ? SquareValue.bomb : null,
         },
       };
-      row.push(square);
-    }
-    squares.push(row);
-  }
+    }),
+  );
+
   import.meta.env.DEV && console.count('boardGeneration');
 
   const squaresAfterFirstClick = revealSquare(squares, firstClick);
@@ -85,11 +74,13 @@ export const revealSurroundingSquares = (
     squareValue === flagsAroundSquare(squares, clickCoords)
   ) {
     let newSquares: SquaresBoard = structuredClone(squares);
-    newSquares.flat().forEach(({ state, position }) => {
-      if (!state.flagged && !state.visible && isSquareAround(position, clickCoords)) {
+    const nonVisibleSquares = nonVisibleSquaresAround(squares, clickCoords);
+
+    for (const position of nonVisibleSquares) {
+      if (!squares[position.row][position.col].state.flagged) {
         newSquares = revealSquare(newSquares, position);
       }
-    });
+    }
 
     return newSquares;
   }
@@ -144,8 +135,7 @@ const isSquareAround = (
 
 const generateBombs = (firstClick: SquareCoords): SquareCoords[] => {
   const { row: clickedRow, col: clickedCol } = firstClick;
-
-  const bombs: SquareCoords[] = [];
+  const bombs = new Set<SquareCoords>();
   const randomCoord = (MAX: number) => (Math.random() * MAX) << 0;
 
   for (let i = 0; i < NUM_BOMBS; i++) {
@@ -156,13 +146,17 @@ const generateBombs = (firstClick: SquareCoords): SquareCoords[] => {
 
     const validLocation =
       !(newBomb.row === clickedRow && newBomb.col === clickedCol) &&
-      !bombs.some(bomb => bomb.row === newBomb.row && bomb.col === newBomb.col) &&
+      !bombs.has(newBomb) &&
       !isSquareAround(newBomb, firstClick);
 
-    validLocation ? bombs.push(newBomb) : --i;
+    if (validLocation) {
+      bombs.add(newBomb);
+    } else {
+      --i;
+    }
   }
 
-  return bombs;
+  return [...bombs];
 };
 
 const getSquareValue = (squares: SquaresBoard, squareCoords: SquareCoords) =>
