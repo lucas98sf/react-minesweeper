@@ -1,46 +1,35 @@
-import { MouseEventHandler, ReactElement } from 'react';
+import { MAX_WIDTH, MAX_HEIGHT } from '@/config/constants';
 
-export enum SquareValue {
-  zero,
-  one,
-  two,
-  three,
-  four,
-  five,
-  six,
-  seven,
-  eight,
-  bomb,
-}
+type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N
+  ? Acc[number]
+  : Enumerate<N, [...Acc, Acc['length']]>;
 
-export type Content = ReactElement | SquareValue | null;
+export type IntRange<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>;
 
-export type SquareProps = {
-  className: string;
-  onClick: MouseEventHandler<HTMLButtonElement>;
-  onAuxClick: MouseEventHandler<HTMLButtonElement>;
-  content: Content;
+export type SquarePosition<
+  X extends number = typeof MAX_WIDTH,
+  Y extends number = typeof MAX_HEIGHT,
+> = {
+  readonly row: IntRange<0, X>;
+  readonly col: IntRange<0, Y>;
 };
 
+export type SquareValue = null | IntRange<0, 9> | 'mine';
+
 export type Square = {
-  hasBomb: boolean;
-  position: SquareCoords;
+  readonly surroundings: SquarePosition[];
+  readonly position: SquarePosition;
+  value?: SquareValue;
   state: {
+    revealed: boolean;
     flagged: boolean;
-    visible: boolean;
-    value: SquareValue | null;
   };
 };
 
-export type SquaresBoard = Square[][];
+export type Board = Square[][];
 
 export enum MouseButton {
   left,
   middle,
   right,
 }
-
-export type SquareCoords = {
-  row: number;
-  col: number;
-};

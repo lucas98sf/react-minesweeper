@@ -6,8 +6,7 @@
 - [X] gamewin
 - [X] middleclick logic
 - [ ] configuration screen
-- [X] prevent first click to be in a bomb
+- [X] prevent first click to be in a mine
 - [X] ensure game is always winnable without needing to take a guess
 - [ ] isBoardSolvable optimization
-- [ ] question marks
 - [ ] readme
