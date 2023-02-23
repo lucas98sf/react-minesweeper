@@ -48,7 +48,7 @@ export const generateSquaresValues = (firstClick: SquarePosition): Board => {
     }
   }
 
-  /*import.meta.env.DEV &&*/ console.count('boardGeneration');
+  import.meta.env.DEV && console.count('boardGeneration');
 
   const newSquares = revealSquare(squares, firstClick);
 
@@ -147,7 +147,7 @@ export const isBoardSolvable = (squares: Board) => {
   let guaranteedMines = getGuaranteedMines(squaresMut);
   let guaranteedNonMines = getGuaranteedNonMines(squaresMut);
   prettyPrintBoard(squaresMut, 'initial');
-  /*import.meta.env.DEV &&*/ console.time('isBoardSolvable');
+  import.meta.env.DEV && console.time('isBoardSolvable');
 
   while (guaranteedMines.length || guaranteedNonMines.length) {
     for (const { row, col } of guaranteedMines) {
@@ -178,16 +178,16 @@ export const isBoardSolvable = (squares: Board) => {
     guaranteedMines = getGuaranteedMines(squaresMut);
     guaranteedNonMines = getGuaranteedNonMines(squaresMut);
   }
-  /*import.meta.env.DEV &&*/ console.timeEnd('isBoardSolvable');
+  import.meta.env.DEV && console.timeEnd('isBoardSolvable');
   prettyPrintBoard(squaresMut, 'final');
 
   return isGameWon(squaresMut);
 };
 
 const prettyPrintBoard = (squares: Board, message?: string): void => {
-  // if (import.meta.env.MODE !== 'testing') {
-  //   return;
-  // }
+  if (import.meta.env.MODE !== 'testing') {
+    return;
+  }
 
   const board = squares
     .flatMap(row => [row, '\n'])
