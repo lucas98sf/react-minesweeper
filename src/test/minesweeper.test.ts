@@ -1,18 +1,20 @@
+import { describe, expect, it } from 'vitest';
+
+import { NUM_MINES } from '@/config/constants';
 import {
   generateEmptySquares,
+  generateMines,
   generateSquaresValues,
+  isBoardSolvable,
+  isGameLost,
+  isGameWon,
   revealSquare,
   revealSurroundingSquares,
   toggleSquareFlag,
-  isGameLost,
-  isGameWon,
-  isBoardSolvable,
-  generateMines,
 } from '@/functions/minesweeper';
-import { describe, it, expect } from 'vitest';
 import { Board, SquarePosition } from '@/types';
+
 import * as mocks from './mocks';
-import { NUM_MINES } from '@/config/constants';
 
 // almost everything written by chatgpt btw
 

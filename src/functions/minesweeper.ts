@@ -1,5 +1,5 @@
-import { NUM_MINES, MAX_HEIGHT, MAX_WIDTH } from '@/config/constants';
-import { Square, Board, SquarePosition, SquareValue, IntRange } from '@/types';
+import { MAX_HEIGHT, MAX_WIDTH, NUM_MINES } from '@/config/constants';
+import { Board, IntRange, Square, SquarePosition, SquareValue } from '@/types';
 
 //TODO: organize this file
 export const generateEmptySquares = () => {

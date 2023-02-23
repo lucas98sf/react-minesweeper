@@ -1,17 +1,19 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Square as SquareType, MouseButton, SquarePosition, Board as BoardType } from '@/types';
+import React, { useEffect, useRef, useState } from 'react';
+
 import {
   generateEmptySquares,
   generateSquaresValues,
+  isGameLost,
+  isGameWon,
   revealSquare,
   revealSurroundingSquares,
   toggleSquareFlag,
-  isGameLost,
-  isGameWon,
 } from '@/functions/minesweeper';
+import { Board as BoardType, MouseButton, Square as SquareType, SquarePosition } from '@/types';
+
+import { Flag } from './Flag';
 import { Mine } from './Mine';
 import { Square } from './Square';
-import { Flag } from './Flag';
 
 export function Board() {
   const [squares, setSquares] = useState<BoardType>(generateEmptySquares());

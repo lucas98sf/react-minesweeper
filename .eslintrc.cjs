@@ -1,12 +1,15 @@
 module.exports = {
   extends: [
     'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
     'plugin:jsx-a11y/recommended',
     'plugin:react/jsx-runtime',
-    'plugin:@typescript-eslint/recommended',
     'eslint-config-prettier',
   ],
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint', 'simple-import-sort'],
+  root: true,
   env: {
     browser: true,
     es2021: true,
@@ -18,6 +21,8 @@ module.exports = {
     },
   },
   rules: {
+    'simple-import-sort/imports': 'error',
+    'simple-import-sort/exports': 'error',
     'import/prefer-default-export': 'off',
     'no-param-reassign': ['error', { props: true }],
     curly: ['error', 'all'],

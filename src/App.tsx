@@ -1,6 +1,7 @@
-import { Board } from '@/components/Board';
-import './App.css';
 import 'virtual:fonts.css';
+import './App.css';
+
+import { Board } from '@/components/Board';
 
 function App() {
   return (
