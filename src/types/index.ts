@@ -1,4 +1,4 @@
-import { MAX_WIDTH, MAX_HEIGHT } from '@/config/constants';
+import { MAX_HEIGHT, MAX_WIDTH } from '@/config/constants';
 
 type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N
   ? Acc[number]
