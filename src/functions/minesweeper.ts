@@ -1,4 +1,4 @@
-import { NUM_BOMBS, MAX_HEIGHT, MAX_WIDTH } from '@/config/constants';
+import { NUM_MINES, MAX_HEIGHT, MAX_WIDTH } from '@/config/constants';
 import { Square, Board, SquarePosition, SquareValue, IntRange } from '@/types';
 
 //TODO: organize this file
@@ -61,10 +61,10 @@ export const generateSquaresValues = (firstClick: SquarePosition): Board => {
 
 export const generateMines = (firstClick: SquarePosition): SquarePosition[] => {
   const { row: clickedRow, col: clickedCol } = firstClick;
-  const mines = new Set<SquarePosition>();
+  const mines: SquarePosition[] = [];
   const randomPosition = (MAX: number) => ((Math.random() * MAX) << 0) as IntRange<0, typeof MAX>;
 
-  for (let i = 0; i < NUM_BOMBS; i++) {
+  while (mines.length < NUM_MINES) {
     const newMine: SquarePosition = {
       row: randomPosition(MAX_HEIGHT),
       col: randomPosition(MAX_WIDTH),
@@ -73,16 +73,14 @@ export const generateMines = (firstClick: SquarePosition): SquarePosition[] => {
     const validLocation =
       Math.abs(newMine.row - clickedRow) > 1 &&
       Math.abs(newMine.col - clickedCol) > 1 &&
-      !mines.has(newMine);
+      !mines.some(mine => mine.row === newMine.row && mine.col === newMine.col);
 
     if (validLocation) {
-      mines.add(newMine);
-    } else {
-      --i;
+      mines.push(newMine);
     }
   }
 
-  return [...mines];
+  return mines;
 };
 
 export const revealSquare = (squares: Board, { row, col }: SquarePosition) => {

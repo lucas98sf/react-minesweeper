@@ -7,10 +7,12 @@ import {
   isGameLost,
   isGameWon,
   isBoardSolvable,
+  generateMines,
 } from '@/functions/minesweeper';
 import { describe, it, expect } from 'vitest';
 import { Board, SquarePosition } from '@/types';
 import * as mocks from './mocks';
+import { NUM_MINES } from '@/config/constants';
 
 // almost everything written by chatgpt btw
 
@@ -28,6 +30,15 @@ describe('minesweeper logic', () => {
           ]),
         ]),
       );
+    });
+  });
+
+  describe('generateMines', () => {
+    it('generates the correct amount of mines', () => {
+      const firstClick: SquarePosition = { row: 0, col: 0 };
+      const mines = generateMines(firstClick);
+
+      expect(mines).toHaveLength(NUM_MINES);
     });
   });
 
@@ -50,6 +61,8 @@ describe('minesweeper logic', () => {
           ]),
         ]),
       );
+
+      expect(squares.flat().filter(square => square.value === 'mine')).toHaveLength(NUM_MINES);
     });
   });
 
