@@ -1,13 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  Square as SquareType,
-  SquareProps,
-  SquareValue,
-  MouseButton,
-  Content,
-  SquareCoords,
-  SquaresBoard,
-} from '@/types';
+import { Square as SquareType, MouseButton, SquarePosition, Board as BoardType } from '@/types';
 import {
   generateEmptySquares,
   generateSquaresValues,
@@ -17,12 +9,12 @@ import {
   isGameLost,
   isGameWon,
 } from '@/functions/minesweeper';
-import { Bomb } from './Bomb';
+import { Mine } from './Mine';
 import { Square } from './Square';
 import { Flag } from './Flag';
 
 export function Board() {
-  const [squares, setSquares] = useState<SquaresBoard>(generateEmptySquares());
+  const [squares, setSquares] = useState<BoardType>(generateEmptySquares());
   const isFirstClick = useRef<boolean>(true);
 
   document.addEventListener('contextmenu', e => {
@@ -32,10 +24,10 @@ export function Board() {
     }
   }); //dont show context menu on right click
 
-  const handleClick = (button: MouseButton, clickedCoords: SquareCoords): void => {
+  const handleClick = (button: MouseButton, clickedCoords: SquarePosition): void => {
     const { row, col } = clickedCoords;
     const clickedSquare = squares[row][col];
-    const { visible, flagged } = clickedSquare.state;
+    const { revealed: visible, flagged } = clickedSquare.state;
 
     //TODO: move this logic to inside minesweeper.ts
     if (isFirstClick.current) {
@@ -66,27 +58,26 @@ export function Board() {
     }
   });
 
-  const getContent = (square: SquareType): Content => {
-    const { visible, flagged, value } = square.state;
+  const getContent = ({ state: { revealed, flagged }, value }: SquareType) => {
     if (flagged) {
       return <Flag />;
     }
-    if (visible && value) {
-      return square.hasBomb ? <Bomb /> : value;
+    if (revealed && value) {
+      return value === 'mine' ? <Mine /> : value;
     }
     return null;
   };
 
   const board = squares.map((rows, row) => {
-    const generatedRow = rows.map((column, col) => {
+    const generatedRow = rows.map((_, col) => {
       const square: SquareType = squares[row][col];
-      const props: SquareProps = {
+      const props = {
         className:
-          square.state.visible && square.state.value !== null
-            ? `square ${SquareValue[square.state.value]}`
-            : 'square',
-        onClick: (e: React.MouseEvent<HTMLElement>) => handleClick(e.button, { row, col }),
-        onAuxClick: (e: React.MouseEvent<HTMLElement>) => handleClick(e.button, { row, col }),
+          square.state.revealed && square.value !== undefined ? `square-${square.value}` : 'square',
+        onClick: (e: React.MouseEvent<HTMLElement>) =>
+          handleClick(e.button, { row, col } as SquarePosition),
+        onAuxClick: (e: React.MouseEvent<HTMLElement>) =>
+          handleClick(e.button, { row, col } as SquarePosition),
         content: getContent(square),
       };
       return <Square key={`${row}-${col}`} {...props} />;

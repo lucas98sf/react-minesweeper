@@ -1,10 +1,13 @@
-import { SquareProps } from '@/types';
+import type { MouseEventHandler } from 'react';
 
-export function Square(props: SquareProps) {
-  const { className, onClick, onAuxClick, content } = props;
-  return (
-    <button className={className} onClick={onClick} onAuxClick={onAuxClick}>
-      {content}
-    </button>
-  );
+type Props = {
+  className: string;
+  onClick: MouseEventHandler<HTMLButtonElement>;
+  onAuxClick: MouseEventHandler<HTMLButtonElement>;
+  content: React.ReactNode;
+};
+
+export function Square(props: Props) {
+  const { content, ...rest } = props;
+  return <button {...rest}>{content}</button>;
 }
