@@ -12,7 +12,7 @@ body {
 
 @font-face {
   font-family: 'MineSweeper';
-  src: url('mine-sweeper.ttf') format('truetype');
+  src: local('MineSweeper') format('truetype');
 }
 
 .board {
@@ -94,7 +94,7 @@ button {
 .flag {
   max-width: -webkit-fill-available;
   max-width: -moz-available;
-  color: crimson;
+  padding-bottom: 7px;
 }
 
 @media only screen and (max-width: 768px) {
