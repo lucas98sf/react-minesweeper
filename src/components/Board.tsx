@@ -1,64 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 
-import {
-  generateEmptySquares,
-  generateSquaresValues,
-  isGameLost,
-  isGameWon,
-  revealSquare,
-  revealSurroundingSquares,
-  toggleSquareFlag,
-} from '@/functions/minesweeper';
-import { Board as BoardType, MouseButton, Square as SquareType, SquarePosition } from '@/types';
+import { useMinesweeper } from '@/hooks/useMinesweeper';
+import { Square as SquareType, SquarePosition } from '@/types';
 
 import { Flag } from './Flag';
 import { Mine } from './Mine';
 import { Square } from './Square';
 
 export function Board() {
-  const [squares, setSquares] = useState<BoardType>(generateEmptySquares());
-  const isFirstClick = useRef<boolean>(true);
-
-  document.addEventListener('contextmenu', e => {
-    const target = e.target as HTMLElement;
-    if (target?.tagName !== 'BODY') {
-      e.preventDefault();
-    }
-  }); //dont show context menu on right click
-
-  const handleClick = (button: MouseButton, clickedCoords: SquarePosition): void => {
-    const { row, col } = clickedCoords;
-    const clickedSquare = squares[row][col];
-    const { revealed: visible, flagged } = clickedSquare.state;
-
-    //TODO: move this logic to inside minesweeper.ts
-    if (isFirstClick.current) {
-      isFirstClick.current = false;
-      return setSquares(generateSquaresValues(clickedCoords));
-    }
-
-    if (button === MouseButton.left && !(visible || flagged)) {
-      setSquares(revealSquare(squares, clickedCoords));
-    }
-
-    if (button === MouseButton.middle && visible) {
-      setSquares(revealSurroundingSquares(squares, clickedCoords));
-    }
-
-    if (button === MouseButton.right && !visible) {
-      setSquares(toggleSquareFlag(squares, clickedCoords));
-    }
-    //--------------------
-  };
-
-  useEffect(() => {
-    if (isGameLost(squares)) {
-      return alert('Game Over');
-    }
-    if (isGameWon(squares)) {
-      return alert('You won!');
-    }
-  });
+  const { board, setBoard, handleClick, reset } = useMinesweeper({ guessFree: true });
 
   const getContent = ({ state: { revealed, flagged }, value }: SquareType) => {
     if (flagged) {
@@ -70,26 +20,49 @@ export function Board() {
     return null;
   };
 
-  const board = squares.map((rows, row) => {
-    const generatedRow = rows.map((_, col) => {
-      const square: SquareType = squares[row][col];
-      const props = {
-        className:
-          square.state.revealed && square.value !== undefined ? `square-${square.value}` : 'square',
-        onClick: (e: React.MouseEvent<HTMLElement>) =>
-          handleClick(e.button, { row, col } as SquarePosition),
-        onAuxClick: (e: React.MouseEvent<HTMLElement>) =>
-          handleClick(e.button, { row, col } as SquarePosition),
-        content: getContent(square),
-      };
-      return <Square key={`${row}-${col}`} {...props} />;
-    });
-    return (
-      <div key={row} className="row">
-        {generatedRow}
-      </div>
-    );
-  });
+  const resetBoard = () => {
+    setBoard(reset() ?? board);
+  };
 
-  return <div className="board">{board}</div>;
+  return (
+    <div className="board">
+      <center>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          {board.flagsLeft} <Flag />
+        </div>
+        <button className="reset" onClick={resetBoard}>
+          🔁
+        </button>
+      </center>
+      <br />
+      {board.squares.map((rows, row) => {
+        const generatedRow = rows.map((_, col) => {
+          const square: SquareType = board.squares[row][col];
+          const props = {
+            className:
+              square.state.revealed && square.value !== undefined
+                ? `square-${square.value}`
+                : 'square',
+            onClick: (e: React.MouseEvent<HTMLElement>) =>
+              setBoard(handleClick(e, { row, col } as SquarePosition) ?? board),
+            onAuxClick: (e: React.MouseEvent<HTMLElement>) =>
+              setBoard(handleClick(e, { row, col } as SquarePosition) ?? board),
+            content: getContent(square),
+          };
+          return <Square key={`${row}-${col}`} {...props} />;
+        });
+        return (
+          <div key={row} className="row">
+            {generatedRow}
+          </div>
+        );
+      })}
+    </div>
+  );
 }
