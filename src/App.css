@@ -19,20 +19,23 @@ body {
   background-color: grey;
 }
 
-button {
+.board * {
+  font-size: 30px;
+  font-weight: bolder;
+  font-family: 'MineSweeper';
+}
+
+.board button {
   width: 60px;
   height: 60px;
   vertical-align: middle;
-  background-color: lightgrey;
-  box-shadow: inset -3px -3px grey, inset 3px 3px white;
   margin: 1px;
   border: 0px;
 }
 
-:is(button, .mine) {
-  font-size: 30px;
-  font-weight: bolder;
-  font-family: 'MineSweeper';
+.square {
+  background-color: lightgrey;
+  box-shadow: inset -3px -3px grey, inset 3px 3px white;
 }
 
 :is(
@@ -94,6 +97,7 @@ button {
 .flag {
   max-width: -webkit-fill-available;
   max-width: -moz-available;
+  font-size: 32px;
   padding-bottom: 7px;
 }
 
