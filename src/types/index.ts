@@ -49,9 +49,8 @@ export type GameResult =
 
 export type BoardState = {
   readonly config: BoardConfig;
-  readonly flagsLeft: typeof maxMines;
   readonly squares: Squares;
-  readonly gameState: GameResult;
+  readonly flagsLeft: typeof maxMines;
 };
 
 export enum MouseButton {
