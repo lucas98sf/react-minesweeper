@@ -1,64 +1,53 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 
-import {
-  generateEmptySquares,
-  generateSquaresValues,
-  isGameLost,
-  isGameWon,
-  revealSquare,
-  revealSurroundingSquares,
-  toggleSquareFlag,
-} from '@/functions/minesweeper';
-import { Board as BoardType, MouseButton, Square as SquareType, SquarePosition } from '@/types';
+import { isTouchEvent, useLongPress, useMinesweeper } from '@/hooks';
+import { Square as SquareType, SquarePosition } from '@/types';
 
 import { Flag } from './Flag';
 import { Mine } from './Mine';
 import { Square } from './Square';
 
 export function Board() {
-  const [squares, setSquares] = useState<BoardType>(generateEmptySquares());
-  const isFirstClick = useRef<boolean>(true);
-
-  document.addEventListener('contextmenu', e => {
-    const target = e.target as HTMLElement;
-    if (target?.tagName !== 'BODY') {
-      e.preventDefault();
-    }
-  }); //dont show context menu on right click
-
-  const handleClick = (button: MouseButton, clickedCoords: SquarePosition): void => {
-    const { row, col } = clickedCoords;
-    const clickedSquare = squares[row][col];
-    const { revealed: visible, flagged } = clickedSquare.state;
-
-    //TODO: move this logic to inside minesweeper.ts
-    if (isFirstClick.current) {
-      isFirstClick.current = false;
-      return setSquares(generateSquaresValues(clickedCoords));
-    }
-
-    if (button === MouseButton.left && !(visible || flagged)) {
-      setSquares(revealSquare(squares, clickedCoords));
-    }
-
-    if (button === MouseButton.middle && visible) {
-      setSquares(revealSurroundingSquares(squares, clickedCoords));
-    }
-
-    if (button === MouseButton.right && !visible) {
-      setSquares(toggleSquareFlag(squares, clickedCoords));
-    }
-    //--------------------
-  };
-
-  useEffect(() => {
-    if (isGameLost(squares)) {
-      return alert('Game Over');
-    }
-    if (isGameWon(squares)) {
-      return alert('You won!');
-    }
+  const { board, setBoard, gameState, setGameState, handleClick, reset } = useMinesweeper({
+    guessFree: true,
   });
+
+  //WIP
+  const isSquarePosition = (obj: Record<string, unknown>): obj is SquarePosition => {
+    return 'row' in obj && 'col' in obj;
+  };
+  const handleSquareAction = useLongPress<
+    HTMLButtonElement & {
+      dataset: DOMStringMap | SquarePosition;
+    }
+  >(
+    {
+      // onLongPress: e => {
+      //   console.log('long press', e.currentTarget.dataset);
+      // },
+      onClick: e => {
+        // if ('touches' in e) {
+        //   return console.log('touch event');
+        // }
+        if (isTouchEvent(e)) {
+          return console.log('touch event');
+        }
+        if (isSquarePosition(e.currentTarget.dataset)) {
+          const newGame = handleClick(e, e.currentTarget.dataset);
+          // console.log(e.button, e.currentTarget.dataset);
+          if (!newGame) {
+            return;
+          }
+          setBoard(newGame.board);
+          setGameState(newGame.state);
+        }
+      },
+    },
+    {
+      delay: 300,
+      // shouldPreventDefault: true,
+    },
+  );
 
   const getContent = ({ state: { revealed, flagged }, value }: SquareType) => {
     if (flagged) {
@@ -70,26 +59,63 @@ export function Board() {
     return null;
   };
 
-  const board = squares.map((rows, row) => {
-    const generatedRow = rows.map((_, col) => {
-      const square: SquareType = squares[row][col];
-      const props = {
-        className:
-          square.state.revealed && square.value !== undefined ? `square-${square.value}` : 'square',
-        onClick: (e: React.MouseEvent<HTMLElement>) =>
-          handleClick(e.button, { row, col } as SquarePosition),
-        onAuxClick: (e: React.MouseEvent<HTMLElement>) =>
-          handleClick(e.button, { row, col } as SquarePosition),
-        content: getContent(square),
-      };
-      return <Square key={`${row}-${col}`} {...props} />;
-    });
-    return (
-      <div key={row} className="row">
-        {generatedRow}
-      </div>
-    );
-  });
+  useEffect(() => {
+    if (gameState.gameOver) {
+      //temporary
+      setTimeout(() => {
+        alert(gameState.result === 'win' ? 'You won!' : 'You lost...');
+      }, 200);
+    }
+  }, [board, gameState]);
 
-  return <div className="board">{board}</div>;
+  const resetBoard = () => {
+    const { board, state } = reset();
+    setBoard(board);
+    setGameState(state);
+  };
+
+  return (
+    <div className="board">
+      <center>
+        <div
+          //FIXME
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          {board.flagsLeft} <Flag />
+        </div>
+        <Square className="reset unrevealed" onClick={resetBoard}>
+          {gameState.result === 'win' ? '😎' : gameState.result === 'lose' ? '😵' : '🙂'}
+        </Square>
+      </center>
+      <br />
+      {board.squares.map((rows, row) => {
+        const generatedRow = rows.map((_, col) => {
+          const square: SquareType = board.squares[row][col];
+          const props = {
+            className:
+              square.state.revealed && square.value !== undefined
+                ? `square-${square.value}`
+                : 'unrevealed',
+            'data-row': row,
+            'data-col': col,
+            surroundings: square.surroundings,
+          };
+          return (
+            <Square {...handleSquareAction} key={`${row}-${col}`} {...props}>
+              {getContent(square)}
+            </Square>
+          );
+        });
+        return (
+          <div key={row} className="row">
+            {generatedRow}
+          </div>
+        );
+      })}
+    </div>
+  );
 }
