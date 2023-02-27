@@ -33,7 +33,7 @@ body {
   border: 0px;
 }
 
-.square {
+.unrevealed {
   background-color: lightgrey;
   box-shadow: inset -3px -3px grey, inset 3px 3px white;
 }
@@ -47,7 +47,8 @@ body {
     .square-5,
     .square-6,
     .square-7,
-    .square-8
+    .square-8,
+    .revealed
   ) {
   background-color: darkgrey;
   box-shadow: 0px 0px;

@@ -122,7 +122,7 @@ describe('minesweeper logic', () => {
         .find(square => square.value === 'mine')!.position;
       minesweeper.handleAction(MouseButton['left'], minePosition);
 
-      expect(minesweeper.checkGameResult()).toMatchObject({
+      expect(minesweeper.state).toMatchObject({
         result: 'lose',
         gameOver: true,
       });
@@ -148,7 +148,7 @@ describe('minesweeper logic', () => {
         minesweeper.handleAction(MouseButton['left'], position);
       }
 
-      expect(minesweeper.checkGameResult()).toMatchObject({
+      expect(minesweeper.state).toMatchObject({
         result: 'win',
         gameOver: true,
       });

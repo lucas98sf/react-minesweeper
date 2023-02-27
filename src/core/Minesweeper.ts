@@ -192,10 +192,10 @@ export class Minesweeper {
     return allSquaresRevealedOrFlagged;
   }
 
-  public checkGameResult(): GameResult {
+  private checkGameResult() {
     const gameResult = this.isGameWon() ? 'win' : this.isGameLost() ? 'lose' : null;
 
-    return {
+    this.gameState = {
       ...this.gameState,
       ...(gameResult
         ? {
@@ -367,16 +367,20 @@ export class Minesweeper {
     return result;
   }
 
-  public handleAction(button: MouseButton, clickedCoords: SquarePosition): GameResult {
+  public handleAction(button: MouseButton, clickedCoords: SquarePosition): this | false {
     const { row, col } = clickedCoords;
     const clickedSquare = this.squares[row][col];
     const { revealed: visible, flagged } = clickedSquare.state;
+
+    if (this.gameState.gameOver) {
+      return false;
+    }
 
     if (this.isFirstMove) {
       this.isFirstMove = false;
       this.generateSquaresValues(clickedCoords);
 
-      return this.gameState;
+      return this;
     }
 
     if (button === MouseButton['left'] && !(visible || flagged)) {
@@ -391,16 +395,20 @@ export class Minesweeper {
       this.toggleSquareFlag(clickedCoords);
     }
 
-    return this.checkGameResult();
+    this.checkGameResult();
+    return this;
   }
 
   public get board(): BoardState {
     return {
       squares: this.squares,
       flagsLeft: this.flagsLeft,
-      gameState: this.gameState,
       config: this.config,
     };
+  }
+
+  public get state(): GameResult {
+    return this.gameState;
   }
 
   public reset(): this {
