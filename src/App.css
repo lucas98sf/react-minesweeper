@@ -2,8 +2,6 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
     'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: greyscale;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,23 +17,36 @@ body {
   background-color: grey;
 }
 
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
 .board * {
-  font-size: 30px;
+  font-size: 1.5rem;
   font-weight: bolder;
   font-family: 'MineSweeper';
 }
 
 .board button {
-  width: 60px;
-  height: 60px;
-  vertical-align: middle;
+  width: 2.5rem;
+  height: 2.5rem;
   margin: 1px;
   border: 0px;
+  vertical-align: middle;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .unrevealed {
   background-color: lightgrey;
-  box-shadow: inset -3px -3px grey, inset 3px 3px white;
+  box-shadow: inset -0.15rem -0.15rem grey, inset 0.15em 0.15rem white;
+}
+
+:is(.flag, .unrevealed) {
+  padding-bottom: 0.35rem;
 }
 
 :is(
@@ -90,23 +101,20 @@ body {
   color: grey;
 }
 
-.mine {
-  max-width: -webkit-fill-available;
-  max-width: -moz-available;
-}
-
-.flag {
-  max-width: -webkit-fill-available;
-  max-width: -moz-available;
-  font-size: 32px;
-  padding-bottom: 7px;
+@media only screen and (max-width: 1024px) {
+  html {
+    font-size: 0.8rem;
+  }
 }
 
 @media only screen and (max-width: 768px) {
-  button {
-    width: 30px;
-    height: 30px;
-    font-size: 18px;
-    box-shadow: inset -2px -2px grey, inset 2px 2px white;
+  html {
+    font-size: 0.6rem;
+  }
+}
+
+@media only screen and (max-height: 700px) {
+  html {
+    font-size: 0.5rem;
   }
 }

@@ -1,4 +1,4 @@
-import { MAX_HEIGHT, MAX_WIDTH } from '@/config/constants';
+import { MAX_HEIGHT, MAX_WIDTH, MIN_HEIGHT, MIN_WIDTH } from '@/config/constants';
 
 type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N
   ? Acc[number]
@@ -33,19 +33,15 @@ const maxMines = MAX_HEIGHT * MAX_WIDTH - 1;
 export type BoardConfig = {
   guessFree: boolean;
   minesNumber: typeof maxMines;
-  width: IntRange<2, Add<1, typeof MAX_WIDTH>>;
-  height: IntRange<2, Add<1, typeof MAX_HEIGHT>>;
+  width: IntRange<typeof MIN_WIDTH, Add<1, typeof MAX_WIDTH>>;
+  height: IntRange<typeof MIN_HEIGHT, Add<1, typeof MAX_HEIGHT>>;
+  randomizer: () => number;
 };
 
-export type GameResult =
-  | {
-      gameOver: true;
-      result: 'win' | 'lose';
-    }
-  | {
-      gameOver: false;
-      result: null;
-    };
+export type GameResult = {
+  gameOver: boolean;
+  result: 'win' | 'lose' | null;
+};
 
 export type BoardState = {
   readonly config: BoardConfig;

@@ -15,7 +15,7 @@ describe('minesweeper logic', () => {
     minesweeper = new Minesweeper({
       guessFree: true,
     });
-    firstClick = { row: 3, col: 3 };
+    firstClick = { row: 2, col: 2 };
   });
 
   describe('generateEmptySquares', () => {
@@ -35,7 +35,7 @@ describe('minesweeper logic', () => {
 
   describe('generateMines', () => {
     it('generates the correct amount of mines', () => {
-      minesweeper.handleAction(MouseButton['left'], firstClick);
+      minesweeper.handleAction(MouseButton.left, firstClick);
 
       const mines = minesweeper.board.squares.flat().filter(square => square.value === 'mine');
       expect(mines).toHaveLength(NUM_MINES);
@@ -44,7 +44,7 @@ describe('minesweeper logic', () => {
 
   describe('generateSquaresValues', () => {
     it('generates squares with the correct values', () => {
-      minesweeper.handleAction(MouseButton['left'], firstClick);
+      minesweeper.handleAction(MouseButton.left, firstClick);
 
       expect(minesweeper.board.squares).toEqual(
         expect.arrayContaining([
@@ -70,8 +70,8 @@ describe('minesweeper logic', () => {
   describe('revealSquare', () => {
     it('reveals the correct square', () => {
       const clickCoords: SquarePosition = { row: 1, col: 1 };
-      minesweeper.handleAction(MouseButton['left'], firstClick);
-      minesweeper.handleAction(MouseButton['left'], clickCoords);
+      minesweeper.handleAction(MouseButton.left, firstClick);
+      minesweeper.handleAction(MouseButton.left, clickCoords);
 
       expect(minesweeper.board.squares[clickCoords.row][clickCoords.col].state.revealed).toBe(true);
     });
@@ -79,7 +79,7 @@ describe('minesweeper logic', () => {
 
   describe('revealSurroundingSquares', () => {
     it('reveals the correct surrounding squares of first click, without mines nearby', () => {
-      minesweeper.handleAction(MouseButton['left'], firstClick);
+      minesweeper.handleAction(MouseButton.left, firstClick);
 
       expect(
         minesweeper.board.squares[firstClick.row][firstClick.col].surroundings
@@ -95,7 +95,7 @@ describe('minesweeper logic', () => {
 
   describe('toggleSquareFlag', () => {
     it('toggles the flag on the correct square', () => {
-      minesweeper.handleAction(MouseButton['left'], firstClick);
+      minesweeper.handleAction(MouseButton.left, firstClick);
       expect(minesweeper.board.flagsLeft).toBe(NUM_MINES);
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -103,11 +103,11 @@ describe('minesweeper logic', () => {
         .flat()
         .find(square => square.value === 'mine')!.position;
 
-      minesweeper.handleAction(MouseButton['right'], clickCoords);
+      minesweeper.handleAction(MouseButton.right, clickCoords);
       expect(minesweeper.board.squares[clickCoords.row][clickCoords.col].state.flagged).toBe(true);
       expect(minesweeper.board.flagsLeft).toBe(NUM_MINES - 1);
 
-      minesweeper.handleAction(MouseButton['right'], clickCoords);
+      minesweeper.handleAction(MouseButton.right, clickCoords);
       expect(minesweeper.board.squares[clickCoords.row][clickCoords.col].state.flagged).toBe(false);
       expect(minesweeper.board.flagsLeft).toBe(NUM_MINES);
     });
@@ -115,12 +115,12 @@ describe('minesweeper logic', () => {
 
   describe('isGameLost', () => {
     it('returns true when a mine is revealed', () => {
-      minesweeper.handleAction(MouseButton['left'], firstClick);
+      minesweeper.handleAction(MouseButton.left, firstClick);
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const minePosition = minesweeper.board.squares
         .flat()
         .find(square => square.value === 'mine')!.position;
-      minesweeper.handleAction(MouseButton['left'], minePosition);
+      minesweeper.handleAction(MouseButton.left, minePosition);
 
       expect(minesweeper.state).toMatchObject({
         result: 'lose',
@@ -131,7 +131,7 @@ describe('minesweeper logic', () => {
 
   describe('isGameWon', () => {
     it('returns true when all mines are flagged or all squares are revealed', () => {
-      minesweeper.handleAction(MouseButton['left'], firstClick);
+      minesweeper.handleAction(MouseButton.left, firstClick);
 
       const mineSquares = minesweeper.board.squares
         .flat()
@@ -141,11 +141,11 @@ describe('minesweeper logic', () => {
         .filter(square => square.value !== 'mine');
 
       for (const { position } of mineSquares) {
-        minesweeper.handleAction(MouseButton['right'], position);
+        minesweeper.handleAction(MouseButton.right, position);
       }
 
       for (const { position } of safeSquares) {
-        minesweeper.handleAction(MouseButton['left'], position);
+        minesweeper.handleAction(MouseButton.left, position);
       }
 
       expect(minesweeper.state).toMatchObject({
@@ -164,6 +164,42 @@ describe('minesweeper logic', () => {
     it('should return false when board is not solvable', () => {
       expect(minesweeper.isBoardSolvable(mocks.needGuessBoard as Squares)).toBe(false);
       expect(minesweeper.isBoardSolvable(mocks.needGuessBoard2 as Squares)).toBe(false);
+    });
+
+    it('should solve an guaranteed non mine case', () => {
+      // hehe
+      // const _11211 = (squares: Squares) =>
+      //   squares
+      //     .flat()
+      //     .filter(
+      //       s =>
+      //         s.value === 'mine' &&
+      //         s.position.row === 0 &&
+      //         (s.position.col === 1 || s.position.col === 3),
+      //     ).length === 2;
+
+      // do {
+      //   minesweeper = new Minesweeper({
+      //     height: 3,
+      //     width: 5,
+      //     minesNumber: 2,
+      //   });
+      //   firstClick = { row: 2, col: 2 };
+      //   minesweeper.handleAction(MouseButton.left, firstClick);
+      // } while (!_11211(minesweeper.board.squares));
+      // expect(minesweeper.board.squares).toMatchInlineSnapshot();
+      // expect(
+      //   minesweeper.board.squares
+      //     .flat()
+      //     .map(s => s.value)
+      //     .join(''),
+      // ).toMatchInlineSnapshot('"1mine2mine11121100000"');
+      minesweeper = new Minesweeper({
+        height: 3,
+        width: 5,
+        minesNumber: 2,
+      });
+      expect(minesweeper.isBoardSolvable(mocks.pattern11211 as Squares)).toBe(true);
     });
   });
 });
