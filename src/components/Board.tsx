@@ -9,7 +9,7 @@ import { Square } from './Square';
 
 export function Board() {
   const { board, setBoard, gameState, setGameState, handleClick, reset } = useMinesweeper({
-    guessFree: true,
+    guessFree: false,
   });
 
   //WIP

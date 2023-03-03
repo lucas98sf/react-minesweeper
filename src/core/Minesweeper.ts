@@ -1,4 +1,4 @@
-import { MAX_HEIGHT, MAX_WIDTH, NUM_MINES } from '@/config/constants';
+import { MAX_HEIGHT, MAX_WIDTH, MIN_HEIGHT, MIN_WIDTH, NUM_MINES } from '@/config/constants';
 import {
   BoardConfig,
   BoardState,
@@ -20,6 +20,7 @@ export class Minesweeper {
     minesNumber: NUM_MINES,
     width: MAX_WIDTH,
     height: MAX_HEIGHT,
+    randomizer: Math.random,
   };
   private gameState: GameResult = {
     gameOver: false,
@@ -32,9 +33,30 @@ export class Minesweeper {
       ...this.configOverrides,
     };
 
-    if (this.config.minesNumber > this.config.width * this.config.height) {
+    if (this.config.minesNumber > this.config.width * this.config.height - 9) {
       throw new Error('Too many mines');
     }
+
+    if (this.config.minesNumber < 1) {
+      throw new Error('Too few mines');
+    }
+
+    if (this.config.width < MIN_WIDTH) {
+      throw new Error('Too few columns');
+    }
+
+    if (this.config.height < MIN_HEIGHT) {
+      throw new Error('Too few rows');
+    }
+
+    if (this.config.height > MAX_HEIGHT) {
+      throw new Error('Too many rows');
+    }
+
+    if (this.config.width > MAX_WIDTH) {
+      throw new Error('Too many columns');
+    }
+
     this.flagsLeft = this.config.minesNumber;
     this.squares = this.generateEmptySquares();
   }
@@ -103,18 +125,18 @@ export class Minesweeper {
   private generateMines(firstClick: SquarePosition): SquarePosition[] {
     const { row: clickedRow, col: clickedCol } = firstClick;
     const mines: SquarePosition[] = [];
-    const randomPosition = (MAX: number) => ((Math.random() * MAX) << 0) as IntRange<0, typeof MAX>;
+    const randomPosition = (MAX: typeof this.config.height | typeof this.config.width) =>
+      ((this.config.randomizer() * MAX) << 0) as IntRange<0, typeof MAX>;
 
-    while (mines.length < NUM_MINES) {
+    while (mines.length < this.config.minesNumber) {
       const newMine: SquarePosition = {
-        row: randomPosition(MAX_HEIGHT),
-        col: randomPosition(MAX_WIDTH),
+        row: randomPosition(this.config.height),
+        col: randomPosition(this.config.width),
       };
 
       const validLocation =
-        Math.abs(newMine.row - clickedRow) > 1 &&
-        Math.abs(newMine.col - clickedCol) > 1 &&
-        !mines.some(mine => mine.row === newMine.row && mine.col === newMine.col);
+        !mines.some(mine => mine.row === newMine.row && mine.col === newMine.col) &&
+        (Math.abs(newMine.row - clickedRow) > 1 || Math.abs(newMine.col - clickedCol) > 1);
 
       if (validLocation) {
         mines.push(newMine);
@@ -130,8 +152,8 @@ export class Minesweeper {
     );
   }
 
-  private flagsAroundSquare(square: Square, squares = this.squares): number {
-    return square.surroundings.filter(({ row, col }) => squares[row][col].state.flagged).length;
+  private flagsAroundSquare(square: Square, squares = this.squares) {
+    return square.surroundings.filter(({ row, col }) => squares[row][col].state.flagged);
   }
 
   private revealSquare({ row, col }: SquarePosition, squares = this.squares): void {
@@ -148,13 +170,10 @@ export class Minesweeper {
 
     if (
       revealedSquare.value !== undefined &&
-      this.nonRevealedSquaresAround(revealedSquare, squares).length &&
-      revealedSquare.value === this.flagsAroundSquare(revealedSquare, squares)
+      revealedSquare.value === this.flagsAroundSquare(revealedSquare, squares).length
     ) {
       for (const position of this.nonRevealedSquaresAround(revealedSquare, squares)) {
-        if (!squares[position.row][position.col].state.flagged) {
-          this.revealSquare(position, squares);
-        }
+        this.revealSquare(position, squares);
       }
     }
   }
@@ -196,63 +215,70 @@ export class Minesweeper {
     const gameResult = this.isGameWon() ? 'win' : this.isGameLost() ? 'lose' : null;
 
     this.gameState = {
-      ...this.gameState,
-      ...(gameResult
-        ? {
-            gameOver: true,
-            result: gameResult,
-          }
-        : {
-            gameOver: false,
-            result: gameResult,
-          }),
+      gameOver: !!gameResult,
+      result: gameResult,
     };
+  }
+
+  public static prettyPrintBoard(squares: Squares, message?: string) {
+    if (import.meta.env.MODE !== 'test') {
+      return;
+    }
+
+    const board = squares
+      .flatMap(row => [row, '\n'])
+      .flat()
+      .map(square => {
+        if (typeof square === 'string') {
+          return square;
+        }
+
+        const numbersEmojis = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣'];
+
+        if (square.state.revealed) {
+          if (square.value === 'mine') {
+            return '💣';
+          }
+          if (square.value) {
+            return numbersEmojis[square.value - 1];
+          }
+          return '⬛';
+        } else {
+          if (square.state.flagged) {
+            return '🚩';
+          }
+          return '⬜';
+        }
+      });
+    const resultingMessage = (message ?? '') + '\n' + ` ${board.join(' ')}`;
+
+    console.log(resultingMessage);
+    return resultingMessage
+      .split('\n')
+      .map(line => line.trim())
+      .filter(Boolean);
   }
 
   public isBoardSolvable(squares: Squares): boolean {
     const isRevealedNumberSquare = (square: Square): square is Square & { value: number } =>
       typeof square.value === 'number' && square.state.revealed;
 
-    const prettyPrintBoard = (squares: Squares, message?: string): void => {
-      if (import.meta.env.MODE !== 'testing') {
-        return;
-      }
-
-      const board = squares
-        .flatMap(row => [row, '\n'])
-        .flat()
-        .map(square => {
-          if (typeof square === 'string') {
-            return square;
+    const getGuaranteedMines = (squares: Squares) => {
+      const revealedNumberSquares = squares.flat().filter(isRevealedNumberSquare);
+      const guaranteedMines = revealedNumberSquares.reduce<{
+        mines: SquarePosition[];
+        nonMines: SquarePosition[];
+        okSquares: Square[];
+      }>(
+        (acc, square) => {
+          if (
+            acc.okSquares.some(
+              ({ position }) => JSON.stringify(position) === JSON.stringify(square.position),
+            )
+          ) {
+            return acc;
           }
 
-          const numbersEmojis = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣'];
-
-          if (square.state.revealed) {
-            if (square.value === 'mine') {
-              return '💣';
-            }
-            if (square.value) {
-              return numbersEmojis[square.value - 1];
-            }
-            return '⬛';
-          } else {
-            if (square.state.flagged) {
-              return '🚩';
-            }
-            return '⬜';
-          }
-        });
-
-      message && console.log(message + '\n');
-      return console.log(` ${board.join(' ')}`);
-    };
-
-    const getGuaranteedMines = (squares: Squares) =>
-      squares
-        .flat()
-        .filter(isRevealedNumberSquare)
-        .reduce<SquarePosition[]>((acc, square) => {
           const unrevealedSquaresAround = this.nonRevealedSquaresAround(square, squares);
           if (!unrevealedSquaresAround.length) {
             return acc;
@@ -260,109 +286,215 @@ export class Minesweeper {
 
           const hasGuaranteedMineAround =
             square.value ===
-            unrevealedSquaresAround.length + this.flagsAroundSquare(square, squares);
+            unrevealedSquaresAround.length + this.flagsAroundSquare(square, squares).length;
 
-          return hasGuaranteedMineAround ? [...acc, ...unrevealedSquaresAround] : acc;
-        }, []);
-
-    const getGuaranteedNonMines = (squares: Squares) =>
-      squares
-        .flat()
-        .filter(isRevealedNumberSquare)
-        .reduce<SquarePosition[]>((acc, square) => {
-          const unrevealedSquaresAround = this.nonRevealedSquaresAround(square, squares);
-          if (!unrevealedSquaresAround.length) {
-            return acc;
-          }
-          //TODO: fix this, it's not working
-          //for each unrevealed square, check if marking it will invalidate any of the surrounding squares
-          const hasGuaranteedNonMineAround = unrevealedSquaresAround.some(({ row, col }) => {
-            const newSquares = structuredClone(squares);
-            newSquares[row][col].state.flagged = true;
-
-            const unrevealedSquaresAroundNew = this.nonRevealedSquaresAround(square, squares);
-            if (!unrevealedSquaresAroundNew.length) {
-              return false;
+          if (hasGuaranteedMineAround) {
+            for (const position of unrevealedSquaresAround) {
+              if (!acc.mines.some(mine => JSON.stringify(mine) === JSON.stringify(position))) {
+                acc.mines.push(position);
+              }
             }
+            acc.okSquares.push(square);
+          } else {
+            /*
+             *     check if marking a square as mine will invalidate another around square value
+             *
+             *     in the example, marking (2, 0) as mine will invalidate the (0, 1) square,
+             *     as it would not be able to have a square without invalidating the (1, 1) square
+             *
+             *     so, (2, 0) is not a mine and can be revealed
+             *
+             *          0  1  2  3
+             *      0 - ?  ?  ?  ?
+             *      1 - 1  1  1  ?
+             *      2 - 0  0  0  ?
+             *
+             */
+            const checkUnrevealedSquaresAround = (
+              unrevealedSquaresAround: SquarePosition[],
+            ): void => {
+              for (const { row, col } of unrevealedSquaresAround
+                .sort(({ row, col }) => squares[row][col].surroundings.length)
+                .reverse()) {
+                const unrevealedSquare = squares[row][col]; // (0, 0);
 
-            return (
-              square.value ===
-              unrevealedSquaresAroundNew.length + this.flagsAroundSquare(square, squares) + 1
-            );
-          });
+                const surroundingValues = unrevealedSquare.surroundings.filter(({ row, col }) =>
+                  isRevealedNumberSquare(squares[row][col]),
+                ); // [(0, 1), (1, 1)]
 
-          return hasGuaranteedNonMineAround ? [...acc, ...unrevealedSquaresAround] : acc;
-        }, []);
+                const valuesIfMine = new Map<SquarePosition, 0 | 1>().set({ row, col }, 1);
 
-    const revealOkSquares = (squares: Squares): number => {
-      const okSquares = squares
-        .flat()
-        .filter(
-          square =>
-            square.state.revealed &&
-            square.value &&
-            this.flagsAroundSquare(square, squares) === square.value,
-        );
+                for (const { row, col } of surroundingValues) {
+                  const surroundingSquare = squares[row][col] as Square & { value: number }; // (0, 1)
 
-      let changeCount = 0,
-        revealedSquaresCount = squares.flat().filter(({ state: { revealed } }) => revealed).length;
+                  const surroundingUnrevealedSquares = this.nonRevealedSquaresAround(
+                    surroundingSquare,
+                    squares,
+                  ); // [(0, 0), (0, 1)]
 
-      for (const square of okSquares) {
-        this.revealSurroundingSquares(square.position, squares);
-        const newRevealedSquaresCount = squares
-          .flat()
-          .filter(({ state: { revealed } }) => revealed).length;
+                  const flagsAroundSurroundingSquare = this.flagsAroundSquare(
+                    surroundingSquare,
+                    squares,
+                  ); // 0
 
-        if (newRevealedSquaresCount !== revealedSquaresCount) {
-          revealedSquaresCount = newRevealedSquaresCount;
-          changeCount += 1;
-          // prettyPrintBoard(`revealed ${JSON.stringify(square.position)}`);
-        }
+                  if (flagsAroundSurroundingSquare.length) {
+                    for (const position of flagsAroundSurroundingSquare) {
+                      if (!valuesIfMine.has(position)) {
+                        valuesIfMine.set(position, 1);
+                      }
+                    }
+                  }
+
+                  const { maybeMinesAround, unknownSurroundingUnrevealedSquares } =
+                    surroundingUnrevealedSquares.reduce(
+                      (acc, position) => {
+                        // [(0, 0), (0, 1)]
+                        if (valuesIfMine.has(position)) {
+                          // (0, 0) -> 1
+                          return valuesIfMine.get(position) === 1
+                            ? {
+                                ...acc,
+                                maybeMinesAround: acc.maybeMinesAround + 1,
+                              }
+                            : {
+                                ...acc,
+                                maybeNonMinesAround: acc.maybeNonMinesAround + 1,
+                              };
+                        } else {
+                          acc.unknownSurroundingUnrevealedSquares.push(position);
+                        }
+
+                        /**
+                         * {
+                         *    maybeMinesAround: 1,
+                         *    maybeNonMinesAround: 0,
+                         *    unknownSurroundingUnrevealedSquares: [(0, 1)]
+                         * }
+                         */
+
+                        return acc;
+                      },
+                      {
+                        maybeMinesAround: 0,
+                        maybeNonMinesAround: 0,
+                        unknownSurroundingUnrevealedSquares: [] as SquarePosition[],
+                      },
+                    );
+                  console.log({
+                    surroundingSquare,
+                    maybeMinesAround,
+                    unknownSurroundingUnrevealedSquares,
+                  });
+                  if (
+                    maybeMinesAround > surroundingSquare.value ||
+                    maybeMinesAround + unknownSurroundingUnrevealedSquares.length <
+                      surroundingSquare.value
+                  ) {
+                    console.log('asjhkdhjksadhjkasdhjkashjkd');
+                    return checkUnrevealedSquaresAround(
+                      unrevealedSquaresAround.filter(
+                        square =>
+                          JSON.stringify(square) !== JSON.stringify(unrevealedSquare.position),
+                      ),
+                    );
+                  } else if (maybeMinesAround === surroundingSquare.value) {
+                    for (const unknownSquare of unknownSurroundingUnrevealedSquares) {
+                      if (!valuesIfMine.has(unknownSquare)) {
+                        valuesIfMine.set(unknownSquare, 0);
+                      }
+                    }
+                  } else if (
+                    maybeMinesAround + unknownSurroundingUnrevealedSquares.length ===
+                    surroundingSquare.value
+                  ) {
+                    for (const unknownSquare of unknownSurroundingUnrevealedSquares) {
+                      if (!valuesIfMine.has(unknownSquare)) {
+                        valuesIfMine.set(unknownSquare, 1);
+                      }
+                    }
+                  }
+                }
+
+                valuesIfMine.forEach((value, position) => {
+                  if (value === 0) {
+                    if (
+                      !acc.nonMines.some(mine => JSON.stringify(mine) === JSON.stringify(position))
+                    ) {
+                      console.log({ value, position });
+                      acc.nonMines.push(position);
+                    }
+                  } else {
+                    if (
+                      !acc.mines.some(mine => JSON.stringify(mine) === JSON.stringify(position))
+                    ) {
+                      console.log({ value, position });
+                      acc.mines.push(position);
+                    }
+                  }
+                });
+
+                // if (
+                //   !acc.okSquares.some(
+                //     ({ position }) => JSON.stringify(position) === JSON.stringify(square.position),
+                //   )
+                // ) {
+                //   acc.okSquares.push(square);
+                // }
+              }
+            };
+            checkUnrevealedSquaresAround(unrevealedSquaresAround);
+          }
+
+          return acc;
+        },
+        { mines: [], nonMines: [], okSquares: [] },
+      );
+
+      if (!guaranteedMines.okSquares.length) {
+        return {
+          mines: guaranteedMines.mines,
+          nonMines: guaranteedMines.nonMines,
+          okSquares: revealedNumberSquares.filter(
+            square =>
+              this.flagsAroundSquare(square, squares).length === square.value &&
+              this.nonRevealedSquaresAround(square, squares).length,
+          ),
+        };
       }
 
-      return changeCount;
+      return guaranteedMines;
     };
 
-    let squaresClone = structuredClone(squares);
-
+    const squaresClone = structuredClone(squares);
     let guaranteedMines = getGuaranteedMines(squaresClone);
-    // TODO: remove coment when getGuaranteedNonMines is fixed
-    const guaranteedNonMines: ReturnType<typeof getGuaranteedNonMines> = []; //getGuaranteedNonMines(squaresClone);
-    prettyPrintBoard(squaresClone, 'initial');
+
+    Minesweeper.prettyPrintBoard(squaresClone, 'initial');
     import.meta.env.DEV && console.time('isBoardSolvable');
 
-    while (guaranteedMines.length || guaranteedNonMines.length) {
-      for (const { row, col } of guaranteedMines) {
+    while (Object.values(guaranteedMines).flat().length) {
+      for (const { row, col } of guaranteedMines.mines) {
         const mine = squaresClone[row][col];
-        if (!mine.state.flagged) {
-          this.toggleSquareFlag(mine.position, squaresClone);
-          // prettyPrintBoard(`flagged ${JSON.stringify(mine.position)}`);
-        }
+        this.toggleSquareFlag(mine.position, squaresClone);
+        // Minesweeper.prettyPrintBoard(squaresClone, `flagged ${JSON.stringify(mine.position)}`);
       }
 
-      // if (guaranteedNonMines.length) {
-      //   for (const { row, col } of guaranteedNonMines) {
-      //     const nonMine = squaresClone[row][col];
-      //     if (!nonMine.state.revealed) {
-      //       this.revealSquare(nonMine.position, squaresClone);
-      //       prettyPrintBoard(squaresClone, `clicked ${JSON.stringify(nonMine.position)}`);
-      //     }
-      //   }
-      // }
+      for (const { row, col } of guaranteedMines.nonMines) {
+        const nonMine = squaresClone[row][col];
+        this.revealSquare(nonMine.position, squaresClone);
+        Minesweeper.prettyPrintBoard(squaresClone, `clicked ${JSON.stringify(nonMine.position)}`);
+      }
 
-      let revealedSquaresCount: number;
-      do {
-        revealedSquaresCount = revealOkSquares(squaresClone);
-      } while (revealedSquaresCount);
+      for (const square of guaranteedMines.okSquares) {
+        this.revealSurroundingSquares(square.position, squaresClone);
+      }
 
       guaranteedMines = getGuaranteedMines(squaresClone);
-      // guaranteedNonMines = getGuaranteedNonMines(squaresClone);
     }
+
     import.meta.env.DEV && console.timeEnd('isBoardSolvable');
-    prettyPrintBoard(squaresClone, 'final');
+    Minesweeper.prettyPrintBoard(squaresClone, 'final');
 
     const result = this.isGameWon(squaresClone);
-    squaresClone = [];
 
     return result;
   }
@@ -370,6 +502,10 @@ export class Minesweeper {
   public handleAction(button: MouseButton, clickedCoords: SquarePosition): this | false {
     const { row, col } = clickedCoords;
     const clickedSquare = this.squares[row][col];
+    if (!clickedSquare) {
+      throw new Error('Clicked square is not on the board');
+    }
+
     const { revealed: visible, flagged } = clickedSquare.state;
 
     if (this.gameState.gameOver) {
@@ -383,15 +519,15 @@ export class Minesweeper {
       return this;
     }
 
-    if (button === MouseButton['left'] && !(visible || flagged)) {
+    if (button === MouseButton.left && !(visible || flagged)) {
       this.revealSquare(clickedCoords);
     }
 
-    if (button === MouseButton['middle'] && visible) {
+    if (button === MouseButton.middle && visible) {
       this.revealSurroundingSquares(clickedCoords);
     }
 
-    if (button === MouseButton['right'] && !visible) {
+    if (button === MouseButton.right && !visible) {
       this.toggleSquareFlag(clickedCoords);
     }
 
