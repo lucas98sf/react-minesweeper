@@ -8,7 +8,7 @@ module.exports = {
     'eslint-config-prettier',
   ],
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'simple-import-sort'],
+  plugins: ['@typescript-eslint', 'simple-import-sort', 'functional'],
   root: true,
   env: {
     browser: true,
@@ -26,5 +26,16 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'no-param-reassign': ['error', { props: true }],
     curly: ['error', 'all'],
+    'functional/immutable-data': [
+      'error',
+      {
+        ignorePattern: ['state', 'current', 'value'],
+        ignoreClasses: 'fieldsOnly',
+        assumeTypes: {
+          forArrays: false,
+          forObjects: true,
+        },
+      },
+    ],
   },
 };
