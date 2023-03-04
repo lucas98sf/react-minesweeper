@@ -20,8 +20,6 @@ body {
 .board {
   background-color: grey;
   margin: 0.5vw;
-  top: auto;
-  bottom: auto;
 }
 
 .row {
@@ -37,8 +35,8 @@ body {
 }
 
 .board button {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.4rem;
+  height: 2.4rem;
   margin: 1px;
   border: 0px;
   vertical-align: middle;
