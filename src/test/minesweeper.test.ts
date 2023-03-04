@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import { NUM_MINES } from '@/config/constants';
 import { Minesweeper } from '@/core/Minesweeper';
-import { MouseButton, SquarePosition, Squares } from '@/types';
+import { BoardConfig, MouseButton, SquarePosition, Squares } from '@/types';
 
 import * as mocks from './mocks';
 
@@ -166,40 +166,38 @@ describe('minesweeper logic', () => {
       expect(minesweeper.isBoardSolvable(mocks.needGuessBoard2 as Squares)).toBe(false);
     });
 
-    it('should solve an guaranteed non mine case', () => {
-      // hehe
-      // const _11211 = (squares: Squares) =>
-      //   squares
-      //     .flat()
-      //     .filter(
-      //       s =>
-      //         s.value === 'mine' &&
-      //         s.position.row === 0 &&
-      //         (s.position.col === 1 || s.position.col === 3),
-      //     ).length === 2;
+    const _mockPattern = (pattern: string, width = 4, height = 4, minesNumber = 2) => {
+      do {
+        minesweeper = new Minesweeper({
+          height,
+          width,
+          minesNumber,
+        } as BoardConfig);
+        firstClick = { row: 0, col: 2 };
+        minesweeper.handleAction(MouseButton.left, firstClick);
+      } while (
+        minesweeper.board.squares
+          .flat()
+          .map(s => s.value)
+          .join('') !== pattern
+      );
+      expect(minesweeper.board.squares).toMatchInlineSnapshot();
+      expect(
+        minesweeper.board.squares
+          .flat()
+          .map(s => s.value)
+          .join(''),
+      ).toMatchInlineSnapshot(pattern);
+    };
 
-      // do {
-      //   minesweeper = new Minesweeper({
-      //     height: 3,
-      //     width: 5,
-      //     minesNumber: 2,
-      //   });
-      //   firstClick = { row: 2, col: 2 };
-      //   minesweeper.handleAction(MouseButton.left, firstClick);
-      // } while (!_11211(minesweeper.board.squares));
-      // expect(minesweeper.board.squares).toMatchInlineSnapshot();
-      // expect(
-      //   minesweeper.board.squares
-      //     .flat()
-      //     .map(s => s.value)
-      //     .join(''),
-      // ).toMatchInlineSnapshot('"1mine2mine11121100000"');
-      minesweeper = new Minesweeper({
-        height: 3,
-        width: 5,
-        minesNumber: 2,
-      });
+    it('should solve an 11211 pattern case', () => {
       expect(minesweeper.isBoardSolvable(mocks.pattern11211 as Squares)).toBe(true);
+    });
+
+    it('should solve an 112211 pattern case', () => {
+      expect(minesweeper.board.squares).toMatchInlineSnapshot();
+      Minesweeper.prettyPrintBoard(mocks.pattern112211 as Squares);
+      expect(minesweeper.isBoardSolvable(mocks.pattern112211 as Squares)).toBe(true);
     });
   });
 });

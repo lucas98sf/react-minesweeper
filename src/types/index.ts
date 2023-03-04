@@ -38,9 +38,10 @@ export type BoardConfig = {
   randomizer: () => number;
 };
 
-export type GameResult = {
+export type GameState = {
   gameOver: boolean;
   result: 'win' | 'lose' | null;
+  isFirstMove: boolean;
 };
 
 export type BoardState = {
@@ -54,6 +55,10 @@ export enum MouseButton {
   middle,
   right,
 }
+
+export const isSquarePosition = (obj: Record<string, unknown>): obj is SquarePosition => {
+  return 'row' in obj && 'col' in obj;
+};
 
 type Length<T extends unknown[]> = T extends { length: infer L } ? L : never;
 

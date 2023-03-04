@@ -25,11 +25,15 @@ module.exports = {
     'simple-import-sort/exports': 'error',
     'import/prefer-default-export': 'off',
     'no-param-reassign': ['error', { props: true }],
+    '@typescript-eslint/no-unused-vars': [
+      'warn',
+      { argsIgnorePattern: '^_', varsIgnorePattern: '^_', ignoreRestSiblings: true },
+    ],
     curly: ['error', 'all'],
     'functional/immutable-data': [
       'error',
       {
-        ignorePattern: ['state', 'current', 'value'],
+        ignorePattern: ['state', 'gameState', 'current', 'value'],
         ignoreClasses: 'fieldsOnly',
         assumeTypes: {
           forArrays: false,

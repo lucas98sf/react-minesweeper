@@ -15,6 +15,7 @@ body {
 
 .board {
   background-color: grey;
+  margin: 2rem;
 }
 
 .row {
