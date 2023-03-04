@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 
 import { Minesweeper } from '@/core/Minesweeper';
-import { BoardState, GameResult } from '@/types';
+import { BoardState, GameState, MouseButton, SquarePosition } from '@/types';
 
 export function useMinesweeper(...params: ConstructorParameters<typeof Minesweeper>) {
   const minesweeper = useMemo(() => new Minesweeper(...params), []);
-  //use reducer maybe?
+
   const [board, setBoard] = useState<BoardState>(minesweeper.board);
-  const [gameState, setGameState] = useState<GameResult>(minesweeper.state);
+  const [gameState, setGameState] = useState<GameState>(minesweeper.state);
 
   useEffect(() => {
     const preventContextMenu = (e: MouseEvent) => {
@@ -21,12 +21,27 @@ export function useMinesweeper(...params: ConstructorParameters<typeof Minesweep
     };
   }, []);
 
+  const touchToMouseClick = (
+    gameState: GameState,
+    boardState: BoardState,
+    { row, col }: SquarePosition,
+  ): MouseButton => {
+    if (gameState.isFirstMove) {
+      return MouseButton.left;
+    } else if (boardState.squares[row][col].state.revealed) {
+      return MouseButton.middle;
+    } else {
+      return MouseButton.right;
+    }
+  };
+
   return {
-    handleClick<T>(
-      event: React.MouseEvent<T>,
+    touchToMouseClick,
+    handleClick(
+      button: MouseButton,
       clickedCoords: Parameters<typeof Minesweeper.prototype.handleAction>[1],
     ) {
-      return minesweeper.handleAction(event.button, clickedCoords);
+      return minesweeper.handleAction(button, clickedCoords);
     },
     reset() {
       return minesweeper.reset();

@@ -1,6 +1,6 @@
 - [ ] socket.io
 - [ ] timer
-- [ ] fix clicks and resolution on mobile
+- [X] fix clicks and resolution on mobile
 - [ ] configuration screen
 - [X] flag counter
 - [X] click hold effect
