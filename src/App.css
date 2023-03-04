@@ -110,12 +110,12 @@ body {
 
 @media only screen and (max-width: 768px) {
   html {
-    font-size: 0.6rem;
+    font-size: 0.4em;
   }
 }
 
 @media only screen and (max-height: 700px) {
   html {
-    font-size: 0.5rem;
+    font-size: 0.3rem;
   }
 }
