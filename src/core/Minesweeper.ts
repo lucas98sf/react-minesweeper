@@ -538,7 +538,7 @@ export class Minesweeper {
     this.gameState = {
       gameOver: false,
       result: null,
-      isFirstMove: false,
+      isFirstMove: true,
     };
 
     return this;
