@@ -1,3 +1,7 @@
+html {
+  height: 100%;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
@@ -5,7 +9,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 100%;
 }
 
 @font-face {
@@ -15,7 +19,9 @@ body {
 
 .board {
   background-color: grey;
-  margin: 2rem;
+  margin: 0.5vw;
+  top: auto;
+  bottom: auto;
 }
 
 .row {
@@ -102,20 +108,8 @@ body {
   color: grey;
 }
 
-@media only screen and (max-width: 1024px) {
-  html {
-    font-size: 0.8rem;
-  }
-}
-
 @media only screen and (max-width: 768px) {
   html {
-    font-size: 0.4em;
-  }
-}
-
-@media only screen and (max-height: 700px) {
-  html {
-    font-size: 0.3rem;
+    font-size: calc(0.9vw + 0.9vh);
   }
 }
