@@ -2,7 +2,7 @@ import { MAX_HEIGHT, MAX_WIDTH, MIN_HEIGHT, MIN_WIDTH, NUM_MINES } from '@/confi
 import {
   BoardConfig,
   BoardState,
-  GameResult,
+  GameState,
   IntRange,
   MouseButton,
   Square,
@@ -13,7 +13,6 @@ import {
 
 export class Minesweeper {
   private squares: Squares;
-  private isFirstMove = true;
   private flagsLeft = NUM_MINES;
   private config: BoardConfig = {
     guessFree: false,
@@ -22,9 +21,10 @@ export class Minesweeper {
     height: MAX_HEIGHT,
     randomizer: Math.random,
   };
-  private gameState: GameResult = {
+  private gameState: GameState = {
     gameOver: false,
     result: null,
+    isFirstMove: true,
   };
 
   constructor(private configOverrides: Partial<BoardConfig> = {}) {
@@ -211,12 +211,13 @@ export class Minesweeper {
     return allSquaresRevealedOrFlagged;
   }
 
-  private checkGameResult() {
-    const gameResult = this.isGameWon() ? 'win' : this.isGameLost() ? 'lose' : null;
+  private checkGameState() {
+    const result = this.isGameWon() ? 'win' : this.isGameLost() ? 'lose' : null;
 
     this.gameState = {
-      gameOver: !!gameResult,
-      result: gameResult,
+      ...this.gameState,
+      gameOver: !!result,
+      result,
     };
   }
 
@@ -296,33 +297,30 @@ export class Minesweeper {
             }
             acc.okSquares.push(square);
           } else {
-            /*
-             *     check if marking a square as mine will invalidate another around square value
-             *
-             *     in the example, marking (2, 0) as mine will invalidate the (0, 1) square,
-             *     as it would not be able to have a square without invalidating the (1, 1) square
-             *
-             *     so, (2, 0) is not a mine and can be revealed
-             *
-             *          0  1  2  3
-             *      0 - ?  ?  ?  ?
-             *      1 - 1  1  1  ?
-             *      2 - 0  0  0  ?
-             *
-             */
             const checkUnrevealedSquaresAround = (
               unrevealedSquaresAround: SquarePosition[],
             ): void => {
-              for (const { row, col } of unrevealedSquaresAround
-                .sort(({ row, col }) => squares[row][col].surroundings.length)
-                .reverse()) {
-                const unrevealedSquare = squares[row][col]; // (0, 0);
+              for (const { row, col } of unrevealedSquaresAround.sort(
+                ({ row, col }) => squares[row][col].surroundings.length,
+              )) {
+                const unrevealedSquare = squares[row][col];
 
                 const surroundingValues = unrevealedSquare.surroundings.filter(({ row, col }) =>
                   isRevealedNumberSquare(squares[row][col]),
-                ); // [(0, 1), (1, 1)]
+                );
 
-                const valuesIfMine = new Map<SquarePosition, 0 | 1>().set({ row, col }, 1);
+                const positionToString = (position: SquarePosition) =>
+                  '' + position.row + position.col;
+
+                const stringToPosition = (position: string) => {
+                  const [row, col] = position.split('');
+                  return { row: Number(row), col: Number(col) } as SquarePosition;
+                };
+
+                const valuesIfMine = new Map<string, 0 | 1>().set(
+                  positionToString({ row, col }),
+                  1,
+                );
 
                 for (const { row, col } of surroundingValues) {
                   const surroundingSquare = squares[row][col] as Square & { value: number }; // (0, 1)
@@ -330,17 +328,17 @@ export class Minesweeper {
                   const surroundingUnrevealedSquares = this.nonRevealedSquaresAround(
                     surroundingSquare,
                     squares,
-                  ); // [(0, 0), (0, 1)]
+                  );
 
                   const flagsAroundSurroundingSquare = this.flagsAroundSquare(
                     surroundingSquare,
                     squares,
-                  ); // 0
+                  );
 
                   if (flagsAroundSurroundingSquare.length) {
                     for (const position of flagsAroundSurroundingSquare) {
-                      if (!valuesIfMine.has(position)) {
-                        valuesIfMine.set(position, 1);
+                      if (!valuesIfMine.has(positionToString(position))) {
+                        valuesIfMine.set(positionToString(position), 1);
                       }
                     }
                   }
@@ -348,10 +346,8 @@ export class Minesweeper {
                   const { maybeMinesAround, unknownSurroundingUnrevealedSquares } =
                     surroundingUnrevealedSquares.reduce(
                       (acc, position) => {
-                        // [(0, 0), (0, 1)]
-                        if (valuesIfMine.has(position)) {
-                          // (0, 0) -> 1
-                          return valuesIfMine.get(position) === 1
+                        if (valuesIfMine.has(positionToString(position))) {
+                          return valuesIfMine.get(positionToString(position)) === 1
                             ? {
                                 ...acc,
                                 maybeMinesAround: acc.maybeMinesAround + 1,
@@ -364,14 +360,6 @@ export class Minesweeper {
                           acc.unknownSurroundingUnrevealedSquares.push(position);
                         }
 
-                        /**
-                         * {
-                         *    maybeMinesAround: 1,
-                         *    maybeNonMinesAround: 0,
-                         *    unknownSurroundingUnrevealedSquares: [(0, 1)]
-                         * }
-                         */
-
                         return acc;
                       },
                       {
@@ -380,11 +368,7 @@ export class Minesweeper {
                         unknownSurroundingUnrevealedSquares: [] as SquarePosition[],
                       },
                     );
-                  console.log({
-                    surroundingSquare,
-                    maybeMinesAround,
-                    unknownSurroundingUnrevealedSquares,
-                  });
+
                   if (
                     maybeMinesAround > surroundingSquare.value ||
                     maybeMinesAround + unknownSurroundingUnrevealedSquares.length <
@@ -399,8 +383,8 @@ export class Minesweeper {
                     );
                   } else if (maybeMinesAround === surroundingSquare.value) {
                     for (const unknownSquare of unknownSurroundingUnrevealedSquares) {
-                      if (!valuesIfMine.has(unknownSquare)) {
-                        valuesIfMine.set(unknownSquare, 0);
+                      if (!valuesIfMine.has(positionToString(unknownSquare))) {
+                        valuesIfMine.set(positionToString(unknownSquare), 0);
                       }
                     }
                   } else if (
@@ -408,27 +392,28 @@ export class Minesweeper {
                     surroundingSquare.value
                   ) {
                     for (const unknownSquare of unknownSurroundingUnrevealedSquares) {
-                      if (!valuesIfMine.has(unknownSquare)) {
-                        valuesIfMine.set(unknownSquare, 1);
+                      if (!valuesIfMine.has(positionToString(unknownSquare))) {
+                        valuesIfMine.set(positionToString(unknownSquare), 1);
                       }
                     }
                   }
                 }
 
+                //fazer recursao antes...
                 valuesIfMine.forEach((value, position) => {
                   if (value === 0) {
                     if (
                       !acc.nonMines.some(mine => JSON.stringify(mine) === JSON.stringify(position))
                     ) {
                       console.log({ value, position });
-                      acc.nonMines.push(position);
+                      acc.nonMines.push(stringToPosition(position));
                     }
                   } else {
                     if (
                       !acc.mines.some(mine => JSON.stringify(mine) === JSON.stringify(position))
                     ) {
                       console.log({ value, position });
-                      acc.mines.push(position);
+                      acc.mines.push(stringToPosition(position));
                     }
                   }
                 });
@@ -512,9 +497,9 @@ export class Minesweeper {
       return false;
     }
 
-    if (this.isFirstMove) {
-      this.isFirstMove = false;
+    if (this.gameState.isFirstMove) {
       this.generateSquaresValues(clickedCoords);
+      this.gameState.isFirstMove = false;
 
       return this;
     }
@@ -531,7 +516,7 @@ export class Minesweeper {
       this.toggleSquareFlag(clickedCoords);
     }
 
-    this.checkGameResult();
+    this.checkGameState();
     return this;
   }
 
@@ -543,7 +528,7 @@ export class Minesweeper {
     };
   }
 
-  public get state(): GameResult {
+  public get state(): GameState {
     return this.gameState;
   }
 
@@ -553,8 +538,8 @@ export class Minesweeper {
     this.gameState = {
       gameOver: false,
       result: null,
+      isFirstMove: false,
     };
-    this.isFirstMove = true;
 
     return this;
   }
