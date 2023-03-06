@@ -2,4 +2,4 @@ node_modules/
 dist/
 .prettierrc.json
 env.d.ts
-.eslintrc.cjs
+*.cjs

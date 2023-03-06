@@ -1,5 +1,5 @@
+import './app.css';
 import 'virtual:fonts.css';
-import './App.css';
 
 import { Board } from '@/components';
 

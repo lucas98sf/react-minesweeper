@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+@font-face {
+  font-family: 'MineSweeper';
+  src: local('MineSweeper') format('truetype');
+}
+
+@layer components {
+  .board * {
+    font-size: 1.5rem;
+    font-weight: bolder;
+    font-family: 'MineSweeper';
+    user-select: none;
+  }
+
+  .square {
+    @apply m-px flex h-10 w-10 items-center justify-center border-0 align-middle;
+  }
+
+  .square-unrevealed {
+    @apply bg-[lightgrey] shadow-[inset_-0.15rem_-0.15rem_grey,inset_0.15em_0.15rem_white];
+  }
+
+  .square-revealed {
+    @apply bg-[darkgrey] shadow-[0px_0px];
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  html {
+    font-size: calc(0.9vw + 0.9vh);
+  }
+}

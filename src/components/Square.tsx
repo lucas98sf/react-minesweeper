@@ -11,7 +11,14 @@ type Props = {
   onClick?: (e: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => void;
 } & Partial<ReturnType<typeof useLongPress<HTMLButtonElement>>>;
 
-export function Square({ children, surroundings, onMouseLeave, boardRef, ...props }: Props) {
+export function Square({
+  children,
+  surroundings,
+  onMouseLeave,
+  boardRef,
+  className,
+  ...props
+}: Props) {
   const pressButtons = (e: React.MouseEvent<HTMLButtonElement>) => {
     const action = e.type === 'mousedown' ? 'add' : 'remove';
 
@@ -26,16 +33,16 @@ export function Square({ children, surroundings, onMouseLeave, boardRef, ...prop
           if ([...el.children].some(child => child.classList.contains('flag'))) {
             return;
           }
-          el.classList[action]('revealed');
+          el.classList[action]('square-revealed');
         });
     };
 
     if (e.button === MouseButton.left) {
-      e.currentTarget.classList[action]('revealed');
+      e.currentTarget.classList[action]('square-revealed');
     }
 
     if (e.button === MouseButton.middle) {
-      if (e.currentTarget.classList.contains('unrevealed')) {
+      if (e.currentTarget.classList.contains('square-unrevealed')) {
         return;
       }
       surroundings && revealSurroundings(surroundings);
@@ -44,11 +51,12 @@ export function Square({ children, surroundings, onMouseLeave, boardRef, ...prop
 
   return (
     <button
+      className={`square ${className}`}
       onMouseDownCapture={pressButtons}
       onMouseUpCapture={pressButtons}
       onMouseLeave={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         boardRef?.current?.querySelectorAll<HTMLButtonElement>('.revealed').forEach(el => {
-          el.classList.remove('revealed');
+          el.classList.remove('square-revealed');
         });
         return onMouseLeave?.(e);
       }}

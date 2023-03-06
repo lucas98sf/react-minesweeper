@@ -5,5 +5,7 @@
   "singleQuote": true,
   "printWidth": 100,
   "bracketSpacing": true,
-  "arrowParens": "avoid"
+  "arrowParens": "avoid",
+  "tailwindConfig": "./tailwind.config.cjs",
+  "plugins": ["prettier-plugin-tailwindcss"]
 }
