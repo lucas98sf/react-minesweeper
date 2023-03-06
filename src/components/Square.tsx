@@ -55,7 +55,7 @@ export function Square({
       onMouseDownCapture={pressButtons}
       onMouseUpCapture={pressButtons}
       onMouseLeave={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        boardRef?.current?.querySelectorAll<HTMLButtonElement>('.revealed').forEach(el => {
+        boardRef?.current?.querySelectorAll<HTMLButtonElement>('.square-revealed').forEach(el => {
           el.classList.remove('square-revealed');
         });
         return onMouseLeave?.(e);
