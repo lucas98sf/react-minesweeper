@@ -80,45 +80,54 @@ export function Board() {
     setGameState(state);
   };
 
+  const squareNumberColors: Record<number | 'mine', string> = {
+    0: 'bg-[darkgrey] ',
+    1: 'bg-[darkgrey] text-indigo-700',
+    2: 'bg-[darkgrey] text-green-900',
+    3: 'bg-[darkgrey] text-red-700',
+    4: 'bg-[darkgrey] text-blue-900',
+    5: 'bg-[darkgrey] text-orange-900',
+    6: 'bg-[darkgrey] text-teal-900',
+    7: 'bg-[darkgrey] text-black',
+    8: 'bg-[darkgrey] text-gray-900',
+    mine: 'bg-red-400',
+  };
+
   return (
-    <div ref={boardRef} className="board">
-      <center>
-        <div
-          //FIXME
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          {board.flagsLeft} <Flag />
+    <div ref={boardRef} className="board m-[0.5vw] bg-[grey]">
+      <div className="flex items-center justify-around p-2">
+        <div className="flex flex-row">
+          <div className="pt-1">{board.flagsLeft}</div>
+          <Flag />
         </div>
-        <Square boardRef={boardRef} className="reset unrevealed" onClick={resetBoard}>
+        <Square boardRef={boardRef} className="square-unrevealed pb-2" onClick={resetBoard}>
           {gameState.result === 'win' ? '😎' : gameState.result === 'lose' ? '😵' : '🙂'}
         </Square>
-      </center>
-      <br />
+        <div>000</div>
+      </div>
       {board.squares.map((rows, row) => {
         const generatedRow = rows.map((_, col) => {
           const square: SquareType = board.squares[row][col];
-          const props = {
-            boardRef,
-            className:
-              square.state.revealed && square.value !== undefined
-                ? `square-${square.value}`
-                : 'unrevealed',
-            'data-row': row,
-            'data-col': col,
-            surroundings: square.surroundings,
-          };
           return (
-            <Square {...handleSquareAction} key={`${row}-${col}`} {...props}>
+            <Square
+              boardRef={boardRef}
+              surroundings={square.surroundings}
+              data-col={col}
+              data-row={row}
+              className={
+                square.state.revealed && square.value !== null && square.value !== undefined
+                  ? squareNumberColors[square.value]
+                  : 'square-unrevealed'
+              }
+              {...handleSquareAction}
+              key={`${row}-${col}`}
+            >
               {getContent(square)}
             </Square>
           );
         });
         return (
-          <div key={row} className="row">
+          <div key={row} className="flex-no-wrap flex flex-row">
             {generatedRow}
           </div>
         );
