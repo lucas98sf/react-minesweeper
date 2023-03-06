@@ -38,7 +38,7 @@
   }
 
   .square {
-    @apply m-px flex h-10 w-10 items-center justify-center border-0 align-middle;
+    @apply m-px flex h-10 w-10 items-center justify-center border-0 bg-[darkgrey] pl-[0.125rem] pt-[0.125rem] align-middle;
   }
 
   .square-unrevealed {

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-import { isTouchEvent, useLongPress, useMinesweeper } from '@/hooks';
+import { isTouchEvent, useLongPress, useMinesweeper, useTimer } from '@/hooks';
 import { isSquarePosition, MouseButton, Square as SquareType, SquarePosition } from '@/types';
 
 import { Flag } from './Flag';
@@ -12,6 +12,7 @@ export function Board() {
     useMinesweeper({
       guessFree: false,
     });
+  const { startTimer, stopTimer, resetTimer, timeElapsed } = useTimer();
   const boardRef = useRef(null);
 
   const handleSquareAction = useLongPress<
@@ -36,6 +37,7 @@ export function Board() {
       },
       onClick: e => {
         if (isSquarePosition(e.currentTarget.dataset)) {
+          startTimer();
           const mouseButton: MouseButton = isTouchEvent(e)
             ? touchToMouseClick(gameState, board, e.currentTarget.dataset)
             : e.button;
@@ -68,42 +70,52 @@ export function Board() {
   useEffect(() => {
     if (gameState.gameOver) {
       //temporary
+      stopTimer();
+
+      if (gameState.result === 'lose') {
+        for (const square of board.squares.flat()) {
+          if (square.value === 'mine') {
+            square.state.revealed = true;
+          }
+        }
+      }
+
       setTimeout(() => {
         alert(gameState.result === 'win' ? 'You won!' : 'You lost...');
       }, 200);
     }
-  }, [board, gameState]);
+  }, [gameState]);
 
   const resetBoard = () => {
     const { board, state } = reset();
     setBoard(board);
     setGameState(state);
+    resetTimer();
   };
 
-  const squareNumberColors: Record<number | 'mine', string> = {
-    0: 'bg-[darkgrey] ',
-    1: 'bg-[darkgrey] text-indigo-700',
-    2: 'bg-[darkgrey] text-green-900',
-    3: 'bg-[darkgrey] text-red-700',
-    4: 'bg-[darkgrey] text-blue-900',
-    5: 'bg-[darkgrey] text-orange-900',
-    6: 'bg-[darkgrey] text-teal-900',
-    7: 'bg-[darkgrey] text-black',
-    8: 'bg-[darkgrey] text-gray-900',
-    mine: 'bg-red-400',
+  const squareNumberColors: Record<number, string> = {
+    0: '',
+    1: 'text-indigo-700',
+    2: 'text-green-900',
+    3: 'text-red-700',
+    4: 'text-blue-900',
+    5: 'text-orange-900',
+    6: 'text-teal-900',
+    7: 'text-black',
+    8: 'text-gray-900',
   };
 
   return (
-    <div ref={boardRef} className="board m-[0.5vw] bg-[grey]">
+    <div ref={boardRef} className="board m-[0.5vw] bg-[grey] shadow-md">
       <div className="flex items-center justify-around p-2">
-        <div className="flex flex-row">
-          <div className="pt-1">{board.flagsLeft}</div>
+        <div className="flex w-20 flex-row">
+          <div className="pt-2 pb-2">{board.flagsLeft}</div>
           <Flag />
         </div>
-        <Square boardRef={boardRef} className="square-unrevealed pb-2" onClick={resetBoard}>
+        <Square boardRef={boardRef} className="square-unrevealed pb-2 pl-0" onClick={resetBoard}>
           {gameState.result === 'win' ? '😎' : gameState.result === 'lose' ? '😵' : '🙂'}
         </Square>
-        <div>000</div>
+        <div className="w-20 pt-2 pb-2">{timeElapsed}</div>
       </div>
       {board.squares.map((rows, row) => {
         const generatedRow = rows.map((_, col) => {
@@ -116,7 +128,7 @@ export function Board() {
               data-row={row}
               className={
                 square.state.revealed && square.value !== null && square.value !== undefined
-                  ? squareNumberColors[square.value]
+                  ? squareNumberColors[square.value as number] ?? 'mine'
                   : 'square-unrevealed'
               }
               {...handleSquareAction}

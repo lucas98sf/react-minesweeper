@@ -1,7 +1,5 @@
-- [ ] socket.io
-- [ ] timer
+- [X] timer
 - [X] fix clicks and resolution on mobile
-- [ ] configuration screen
 - [X] flag counter
 - [X] click hold effect
 - [X] restart button
@@ -12,4 +10,6 @@
 - [X] prevent first click to be in a mine
 - [X] ensure game is always winnable without needing to take a guess
 - [ ] isBoardSolvable optimization
+- [ ] configuration screen
+- [ ] socket.io
 - [ ] readme
