@@ -2,5 +2,6 @@
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
-  }
+  },
+  "exportall.config.folderListener": ["/src/core/types", "/src/components", "/src/hooks"]
 }
