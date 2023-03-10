@@ -30,16 +30,16 @@ module.exports = {
       { argsIgnorePattern: '^_', varsIgnorePattern: '^_', ignoreRestSiblings: true },
     ],
     curly: ['error', 'all'],
-    'functional/immutable-data': [
-      'error',
-      {
-        ignorePattern: ['state', 'gameState', 'current', 'value'],
-        ignoreClasses: 'fieldsOnly',
-        assumeTypes: {
-          forArrays: false,
-          forObjects: true,
-        },
-      },
-    ],
+    // 'functional/immutable-data': [
+    //   'error',
+    //   {
+    //     ignorePattern: ['state', 'gameState', 'current', 'value'],
+    //     ignoreClasses: 'fieldsOnly',
+    //     assumeTypes: {
+    //       forArrays: false,
+    //       forObjects: true,
+    //     },
+    //   },
+    // ],
   },
 };

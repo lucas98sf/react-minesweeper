@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 
 import { Minesweeper } from '@/core/Minesweeper';
-import { BoardState, GameState, MouseButton, SquarePosition } from '@/types';
+import { BoardState, GameState, MouseButton, SquarePosition } from '@/core/types';
 
 export function useMinesweeper(...params: ConstructorParameters<typeof Minesweeper>) {
   const minesweeper = useMemo(() => new Minesweeper(...params), []);

@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import { NUM_MINES } from '@/config/constants';
 import { Minesweeper } from '@/core/Minesweeper';
-import { BoardConfig, MouseButton, SquarePosition, Squares } from '@/types';
+import { BoardConfig, MouseButton, SquarePosition, Squares } from '@/core/types';
 
 import * as mocks from './mocks';
 
@@ -130,19 +130,12 @@ describe('minesweeper logic', () => {
   });
 
   describe('isGameWon', () => {
-    it('returns true when all mines are flagged or all squares are revealed', () => {
+    it('returns true when or all safe squares are revealed', () => {
       minesweeper.handleAction(MouseButton.left, firstClick);
 
-      const mineSquares = minesweeper.board.squares
-        .flat()
-        .filter(square => square.value === 'mine');
       const safeSquares = minesweeper.board.squares
         .flat()
         .filter(square => square.value !== 'mine');
-
-      for (const { position } of mineSquares) {
-        minesweeper.handleAction(MouseButton.right, position);
-      }
 
       for (const { position } of safeSquares) {
         minesweeper.handleAction(MouseButton.left, position);
@@ -166,38 +159,55 @@ describe('minesweeper logic', () => {
       expect(minesweeper.isBoardSolvable(mocks.needGuessBoard2 as Squares)).toBe(false);
     });
 
-    const _mockPattern = (pattern: string, width = 4, height = 4, minesNumber = 2) => {
-      do {
-        minesweeper = new Minesweeper({
-          height,
-          width,
-          minesNumber,
-        } as BoardConfig);
-        firstClick = { row: 0, col: 2 };
-        minesweeper.handleAction(MouseButton.left, firstClick);
-      } while (
-        minesweeper.board.squares
-          .flat()
-          .map(s => s.value)
-          .join('') !== pattern
-      );
-      expect(minesweeper.board.squares).toMatchInlineSnapshot();
-      expect(
-        minesweeper.board.squares
-          .flat()
-          .map(s => s.value)
-          .join(''),
-      ).toMatchInlineSnapshot(pattern);
-    };
-
     it('should solve an 11211 pattern case', () => {
       expect(minesweeper.isBoardSolvable(mocks.pattern11211 as Squares)).toBe(true);
     });
 
     it('should solve an 112211 pattern case', () => {
-      expect(minesweeper.board.squares).toMatchInlineSnapshot();
       Minesweeper.prettyPrintBoard(mocks.pattern112211 as Squares);
       expect(minesweeper.isBoardSolvable(mocks.pattern112211 as Squares)).toBe(true);
+    });
+
+    it.skip('idk yet', () => {
+      Minesweeper.prettyPrintBoard(mocks.randomPattern as Squares);
+      expect(minesweeper.isBoardSolvable(mocks.randomPattern as Squares)).toBe(true);
+    });
+
+    it.skip('mock pattern util', () => {
+      const mockPattern = (
+        pattern: string,
+        width = 11,
+        height = 3,
+        minesNumber = 9,
+        firstClick: SquarePosition = { row: 2, col: 3 },
+      ) => {
+        const patternRegex = new RegExp(
+          pattern.replaceAll(/\s/g, '').replaceAll('x', 'mine').replaceAll('?', '(.|.{4})'),
+        );
+        do {
+          minesweeper = new Minesweeper({
+            height,
+            width,
+            minesNumber,
+          } as BoardConfig);
+          minesweeper.handleAction(MouseButton.left, firstClick);
+        } while (
+          !minesweeper.board.squares
+            .flat()
+            .map(s => s.value)
+            .join('')
+            .match(patternRegex)
+        );
+        expect(minesweeper.board.squares).toMatchInlineSnapshot();
+      };
+
+      const pattern = `
+      ? ? ? ? ? ? ? ? ? ? ?
+      ?	3	2 2 1 ? ? ?	4	3	2
+      ?	x	1	0	0	?	?	?	?	x	?
+      `;
+
+      mockPattern(pattern);
     });
   });
 });
