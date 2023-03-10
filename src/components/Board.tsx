@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 
+import { isSquarePosition, MouseButton, Square as SquareType, SquarePosition } from '@/core/types';
 import { isTouchEvent, useLongPress, useMinesweeper, useTimer } from '@/hooks';
-import { isSquarePosition, MouseButton, Square as SquareType, SquarePosition } from '@/types';
 
 import { Flag } from './Flag';
 import { Mine } from './Mine';
@@ -10,7 +10,7 @@ import { Square } from './Square';
 export function Board() {
   const { board, setBoard, gameState, setGameState, touchToMouseClick, handleClick, reset } =
     useMinesweeper({
-      guessFree: false,
+      guessFree: true,
     });
   const { startTimer, stopTimer, resetTimer, timeElapsed } = useTimer();
   const boardRef = useRef(null);
@@ -69,7 +69,6 @@ export function Board() {
 
   useEffect(() => {
     if (gameState.gameOver) {
-      //temporary
       stopTimer();
 
       if (gameState.result === 'lose') {
@@ -81,6 +80,7 @@ export function Board() {
       }
 
       setTimeout(() => {
+        //temporary
         alert(gameState.result === 'win' ? 'You won!' : 'You lost...');
       }, 200);
     }

@@ -9,7 +9,7 @@ import {
   SquarePosition,
   Squares,
   SquareValue,
-} from '@/types';
+} from '@/core/types';
 
 export class Minesweeper {
   private squares: Squares;
@@ -152,7 +152,7 @@ export class Minesweeper {
     );
   }
 
-  private flagsAroundSquare(square: Square, squares = this.squares) {
+  private flagsAroundSquare(square: Square, squares = this.squares): SquarePosition[] {
     return square.surroundings.filter(({ row, col }) => squares[row][col].state.flagged);
   }
 
@@ -200,18 +200,18 @@ export class Minesweeper {
   }
 
   private isGameWon(squares = this.squares): boolean {
-    const allSquaresRevealedOrFlagged = squares
+    const allNonMinesRevealed = squares
       .flat()
       .every(
         square =>
           (square.state.revealed && square.value !== 'mine') ||
-          (square.state.flagged && square.value === 'mine'),
+          (!square.state.revealed && square.value === 'mine'),
       );
 
-    return allSquaresRevealedOrFlagged;
+    return allNonMinesRevealed;
   }
 
-  private checkGameState() {
+  private checkGameState(): void {
     const result = this.isGameWon() ? 'win' : this.isGameLost() ? 'lose' : null;
 
     this.gameState = {
@@ -221,7 +221,7 @@ export class Minesweeper {
     };
   }
 
-  public static prettyPrintBoard(squares: Squares, message?: string) {
+  public static prettyPrintBoard(squares: Squares, message?: string): string[] | void {
     if (import.meta.env.MODE !== 'test') {
       return;
     }
@@ -264,6 +264,120 @@ export class Minesweeper {
     const isRevealedNumberSquare = (square: Square): square is Square & { value: number } =>
       typeof square.value === 'number' && square.state.revealed;
 
+    const getGuaranteedNonMines = (possibleNonMines: SquarePosition[]): SquarePosition[] => {
+      const nonMines: SquarePosition[] = [];
+      for (const assumedMine of possibleNonMines) {
+        type StringSquarePosition = `${SquarePosition['row']},${SquarePosition['col']}`;
+
+        const positionToString = (position: SquarePosition) =>
+          ('' + position.row + position.col) as StringSquarePosition;
+
+        const valuesIfMine = new Map<StringSquarePosition, 0 | 1>().set(
+          positionToString(assumedMine),
+          1,
+        );
+        const checkedSurroundingSquares = new Set<string>();
+
+        const getSurroundingValues = (unrevealedSquare: Square) =>
+          unrevealedSquare.surroundings.filter(({ row, col }) => {
+            const square = squares[row][col];
+            if (
+              isRevealedNumberSquare(square) &&
+              square.value > 0 &&
+              !checkedSurroundingSquares.has(positionToString(square.position))
+            ) {
+              checkedSurroundingSquares.add(positionToString(square.position));
+              return true;
+            }
+          });
+
+        const checkSurroundingValues = (unrevealedSquare: Square) => {
+          const surroundingValues = getSurroundingValues(unrevealedSquare);
+          if (!surroundingValues.length) {
+            return;
+          }
+          for (const { row, col } of surroundingValues) {
+            const surroundingSquare = squares[row][col] as Square & { value: number };
+
+            const surroundingUnrevealedSquares = this.nonRevealedSquaresAround(
+              surroundingSquare,
+              squares,
+            );
+
+            const flagsAroundSurroundingSquare = this.flagsAroundSquare(surroundingSquare, squares);
+
+            if (flagsAroundSurroundingSquare.length) {
+              for (const position of flagsAroundSurroundingSquare) {
+                if (!valuesIfMine.has(positionToString(position))) {
+                  valuesIfMine.set(positionToString(position), 1);
+                }
+              }
+            }
+
+            const { maybeMinesAround, unknownSurroundingUnrevealedSquares } =
+              surroundingUnrevealedSquares.reduce(
+                (acc, position) => {
+                  if (valuesIfMine.has(positionToString(position))) {
+                    return valuesIfMine.get(positionToString(position)) === 1
+                      ? {
+                          ...acc,
+                          maybeMinesAround: acc.maybeMinesAround + 1,
+                        }
+                      : {
+                          ...acc,
+                          maybeNonMinesAround: acc.maybeNonMinesAround + 1,
+                        };
+                  } else {
+                    acc.unknownSurroundingUnrevealedSquares.push(position);
+                  }
+
+                  return acc;
+                },
+                {
+                  maybeMinesAround: 0,
+                  maybeNonMinesAround: 0,
+                  unknownSurroundingUnrevealedSquares: [] as SquarePosition[],
+                },
+              );
+
+            const isImpossibleMine =
+              maybeMinesAround > surroundingSquare.value ||
+              maybeMinesAround + unknownSurroundingUnrevealedSquares.length <
+                surroundingSquare.value;
+
+            const hasPossibleMines =
+              maybeMinesAround + unknownSurroundingUnrevealedSquares.length ===
+              surroundingSquare.value;
+
+            const hasPossibleNonMines = maybeMinesAround === surroundingSquare.value;
+
+            if (isImpossibleMine) {
+              nonMines.push(assumedMine);
+            } else if (hasPossibleNonMines) {
+              for (const unknownSquare of unknownSurroundingUnrevealedSquares) {
+                if (!valuesIfMine.has(positionToString(unknownSquare))) {
+                  valuesIfMine.set(positionToString(unknownSquare), 0);
+                }
+              }
+            } else if (hasPossibleMines) {
+              for (const unknownSquare of unknownSurroundingUnrevealedSquares) {
+                if (!valuesIfMine.has(positionToString(unknownSquare))) {
+                  valuesIfMine.set(positionToString(unknownSquare), 1);
+                }
+              }
+            }
+          }
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          const lastCheckedSquare = surroundingValues.pop()!;
+          checkSurroundingValues(squares[lastCheckedSquare.row][lastCheckedSquare.col]);
+        };
+
+        checkSurroundingValues(squares[assumedMine.row][assumedMine.col]);
+      }
+
+      return [...new Set(nonMines)];
+    };
+
     const getGuaranteedMines = (squares: Squares) => {
       const revealedNumberSquares = squares.flat().filter(isRevealedNumberSquare);
       const guaranteedMines = revealedNumberSquares.reduce<{
@@ -297,137 +411,15 @@ export class Minesweeper {
             }
             acc.okSquares.push(square);
           } else {
-            const checkUnrevealedSquaresAround = (
-              unrevealedSquaresAround: SquarePosition[],
-            ): void => {
-              for (const { row, col } of unrevealedSquaresAround.sort(
-                ({ row, col }) => squares[row][col].surroundings.length,
-              )) {
-                const unrevealedSquare = squares[row][col];
-
-                const surroundingValues = unrevealedSquare.surroundings.filter(({ row, col }) =>
-                  isRevealedNumberSquare(squares[row][col]),
-                );
-
-                const positionToString = (position: SquarePosition) =>
-                  '' + position.row + position.col;
-
-                const stringToPosition = (position: string) => {
-                  const [row, col] = position.split('');
-                  return { row: Number(row), col: Number(col) } as SquarePosition;
-                };
-
-                const valuesIfMine = new Map<string, 0 | 1>().set(
-                  positionToString({ row, col }),
-                  1,
-                );
-
-                for (const { row, col } of surroundingValues) {
-                  const surroundingSquare = squares[row][col] as Square & { value: number }; // (0, 1)
-
-                  const surroundingUnrevealedSquares = this.nonRevealedSquaresAround(
-                    surroundingSquare,
-                    squares,
-                  );
-
-                  const flagsAroundSurroundingSquare = this.flagsAroundSquare(
-                    surroundingSquare,
-                    squares,
-                  );
-
-                  if (flagsAroundSurroundingSquare.length) {
-                    for (const position of flagsAroundSurroundingSquare) {
-                      if (!valuesIfMine.has(positionToString(position))) {
-                        valuesIfMine.set(positionToString(position), 1);
-                      }
-                    }
-                  }
-
-                  const { maybeMinesAround, unknownSurroundingUnrevealedSquares } =
-                    surroundingUnrevealedSquares.reduce(
-                      (acc, position) => {
-                        if (valuesIfMine.has(positionToString(position))) {
-                          return valuesIfMine.get(positionToString(position)) === 1
-                            ? {
-                                ...acc,
-                                maybeMinesAround: acc.maybeMinesAround + 1,
-                              }
-                            : {
-                                ...acc,
-                                maybeNonMinesAround: acc.maybeNonMinesAround + 1,
-                              };
-                        } else {
-                          acc.unknownSurroundingUnrevealedSquares.push(position);
-                        }
-
-                        return acc;
-                      },
-                      {
-                        maybeMinesAround: 0,
-                        maybeNonMinesAround: 0,
-                        unknownSurroundingUnrevealedSquares: [] as SquarePosition[],
-                      },
-                    );
-
-                  if (
-                    maybeMinesAround > surroundingSquare.value ||
-                    maybeMinesAround + unknownSurroundingUnrevealedSquares.length <
-                      surroundingSquare.value
-                  ) {
-                    console.log('asjhkdhjksadhjkasdhjkashjkd');
-                    return checkUnrevealedSquaresAround(
-                      unrevealedSquaresAround.filter(
-                        square =>
-                          JSON.stringify(square) !== JSON.stringify(unrevealedSquare.position),
-                      ),
-                    );
-                  } else if (maybeMinesAround === surroundingSquare.value) {
-                    for (const unknownSquare of unknownSurroundingUnrevealedSquares) {
-                      if (!valuesIfMine.has(positionToString(unknownSquare))) {
-                        valuesIfMine.set(positionToString(unknownSquare), 0);
-                      }
-                    }
-                  } else if (
-                    maybeMinesAround + unknownSurroundingUnrevealedSquares.length ===
-                    surroundingSquare.value
-                  ) {
-                    for (const unknownSquare of unknownSurroundingUnrevealedSquares) {
-                      if (!valuesIfMine.has(positionToString(unknownSquare))) {
-                        valuesIfMine.set(positionToString(unknownSquare), 1);
-                      }
-                    }
-                  }
-                }
-
-                //fazer recursao antes...
-                valuesIfMine.forEach((value, position) => {
-                  if (value === 0) {
-                    if (
-                      !acc.nonMines.some(mine => JSON.stringify(mine) === JSON.stringify(position))
-                    ) {
-                      console.log({ value, position });
-                      acc.nonMines.push(stringToPosition(position));
-                    }
-                  } else {
-                    if (
-                      !acc.mines.some(mine => JSON.stringify(mine) === JSON.stringify(position))
-                    ) {
-                      console.log({ value, position });
-                      acc.mines.push(stringToPosition(position));
-                    }
-                  }
-                });
-
-                // if (
-                //   !acc.okSquares.some(
-                //     ({ position }) => JSON.stringify(position) === JSON.stringify(square.position),
-                //   )
-                // ) {
-                //   acc.okSquares.push(square);
-                // }
-              }
-            };
-            checkUnrevealedSquaresAround(unrevealedSquaresAround);
+            //FIXME: move this out from here
+            const possibleNonMines = unrevealedSquaresAround
+              .filter(
+                position =>
+                  !acc.nonMines.some(mine => JSON.stringify(mine) === JSON.stringify(position)),
+              )
+              .sort(({ row, col }) => squares[row][col].surroundings.length);
+            const guaranteedNonMines = getGuaranteedNonMines(possibleNonMines);
+            acc.nonMines.push(...guaranteedNonMines);
           }
 
           return acc;

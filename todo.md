@@ -12,4 +12,5 @@
 - [ ] isBoardSolvable optimization
 - [ ] configuration screen
 - [ ] socket.io
+- [ ] records
 - [ ] readme

@@ -1,5 +1,5 @@
+import { MouseButton, SquarePosition } from '@/core/types';
 import { useLongPress } from '@/hooks';
-import { MouseButton, SquarePosition } from '@/types';
 
 type Props = {
   className: string;
@@ -14,9 +14,9 @@ type Props = {
 export function Square({
   children,
   surroundings,
-  onMouseLeave,
   boardRef,
   className,
+  onMouseLeave,
   ...props
 }: Props) {
   const pressButtons = (e: React.MouseEvent<HTMLButtonElement>) => {
