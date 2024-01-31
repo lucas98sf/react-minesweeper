@@ -1,2 +1,2 @@
-export * from './minesweeper';
-export * from './utils';
+export * from "./minesweeper";
+export * from "./utils";

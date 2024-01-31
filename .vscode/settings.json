@@ -1,7 +1,13 @@
 {
-  "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
-  },
-  "exportall.config.folderListener": ["/src/core/types", "/src/components", "/src/hooks"]
+	"editor.formatOnSave": true,
+	"editor.codeActionsOnSave": {
+		"quickfix.biome": "explicit",
+		"source.organizeImports.biome": "explicit"
+	},
+	"exportall.config.folderListener": [
+		"/src/core/types",
+		"/src/components",
+		"/src/hooks"
+	],
+	"css.customData": [".vscode/tailwind.json"]
 }
