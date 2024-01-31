@@ -1,8 +1,6 @@
 {
-  "recommendations": [
-    "esbenp.prettier-vscode",
-    "dbaeumer.vscode-eslint",
-    "EditorConfig.EditorConfig",
-    "eliostruyf.vscode-typescript-exportallmodules"
-  ]
+	"recommendations": [
+		"biomejs.biome",
+		"eliostruyf.vscode-typescript-exportallmodules"
+	]
 }
