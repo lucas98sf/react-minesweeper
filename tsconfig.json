@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "types": ["vite/client", "vitest/globals"],
+    "types": [ "@remix-run/node", "node", "vite/client", "vitest/globals"],
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": false,
@@ -17,10 +17,10 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@/components/*": ["src/components/*"]
+      "@/*": ["app/*"],
+      "@/components/*": ["app/components/*"]
     }
   },
-  "include": ["src"],
+  "include": ["app", "process.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -6,6 +6,7 @@ import {
 	NUM_MINES,
 } from "@/config/constants";
 import {
+	Action,
 	BoardConfig,
 	BoardState,
 	GameState,
@@ -544,10 +545,8 @@ export class Minesweeper {
 		return result;
 	}
 
-	public handleAction(
-		button: MouseButton,
-		clickedCoords: SquarePosition,
-	): this | false {
+	public handleAction(action: Action): this | false {
+		const { button, clickedCoords } = action;
 		const { row, col } = clickedCoords;
 		const clickedSquare = this.squares[row][col];
 		if (!clickedSquare) {

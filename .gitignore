@@ -24,5 +24,10 @@ dist-ssr
 *.sln
 *.sw?
 
+/.cache
+/build
+.env
+
 coverage
 .eslintcache
+.partykit
