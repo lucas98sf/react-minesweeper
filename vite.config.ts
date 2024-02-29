@@ -1,25 +1,16 @@
-import react from "@vitejs/plugin-react";
+import path from "path";
+import { vitePlugin as remix } from "@remix-run/dev";
 import { defineConfig } from "vite";
-import { VitePluginFonts } from "vite-plugin-fonts";
+import relay from "vite-plugin-relay";
 import viteTsconfigPaths from "vite-tsconfig-paths";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-	plugins: [
-		react(),
-		viteTsconfigPaths(),
-		VitePluginFonts({
-			custom: {
-				families: [
-					{
-						name: "MineSweeper",
-						local: "MineSweeper",
-						src: "./src/assets/fonts/*.ttf",
-					},
-				],
-				display: "auto",
-			},
-		}),
-	],
-	base: "/react-minesweeper/",
+	plugins: [relay, remix(), viteTsconfigPaths()],
+	resolve: {
+		alias: {
+			"@": path.resolve(__dirname, "./app"),
+		},
+	},
+	// base: "/react-minesweeper/",
 });

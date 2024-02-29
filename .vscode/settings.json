@@ -5,8 +5,9 @@
 		"source.organizeImports.biome": "explicit"
 	},
 	"exportall.config.folderListener": [
-		"/src/core/types",
-		"/src/components",
-		"/src/hooks"
-	]
+		"/app/core/types",
+		"/app/components",
+		"/app/hooks"
+	],
+	"css.customData": [".vscode/tailwind.json"]
 }

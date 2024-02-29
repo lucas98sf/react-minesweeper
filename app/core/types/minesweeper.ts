@@ -5,7 +5,7 @@ import {
 	MIN_WIDTH,
 } from "@/config/constants";
 
-import { Add, IntRange } from "./utils";
+import { Add, IntRange, MouseButton } from "./utils";
 
 export type SquarePosition<
 	X extends number = typeof MAX_WIDTH,
@@ -55,4 +55,9 @@ export const isSquarePosition = (
 	obj: Record<string, unknown>,
 ): obj is SquarePosition => {
 	return "row" in obj && "col" in obj;
+};
+
+export type Action = {
+	button: MouseButton;
+	clickedCoords: SquarePosition;
 };
