@@ -10,6 +10,11 @@ import { Board } from "~/components";
 const supabase = createClient(
 	import.meta.env.VITE_SUPABASE_URL,
 	import.meta.env.VITE_SUPABASE_ANON_KEY,
+	{
+		auth: {
+			debug: true,
+		},
+	},
 );
 
 function App() {
@@ -74,6 +79,7 @@ function App() {
 						},
 					},
 				}}
+				redirectTo={window.location.origin + import.meta.env.BASE_URL}
 				providers={["google"]}
 			/>
 		);
