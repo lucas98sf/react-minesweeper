@@ -9,5 +9,13 @@
 		"/src/components",
 		"/src/hooks"
 	],
+	"eslint.enable": false,
+	"biome.enabled": true,
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
 	"css.customData": [".vscode/tailwind.json"]
 }

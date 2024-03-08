@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 
-import { Minesweeper } from "@/core/Minesweeper";
+import { Minesweeper } from "~/core/Minesweeper";
 import {
 	BoardState,
 	GameState,
 	MouseButton,
 	SquarePosition,
-} from "@/core/types";
+} from "~/core/types";
 
 let initialParams: ConstructorParameters<typeof Minesweeper> = [];
 

@@ -1,5 +1,5 @@
-import { MouseButton, SquarePosition } from "@/core/types";
-import { useLongPress } from "@/hooks";
+import { MouseButton, SquarePosition } from "~/core/types";
+import { useLongPress } from "~/hooks";
 
 type Props = {
 	className: string;
