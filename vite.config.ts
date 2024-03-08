@@ -1,14 +1,13 @@
+import path from "node:path";
 import react from "@vitejs/plugin-react";
+import Unfonts from "unplugin-fonts/vite";
 import { defineConfig } from "vite";
-import { VitePluginFonts } from "vite-plugin-fonts";
-import viteTsconfigPaths from "vite-tsconfig-paths";
 
 // https://vitejs.dev/config/
 export default defineConfig({
 	plugins: [
 		react(),
-		viteTsconfigPaths(),
-		VitePluginFonts({
+		Unfonts({
 			custom: {
 				families: [
 					{
@@ -22,4 +21,9 @@ export default defineConfig({
 		}),
 	],
 	base: "/react-minesweeper/",
+	resolve: {
+		alias: {
+			"~": path.resolve(__dirname, "./src"),
+		},
+	},
 });

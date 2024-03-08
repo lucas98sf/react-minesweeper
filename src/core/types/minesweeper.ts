@@ -3,7 +3,7 @@ import {
 	MAX_WIDTH,
 	MIN_HEIGHT,
 	MIN_WIDTH,
-} from "@/config/constants";
+} from "~/config/constants";
 
 import { Add, IntRange } from "./utils";
 

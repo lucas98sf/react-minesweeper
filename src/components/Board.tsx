@@ -5,8 +5,8 @@ import {
 	Square as SquareType,
 	SquarePosition,
 	isSquarePosition,
-} from "@/core/types";
-import { isTouchEvent, useLongPress, useMinesweeper, useTimer } from "@/hooks";
+} from "~/core/types";
+import { isTouchEvent, useLongPress, useMinesweeper, useTimer } from "~/hooks";
 
 import { Flag } from "./Flag";
 import { Mine } from "./Mine";

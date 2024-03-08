@@ -4,7 +4,7 @@ import {
 	MIN_HEIGHT,
 	MIN_WIDTH,
 	NUM_MINES,
-} from "@/config/constants";
+} from "~/config/constants";
 import {
 	BoardConfig,
 	BoardState,
@@ -15,7 +15,7 @@ import {
 	SquarePosition,
 	SquareValue,
 	Squares,
-} from "@/core/types";
+} from "~/core/types";
 
 export class Minesweeper {
 	private squares: Squares;

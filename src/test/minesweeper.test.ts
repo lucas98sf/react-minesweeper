@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { NUM_MINES } from "@/config/constants";
-import { Minesweeper } from "@/core/Minesweeper";
+import { NUM_MINES } from "~/config/constants";
+import { Minesweeper } from "~/core/Minesweeper";
 import {
 	BoardConfig,
 	MouseButton,
 	SquarePosition,
 	Squares,
-} from "@/core/types";
+} from "~/core/types";
 
 import * as mocks from "./mocks";
 
