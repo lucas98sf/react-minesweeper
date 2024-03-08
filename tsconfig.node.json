@@ -7,5 +7,5 @@
 		"strict": true,
 		"noPropertyAccessFromIndexSignature": true
 	},
-	"include": ["vite.config.ts"]
+	"include": ["vite.config.ts", "src/server/**/*.ts", "src/server/**/*.d.ts"]
 }
