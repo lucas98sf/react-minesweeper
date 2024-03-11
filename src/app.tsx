@@ -22,19 +22,17 @@ function App() {
 	const [userState, setUserState] = useState<RealtimePresenceState>({});
 
 	useEffect(() => {
-		console.log("user: ", session?.user);
-
+		if (!session?.user?.email) return;
 		const channel = supabase.channel("online-users", {
 			config: {
 				presence: {
-					key: session?.user?.email ? session?.user?.email : "Unknown",
+					key: session?.user?.email,
 				},
 			},
 		});
 
 		channel.on("presence", { event: "sync" }, () => {
 			const presentState = channel.presenceState();
-
 			console.log("inside presence: ", presentState);
 
 			setUserState({ ...presentState });
@@ -47,11 +45,15 @@ function App() {
 		channel.subscribe(async (status) => {
 			if (status === "SUBSCRIBED") {
 				await channel.track({
-					user_name: session?.user?.email ? session?.user?.email : "Unknown",
+					user_name: session?.user?.email,
 				});
 			}
 		});
-	}, [session?.user]);
+
+		return () => {
+			channel.unsubscribe();
+		};
+	}, [session?.user?.email]);
 
 	useEffect(() => {
 		supabase.auth.getSession().then(({ data: { session } }) => {
@@ -86,18 +88,6 @@ function App() {
 						)}
 					</div>
 				)}
-				{Object.keys(userState).map((key) => {
-					if (key === session?.user?.email || key === "Unknown") return null;
-					return (
-						<div
-							key={key}
-							className="fixed top-28 left-0 p-2 m-2 bg-black text-white rounded-md flex flex-row items-center"
-						>
-							<div className={"text-green-500 mr-1 text-lg"}>●</div>
-							{key}
-						</div>
-					);
-				})}
 				<button
 					type="button"
 					className="right-0 top-0 fixed p-2 m-2 bg-black text-white rounded-md"
@@ -133,9 +123,21 @@ function App() {
 	return (
 		<Container>
 			<SessionContextProvider supabaseClient={supabase}>
-				{Object.keys(userState).map((email) => {
-					return <Board key={email} userEmail={email} />;
-				})}
+				<div className="flex flex-row">
+					{Object.keys(userState).map((email) => {
+						return (
+							<div key={email}>
+								{
+									<div className="p-2 m-2 bg-black text-white rounded-md flex flex-row items-center">
+										<div className={"text-green-500 mr-1 text-lg"}>●</div>
+										{email}
+									</div>
+								}
+								<Board key={email} userEmail={email} />
+							</div>
+						);
+					})}
+				</div>
 			</SessionContextProvider>
 		</Container>
 	);

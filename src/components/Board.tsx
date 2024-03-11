@@ -44,6 +44,10 @@ export const Board = ({ userEmail }: BoardProps) => {
 		});
 
 		channel.subscribe();
+
+		return () => {
+			channel.unsubscribe();
+		};
 	}, [
 		client.channel,
 		userEmail,
@@ -183,7 +187,7 @@ export const Board = ({ userEmail }: BoardProps) => {
 	};
 
 	return (
-		<div ref={boardRef} className="board m-[0.5vh] bg-[grey] shadow-md">
+		<div ref={boardRef} className="board m-[0.4vh] bg-[grey] shadow-md">
 			<div className="flex items-center justify-around p-2">
 				<div className="flex w-20 flex-row">
 					<div className="pt-2 pb-2">{boardState.flagsLeft}</div>
