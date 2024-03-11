@@ -1,1 +1,1 @@
-https://lufferreira.github.io/react-minesweeper/
+https://lucas98sf.github.io/react-minesweeper/
