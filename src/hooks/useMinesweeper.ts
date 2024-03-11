@@ -18,7 +18,7 @@ export function useMinesweeper(
 	}
 	const minesweeper = useMemo(() => new Minesweeper(...initialParams), []);
 
-	const [board, setBoard] = useState<BoardState>(minesweeper.board);
+	const [boardState, setBoardState] = useState<BoardState>(minesweeper.board);
 	const [gameState, setGameState] = useState<GameState>(minesweeper.state);
 
 	useEffect(() => {
@@ -58,8 +58,8 @@ export function useMinesweeper(
 		reset() {
 			return minesweeper.reset();
 		},
-		board,
-		setBoard,
+		boardState,
+		setBoardState,
 		gameState,
 		setGameState,
 	};

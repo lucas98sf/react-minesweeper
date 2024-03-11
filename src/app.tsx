@@ -1,6 +1,7 @@
 import "unfonts.css";
 import "./app.css";
 
+import { SessionContextProvider } from "@supabase/auth-helpers-react";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import {
@@ -39,16 +40,15 @@ function App() {
 			setUserState({ ...presentState });
 		});
 
-		channel.on("presence", { event: "join" }, ({ newPresences }) => {
-			console.log("New users have joined: ", newPresences);
-		});
+		// channel.on("presence", { event: "join" }, ({ newPresences }) => {
+		// 	console.log("New users have joined: ", newPresences);
+		// });
 
 		channel.subscribe(async (status) => {
 			if (status === "SUBSCRIBED") {
-				const status = await channel.track({
+				await channel.track({
 					user_name: session?.user?.email ? session?.user?.email : "Unknown",
 				});
-				console.log("status: ", status);
 			}
 		});
 	}, [session?.user]);
@@ -132,7 +132,11 @@ function App() {
 
 	return (
 		<Container>
-			<Board />
+			<SessionContextProvider supabaseClient={supabase}>
+				{Object.keys(userState).map((email) => {
+					return <Board key={email} userEmail={email} />;
+				})}
+			</SessionContextProvider>
 		</Container>
 	);
 }

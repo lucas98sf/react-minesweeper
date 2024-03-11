@@ -8,15 +8,20 @@ import {
 } from "~/core/types";
 import { isTouchEvent, useLongPress, useMinesweeper, useTimer } from "~/hooks";
 
+import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Flag } from "./Flag";
 import { Mine } from "./Mine";
 import { Square } from "./Square";
 
-export function Board() {
+interface BoardProps {
+	userEmail: string;
+}
+
+export const Board = ({ userEmail }: BoardProps) => {
 	const {
-		board,
-		setBoard,
+		boardState,
 		gameState,
+		setBoardState,
 		setGameState,
 		touchToMouseClick,
 		handleClick,
@@ -24,6 +29,29 @@ export function Board() {
 	} = useMinesweeper({
 		guessFree: true,
 	});
+
+	const client = useSupabaseClient();
+	const session = useSession();
+
+	useEffect(() => {
+		const channel = client.channel(`boards:${userEmail}`);
+
+		channel.on("broadcast", { event: "sync" }, ({ payload }) => {
+			if (payload.userEmail !== session?.user.email) {
+				setBoardState(payload.board);
+				setGameState(payload.gameState);
+			}
+		});
+
+		channel.subscribe();
+	}, [
+		client.channel,
+		userEmail,
+		setBoardState,
+		setGameState,
+		session?.user.email,
+	]);
+
 	const { startTimer, stopTimer, resetTimer, timeElapsed } = useTimer();
 	const boardRef = useRef(null);
 
@@ -33,7 +61,10 @@ export function Board() {
 		}
 	>(
 		{
-			onLongPress: (e) => {
+			onLongPress: async (e) => {
+				if (session?.user?.email !== userEmail) {
+					return;
+				}
 				if (!isTouchEvent(e)) {
 					return;
 				}
@@ -46,23 +77,44 @@ export function Board() {
 					if (!newGame) {
 						return;
 					}
-					setBoard(newGame.board);
+					setBoardState(newGame.board);
 					setGameState(newGame.state);
+					await client.channel(`boards:${userEmail}`).send({
+						type: "broadcast",
+						event: "sync",
+						payload: {
+							board: newGame.board,
+							gameState: newGame.state,
+							userEmail,
+						},
+					});
 				}
 			},
-			onClick: (e) => {
+			onClick: async (e) => {
+				if (session?.user?.email !== userEmail) {
+					return;
+				}
 				if (isSquarePosition(e.currentTarget.dataset)) {
 					startTimer();
 					const mouseButton: MouseButton = isTouchEvent(e)
-						? touchToMouseClick(gameState, board, e.currentTarget.dataset)
+						? touchToMouseClick(gameState, boardState, e.currentTarget.dataset)
 						: e.button;
 
 					const newGame = handleClick(mouseButton, e.currentTarget.dataset);
 					if (!newGame) {
 						return;
 					}
-					setBoard(newGame.board);
+					setBoardState(newGame.board);
 					setGameState(newGame.state);
+					await client.channel(`boards:${userEmail}`).send({
+						type: "broadcast",
+						event: "sync",
+						payload: {
+							board: newGame.board,
+							gameState: newGame.state,
+							userEmail,
+						},
+					});
 				}
 			},
 		},
@@ -87,7 +139,7 @@ export function Board() {
 			stopTimer();
 
 			if (gameState.result === "lose") {
-				for (const square of board.squares.flat()) {
+				for (const square of boardState.squares.flat()) {
 					if (square.value === "mine") {
 						square.state.revealed = true;
 					}
@@ -99,13 +151,23 @@ export function Board() {
 				alert(gameState.result === "win" ? "You won!" : "You lost...");
 			}, 200);
 		}
-	}, [gameState, board.squares, stopTimer]);
+	}, [gameState, boardState.squares, stopTimer]);
 
-	const resetBoard = () => {
+	const resetBoard = async () => {
 		const { board, state } = reset();
-		setBoard(board);
+		setBoardState(board);
 		setGameState(state);
+		//@todo: move timer to state
 		resetTimer();
+		await client.channel(`boards:${userEmail}`).send({
+			type: "broadcast",
+			event: "sync",
+			payload: {
+				board: board,
+				gameState: state,
+				userEmail,
+			},
+		});
 	};
 
 	const squareNumberColors: Record<number, string> = {
@@ -124,7 +186,7 @@ export function Board() {
 		<div ref={boardRef} className="board m-[0.5vh] bg-[grey] shadow-md">
 			<div className="flex items-center justify-around p-2">
 				<div className="flex w-20 flex-row">
-					<div className="pt-2 pb-2">{board.flagsLeft}</div>
+					<div className="pt-2 pb-2">{boardState.flagsLeft}</div>
 					<Flag />
 				</div>
 				<Square
@@ -140,9 +202,9 @@ export function Board() {
 				</Square>
 				<div className="w-20 pt-2 pb-2">{timeElapsed}</div>
 			</div>
-			{board.squares.map((rows, row) => {
+			{boardState.squares.map((rows, row) => {
 				const generatedRow = rows.map((_, col) => {
-					const square: SquareType = board.squares[row][col];
+					const square: SquareType = boardState.squares[row][col];
 					return (
 						<Square
 							boardRef={boardRef}
@@ -166,4 +228,4 @@ export function Board() {
 			})}
 		</div>
 	);
-}
+};
