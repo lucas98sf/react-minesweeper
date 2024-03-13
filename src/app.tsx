@@ -9,8 +9,9 @@ import {
 	type Session,
 	createClient,
 } from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Board } from "~/components";
+import { useTimer } from "~/hooks";
 
 const supabase = createClient(
 	import.meta.env.VITE_SUPABASE_URL,
@@ -20,6 +21,43 @@ const supabase = createClient(
 function App() {
 	const [session, setSession] = useState<Session | null>(null);
 	const [userState, setUserState] = useState<RealtimePresenceState>({});
+
+	const [gameOver, setGameOver] = useState<boolean>(false);
+	const { resetTimer, startTimer, stopTimer, timeElapsed } = useTimer();
+
+	const [countdownStarted, setCountdownStarted] = useState<boolean>(false);
+	const countdownId = useRef<NodeJS.Timeout | null>(null);
+	const [countdown, setCountdown] = useState<number>(5);
+	const [gameStarted, setGameStarted] = useState<boolean>(false);
+
+	// useEffect(() => {
+	// 	if (gameOver) {
+	// 		stopTimer();
+	// 	}
+	// 	if (gameStarted && timeElapsed === "000") {
+	// 		startTimer();
+	// 	}
+	// }, [gameOver, gameStarted, startTimer, stopTimer, timeElapsed]);
+
+	useEffect(() => {
+		if (countdownStarted && countdown === 0) {
+			setCountdownStarted(false);
+			setGameStarted(true);
+		}
+	}, [countdown, countdownStarted]);
+
+	useEffect(() => {
+		if (countdownStarted && countdown > 0) {
+			countdownId.current = setInterval(() => {
+				setCountdown((prev) => prev - 1);
+			}, 1000);
+		}
+		return () => {
+			if (countdownId.current) {
+				clearInterval(countdownId.current);
+			}
+		};
+	}, [countdown, countdownStarted]);
 
 	useEffect(() => {
 		if (!session?.user?.email) return;
@@ -122,6 +160,21 @@ function App() {
 
 	return (
 		<Container>
+			{!gameStarted ? (
+				countdownStarted ? (
+					<>{countdown}</>
+				) : (
+					<button
+						type="button"
+						className="p-2 m-2 bg-black text-white rounded-md"
+						onClick={() => setCountdownStarted(true)}
+					>
+						Start
+					</button>
+				)
+			) : (
+				<>{timeElapsed}</>
+			)}
 			<SessionContextProvider supabaseClient={supabase}>
 				<div className="flex flex-row">
 					{Object.keys(userState).map((email) => {
@@ -133,7 +186,7 @@ function App() {
 										{email}
 									</div>
 								}
-								<Board key={email} userEmail={email} />
+								<Board userEmail={email} locked={!gameStarted} />
 							</div>
 						);
 					})}

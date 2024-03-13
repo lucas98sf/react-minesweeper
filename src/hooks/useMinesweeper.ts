@@ -7,6 +7,7 @@ import {
 	MouseButton,
 	SquarePosition,
 } from "~/core/types";
+import { useTimer } from "~/hooks/useTimer";
 
 let initialParams: ConstructorParameters<typeof Minesweeper> = [];
 
@@ -20,6 +21,7 @@ export function useMinesweeper(
 
 	const [boardState, setBoardState] = useState<BoardState>(minesweeper.board);
 	const [gameState, setGameState] = useState<GameState>(minesweeper.state);
+	const { startTimer, stopTimer, resetTimer, timeElapsed } = useTimer();
 
 	useEffect(() => {
 		const preventContextMenu = (e: MouseEvent) => {
@@ -32,6 +34,20 @@ export function useMinesweeper(
 			window.removeEventListener("contextmenu", preventContextMenu);
 		};
 	}, []);
+
+	useEffect(() => {
+		if (gameState.gameOver) {
+			stopTimer();
+
+			if (gameState.result === "lose") {
+				for (const square of boardState.squares.flat()) {
+					if (square.value === "mine") {
+						square.state.revealed = true;
+					}
+				}
+			}
+		}
+	}, [gameState, boardState.squares, stopTimer]);
 
 	const touchToMouseClick = (
 		gameState: GameState,
@@ -53,14 +69,23 @@ export function useMinesweeper(
 			button: MouseButton,
 			clickedCoords: Parameters<typeof Minesweeper.prototype.handleAction>[1],
 		) {
-			return minesweeper.handleAction(button, clickedCoords);
+			if (gameState.isFirstMove) {
+				startTimer();
+			}
+			minesweeper.handleAction(button, clickedCoords);
+			setBoardState(minesweeper.board);
+			setGameState(minesweeper.state);
 		},
 		reset() {
-			return minesweeper.reset();
+			resetTimer();
+			minesweeper.reset();
+			setBoardState(minesweeper.board);
+			setGameState(minesweeper.state);
 		},
+		timeElapsed,
 		boardState,
-		setBoardState,
 		gameState,
+		setBoardState,
 		setGameState,
 	};
 }

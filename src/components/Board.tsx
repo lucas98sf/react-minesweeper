@@ -6,7 +6,7 @@ import {
 	SquarePosition,
 	isSquarePosition,
 } from "~/core/types";
-import { isTouchEvent, useLongPress, useMinesweeper, useTimer } from "~/hooks";
+import { isTouchEvent, useLongPress, useMinesweeper } from "~/hooks";
 
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Flag } from "./Flag";
@@ -14,13 +14,15 @@ import { Mine } from "./Mine";
 import { Square } from "./Square";
 
 interface BoardProps {
-	userEmail: string;
+	userEmail?: string;
+	locked?: boolean;
 }
 
-export const Board = ({ userEmail }: BoardProps) => {
+export const Board = ({ userEmail, locked }: BoardProps) => {
 	const {
 		boardState,
 		gameState,
+		timeElapsed,
 		setBoardState,
 		setGameState,
 		touchToMouseClick,
@@ -30,25 +32,30 @@ export const Board = ({ userEmail }: BoardProps) => {
 		guessFree: true,
 	});
 
+	const isMultiplayer = !!userEmail;
+
 	const client = useSupabaseClient();
 	const session = useSession();
 
 	useEffect(() => {
-		const channel = client.channel(`boards:${userEmail}`);
+		if (isMultiplayer) {
+			const channel = client.channel(`boards:${userEmail}`);
 
-		channel.on("broadcast", { event: "sync" }, ({ payload }) => {
-			if (payload.userEmail !== session?.user.email) {
-				setBoardState(payload.board);
-				setGameState(payload.gameState);
-			}
-		});
+			channel.on("broadcast", { event: "sync" }, ({ payload }) => {
+				if (payload.userEmail !== session?.user.email) {
+					setBoardState(payload.boardState);
+					setGameState(payload.gameState);
+				}
+			});
 
-		channel.subscribe();
+			channel.subscribe();
 
-		return () => {
-			channel.unsubscribe();
-		};
+			return () => {
+				channel.unsubscribe();
+			};
+		}
 	}, [
+		isMultiplayer,
 		client.channel,
 		userEmail,
 		setBoardState,
@@ -56,7 +63,6 @@ export const Board = ({ userEmail }: BoardProps) => {
 		session?.user.email,
 	]);
 
-	const { startTimer, stopTimer, resetTimer, timeElapsed } = useTimer();
 	const boardRef = useRef(null);
 
 	const handleSquareAction = useLongPress<
@@ -66,7 +72,7 @@ export const Board = ({ userEmail }: BoardProps) => {
 	>(
 		{
 			onLongPress: async (e) => {
-				if (session?.user?.email !== userEmail) {
+				if (locked || (isMultiplayer && session?.user?.email !== userEmail)) {
 					return;
 				}
 				if (!isTouchEvent(e)) {
@@ -74,51 +80,43 @@ export const Board = ({ userEmail }: BoardProps) => {
 				}
 				if (isSquarePosition(e.currentTarget.dataset)) {
 					// long press on mobile = normal click after the first move
-					const newGame = handleClick(
-						MouseButton.left,
-						e.currentTarget.dataset,
-					);
-					if (!newGame) {
-						return;
+					handleClick(MouseButton.left, e.currentTarget.dataset);
+
+					if (isMultiplayer) {
+						await client.channel(`boards:${userEmail}`).send({
+							type: "broadcast",
+							event: "sync",
+							payload: {
+								boardState,
+								gameState,
+								userEmail,
+							},
+						});
 					}
-					setBoardState(newGame.board);
-					setGameState(newGame.state);
-					await client.channel(`boards:${userEmail}`).send({
-						type: "broadcast",
-						event: "sync",
-						payload: {
-							board: newGame.board,
-							gameState: newGame.state,
-							userEmail,
-						},
-					});
 				}
 			},
 			onClick: async (e) => {
-				if (session?.user?.email !== userEmail) {
+				if (locked || (isMultiplayer && session?.user?.email !== userEmail)) {
 					return;
 				}
 				if (isSquarePosition(e.currentTarget.dataset)) {
-					startTimer();
 					const mouseButton: MouseButton = isTouchEvent(e)
 						? touchToMouseClick(gameState, boardState, e.currentTarget.dataset)
 						: e.button;
 
-					const newGame = handleClick(mouseButton, e.currentTarget.dataset);
-					if (!newGame) {
-						return;
+					handleClick(mouseButton, e.currentTarget.dataset);
+
+					if (isMultiplayer) {
+						await client.channel(`boards:${userEmail}`).send({
+							type: "broadcast",
+							event: "sync",
+							payload: {
+								boardState,
+								gameState,
+								userEmail,
+							},
+						});
 					}
-					setBoardState(newGame.board);
-					setGameState(newGame.state);
-					await client.channel(`boards:${userEmail}`).send({
-						type: "broadcast",
-						event: "sync",
-						payload: {
-							board: newGame.board,
-							gameState: newGame.state,
-							userEmail,
-						},
-					});
 				}
 			},
 		},
@@ -138,40 +136,19 @@ export const Board = ({ userEmail }: BoardProps) => {
 		return null;
 	};
 
-	useEffect(() => {
-		if (gameState.gameOver) {
-			stopTimer();
-
-			if (gameState.result === "lose") {
-				for (const square of boardState.squares.flat()) {
-					if (square.value === "mine") {
-						square.state.revealed = true;
-					}
-				}
-			}
-
-			setTimeout(() => {
-				//temporary
-				alert(gameState.result === "win" ? "You won!" : "You lost...");
-			}, 200);
-		}
-	}, [gameState, boardState.squares, stopTimer]);
-
 	const resetBoard = async () => {
-		const { board, state } = reset();
-		setBoardState(board);
-		setGameState(state);
-		//@todo: move timer to state
-		resetTimer();
-		await client.channel(`boards:${userEmail}`).send({
-			type: "broadcast",
-			event: "sync",
-			payload: {
-				board: board,
-				gameState: state,
-				userEmail,
-			},
-		});
+		reset();
+		if (isMultiplayer) {
+			await client.channel(`boards:${userEmail}`).send({
+				type: "broadcast",
+				event: "sync",
+				payload: {
+					boardState,
+					gameState,
+					userEmail,
+				},
+			});
+		}
 	};
 
 	const squareNumberColors: Record<number, string> = {
@@ -193,18 +170,22 @@ export const Board = ({ userEmail }: BoardProps) => {
 					<div className="pt-2 pb-2">{boardState.flagsLeft}</div>
 					<Flag />
 				</div>
-				<Square
-					boardRef={boardRef}
-					className="square-unrevealed pb-2 pl-0"
-					onClick={resetBoard}
-				>
-					{gameState.result === "win"
-						? "😎"
-						: gameState.result === "lose"
-						  ? "😵"
-						  : "🙂"}
-				</Square>
-				<div className="w-20 pt-2 pb-2">{timeElapsed}</div>
+				{!isMultiplayer && (
+					<>
+						<Square
+							boardRef={boardRef}
+							className="square-unrevealed pb-2 pl-0"
+							onClick={resetBoard}
+						>
+							{gameState.result === "win"
+								? "😎"
+								: gameState.result === "lose"
+								  ? "😵"
+								  : "🙂"}
+						</Square>
+						<div className="w-20 pt-2 pb-2">{timeElapsed}</div>
+					</>
+				)}
 			</div>
 			{boardState.squares.map((rows, row) => {
 				const generatedRow = rows.map((_, col) => {
