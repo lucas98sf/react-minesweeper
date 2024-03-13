@@ -63,6 +63,40 @@ export const Board = ({ userEmail, locked }: BoardProps) => {
 		session?.user.email,
 	]);
 
+	useEffect(() => {
+		if (isMultiplayer && gameState.result) {
+			client.channel("boards").send({
+				type: "broadcast",
+				event: "over",
+				payload: {
+					boardState,
+					gameState,
+					userEmail,
+				},
+			});
+		}
+	}, [
+		gameState.result,
+		userEmail,
+		isMultiplayer,
+		client.channel,
+		boardState,
+		gameState,
+	]);
+
+	useEffect(() => {
+		if (isMultiplayer) {
+			const boardsChannel = client.channel("boards");
+			boardsChannel.on("broadcast", { event: "reset" }, reset);
+
+			// boardsChannel.subscribe();
+
+			// return () => {
+			// 	boardsChannel.unsubscribe();
+			// };
+		}
+	}, [isMultiplayer, reset, client.channel]);
+
 	const boardRef = useRef(null);
 
 	const handleSquareAction = useLongPress<
@@ -192,6 +226,10 @@ export const Board = ({ userEmail, locked }: BoardProps) => {
 					const square: SquareType = boardState.squares[row][col];
 					return (
 						<Square
+							key={`${row}-${
+								// biome-ignore lint/suspicious/noArrayIndexKey: yolo
+								col
+							}`}
 							boardRef={boardRef}
 							surroundings={square.surroundings}
 							data-col={col}
@@ -209,7 +247,12 @@ export const Board = ({ userEmail, locked }: BoardProps) => {
 						</Square>
 					);
 				});
-				return <div className="flex-no-wrap flex flex-row">{generatedRow}</div>;
+				return (
+					// biome-ignore lint/suspicious/noArrayIndexKey: yolo
+					<div key={row} className="flex-no-wrap flex flex-row">
+						{generatedRow}
+					</div>
+				);
 			})}
 		</div>
 	);

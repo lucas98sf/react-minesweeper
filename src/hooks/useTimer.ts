@@ -1,32 +1,31 @@
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 export function useTimer() {
-	const [intervalId, setIntervalId] = useState<NodeJS.Timer | null>(null);
+	const intervalId = useRef<NodeJS.Timeout | null>(null);
 	const [timeElapsed, setTimeElapsed] = useState<number>(0);
 
-	const startTimer = () => {
-		if (!intervalId) {
-			const intervalId = setInterval(() => {
+	const startTimer = useCallback(() => {
+		if (!intervalId.current) {
+			intervalId.current = setInterval(() => {
 				setTimeElapsed((prevTime) => prevTime + 1);
 			}, 1000);
-			setIntervalId(intervalId);
 		}
-	};
+	}, []);
 
-	const stopTimer = () => {
-		if (intervalId) {
-			clearInterval(intervalId as NodeJS.Timeout);
-			setIntervalId(null);
+	const stopTimer = useCallback(() => {
+		if (intervalId.current) {
+			clearInterval(intervalId.current as NodeJS.Timeout);
+			intervalId.current = null;
 		}
-	};
+	}, []);
 
-	const resetTimer = () => {
-		if (intervalId) {
-			clearInterval(intervalId as NodeJS.Timeout);
-			setIntervalId(null);
+	const resetTimer = useCallback(() => {
+		if (intervalId.current) {
+			clearInterval(intervalId.current as NodeJS.Timeout);
+			intervalId.current = null;
 		}
 		setTimeElapsed(0);
-	};
+	}, []);
 
 	return {
 		timeElapsed: new Intl.NumberFormat("en-US", {
