@@ -186,19 +186,27 @@ function App() {
 
 	if (!session) {
 		return (
-			<Auth
-				supabaseClient={supabase}
-				appearance={{
-					theme: ThemeSupa,
-					style: {
-						container: {
-							minWidth: "400px",
-						},
-					},
-				}}
-				redirectTo={window.location.origin + import.meta.env.BASE_URL}
-				providers={["google"]}
-			/>
+			<div className="flex flex-row space-x-10">
+				<Board />
+				<div>
+					<div className="board">
+						<p>Play Online</p>
+					</div>
+					<Auth
+						supabaseClient={supabase}
+						appearance={{
+							theme: ThemeSupa,
+							style: {
+								container: {
+									minWidth: "400px",
+								},
+							},
+						}}
+						redirectTo={window.location.origin + import.meta.env.BASE_URL}
+						providers={["google"]}
+					/>
+				</div>
+			</div>
 		);
 	}
 
