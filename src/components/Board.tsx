@@ -198,9 +198,9 @@ export const Board = ({ userEmail, locked }: BoardProps) => {
 	};
 
 	return (
-		<div ref={boardRef} className="board m-[0.4vh] bg-[grey] shadow-md">
-			<div className="flex items-center justify-around p-2">
-				<div className="flex w-20 flex-row">
+		<div ref={boardRef} className="board bg-[grey] shadow-md w-fit p-2 mx-auto">
+			<div className="flex justify-around p-2">
+				<div className="flex flex-row">
 					<div className="pt-2 pb-2">{boardState.flagsLeft}</div>
 					<Flag />
 				</div>
@@ -217,43 +217,45 @@ export const Board = ({ userEmail, locked }: BoardProps) => {
 								  ? "😵"
 								  : "🙂"}
 						</Square>
-						<div className="w-20 pt-2 pb-2">{timeElapsed}</div>
+						<div className="pt-2 pb-2">{timeElapsed}</div>
 					</>
 				)}
 			</div>
-			{boardState.squares.map((rows, row) => {
-				const generatedRow = rows.map((_, col) => {
-					const square: SquareType = boardState.squares[row][col];
+			<div className="flex items-center flex-col">
+				{boardState.squares.map((rows, row) => {
+					const generatedRow = rows.map((_, col) => {
+						const square: SquareType = boardState.squares[row][col];
+						return (
+							<Square
+								key={`${row}-${
+									// biome-ignore lint/suspicious/noArrayIndexKey: yolo
+									col
+								}`}
+								boardRef={boardRef}
+								surroundings={square.surroundings}
+								data-col={col}
+								data-row={row}
+								className={
+									square.state.revealed &&
+									square.value !== null &&
+									square.value !== undefined
+										? squareNumberColors[square.value as number] ?? "mine"
+										: "square-unrevealed"
+								}
+								{...handleSquareAction}
+							>
+								{getContent(square)}
+							</Square>
+						);
+					});
 					return (
-						<Square
-							key={`${row}-${
-								// biome-ignore lint/suspicious/noArrayIndexKey: yolo
-								col
-							}`}
-							boardRef={boardRef}
-							surroundings={square.surroundings}
-							data-col={col}
-							data-row={row}
-							className={
-								square.state.revealed &&
-								square.value !== null &&
-								square.value !== undefined
-									? squareNumberColors[square.value as number] ?? "mine"
-									: "square-unrevealed"
-							}
-							{...handleSquareAction}
-						>
-							{getContent(square)}
-						</Square>
+						// biome-ignore lint/suspicious/noArrayIndexKey: yolo
+						<div key={row} className="flex-no-wrap flex flex-row">
+							{generatedRow}
+						</div>
 					);
-				});
-				return (
-					// biome-ignore lint/suspicious/noArrayIndexKey: yolo
-					<div key={row} className="flex-no-wrap flex flex-row">
-						{generatedRow}
-					</div>
-				);
-			})}
+				})}
+			</div>
 		</div>
 	);
 };
