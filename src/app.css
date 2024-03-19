@@ -3,10 +3,6 @@
 @tailwind utilities;
 
 @layer base {
-  html {
-    height: 100%;
-  }
-
   body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
@@ -14,7 +10,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
   }
 
   @font-face {
@@ -38,7 +33,7 @@
   }
 
   .square {
-    @apply m-px flex h-10 w-10 items-center justify-center border-0 bg-[darkgrey] pl-[0.125rem] pt-[0.125rem] align-middle;
+    @apply m-px flex min-h-14 min-w-14 items-center justify-center border-0 bg-[darkgrey] pl-[0.125rem] pt-[0.125rem] align-middle;
   }
 
   .square-unrevealed {

@@ -186,9 +186,9 @@ function App() {
 
 	if (!session) {
 		return (
-			<div className="flex flex-row space-x-10">
+			<div className="flex md:flex-row flex-col mt-4">
 				<Board />
-				<div>
+				<div className="p-10">
 					<div className="board">
 						<p>Play Online</p>
 					</div>
@@ -198,7 +198,7 @@ function App() {
 							theme: ThemeSupa,
 							style: {
 								container: {
-									minWidth: "400px",
+									minWidth: "300px",
 								},
 							},
 						}}
@@ -253,7 +253,7 @@ function App() {
 						<p>{timeElapsed}</p>
 					</div>
 				)}
-				<div className="flex flex-row">
+				<div className="flex md:flex-row flex-col gap-2 my-6">
 					{Object.keys(userState).map((email) => {
 						return (
 							<div key={email}>
