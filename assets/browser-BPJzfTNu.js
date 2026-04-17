@@ -1,0 +1,1 @@
+import{t as e}from"./chunk-DECur_0Z.js";var t=e(((e,t)=>{t.exports=function(){throw Error(`ws does not work in the browser. Browser clients must use the native WebSocket object`)}}));export default t();
