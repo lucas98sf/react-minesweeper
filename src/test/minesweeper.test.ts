@@ -184,9 +184,12 @@ describe("minesweeper logic", () => {
       expect(minesweeper.isBoardSolvable(mocks.needGuessBoard as Squares)).toBe(
         false
       );
+    });
+
+    it("should solve needGuessBoard2 with constraint subset analysis", () => {
       expect(
         minesweeper.isBoardSolvable(mocks.needGuessBoard2 as Squares)
-      ).toBe(false);
+      ).toBe(true);
     });
 
     it("should solve an 11211 pattern case", () => {

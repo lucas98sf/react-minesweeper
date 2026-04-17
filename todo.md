@@ -9,7 +9,7 @@
 - [X] middleclick logic
 - [X] prevent first click to be in a mine
 - [X] ensure game is always winnable without needing to take a guess
-- [ ] isBoardSolvable optimization
+- [X] isBoardSolvable optimization
 - [ ] configuration screen
 - [ ] socket.io
 - [ ] records

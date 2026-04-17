@@ -18,6 +18,20 @@ import {
   type SquareValue,
 } from "~/core/types";
 
+type PositionKey = `${number},${number}`;
+
+const posKey = (pos: SquarePosition): PositionKey => `${pos.row},${pos.col}`;
+
+const parsePosKey = (key: PositionKey): SquarePosition => {
+  const [row, col] = key.split(",").map(Number);
+  return { row, col } as SquarePosition;
+};
+
+interface SolverConstraint {
+  unknowns: Set<PositionKey>;
+  mineCount: number;
+}
+
 export class Minesweeper {
   private squares: Squares;
   private flagsLeft = NUM_MINES;
@@ -301,257 +315,296 @@ export class Minesweeper {
       .filter(Boolean);
   }
 
-  // biome-ignore lint/style/useConsistentMemberAccessibility: public method is part of class API
-  public isBoardSolvable(squares: Squares): boolean {
-    const isRevealedNumberSquare = (
-      square: Square
-    ): square is Square & { value: number } =>
-      typeof square.value === "number" && square.state.revealed;
+  private isRevealedNumberSquare(
+    square: Square
+  ): square is Square & { value: number } {
+    return typeof square.value === "number" && square.state.revealed;
+  }
 
-    const getGuaranteedNonMines = (
-      possibleNonMines: SquarePosition[]
-    ): SquarePosition[] => {
-      const nonMines: SquarePosition[] = [];
-      for (const assumedMine of possibleNonMines) {
-        type StringSquarePosition =
-          `${SquarePosition["row"]},${SquarePosition["col"]}`;
+  private buildConstraints(squares: Squares): SolverConstraint[] {
+    const constraints: SolverConstraint[] = [];
+    for (const square of squares.flat()) {
+      if (!this.isRevealedNumberSquare(square)) {
+        continue;
+      }
 
-        const positionToString = (position: SquarePosition) =>
-          `${position.row}${position.col}` as StringSquarePosition;
+      const flaggedCount = this.flagsAroundSquare(square, squares).length;
+      const mineCount = square.value - flaggedCount;
+      const unknowns = new Set<PositionKey>();
 
-        const valuesIfMine = new Map<StringSquarePosition, 0 | 1>().set(
-          positionToString(assumedMine),
-          1
-        );
-        const checkedSurroundingSquares = new Set<string>();
+      for (const pos of this.nonRevealedSquaresAround(square, squares)) {
+        if (!squares[pos.row][pos.col].state.flagged) {
+          unknowns.add(posKey(pos));
+        }
+      }
 
-        const getSurroundingValues = (unrevealedSquare: Square) =>
-          // biome-ignore lint/suspicious/useIterableCallbackReturn: filter intentionally returns undefined for non-matches
-          unrevealedSquare.surroundings.filter(({ row, col }) => {
-            const square = squares[row][col];
-            if (
-              isRevealedNumberSquare(square) &&
-              square.value > 0 &&
-              !checkedSurroundingSquares.has(positionToString(square.position))
-            ) {
-              checkedSurroundingSquares.add(positionToString(square.position));
-              return true;
-            }
-          });
+      if (unknowns.size > 0) {
+        constraints.push({ unknowns, mineCount });
+      }
+    }
+    return constraints;
+  }
 
-        // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: solver algorithm is inherently complex
-        const checkSurroundingValues = (unrevealedSquare: Square) => {
-          const surroundingValues = getSurroundingValues(unrevealedSquare);
-          if (!surroundingValues.length) {
-            return;
+  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: solver algorithm is inherently complex
+  private deduceFromConstraints(constraints: SolverConstraint[]): {
+    mines: Set<PositionKey>;
+    safe: Set<PositionKey>;
+  } {
+    const mines = new Set<PositionKey>();
+    const safe = new Set<PositionKey>();
+
+    // Simple deductions: single-constraint analysis
+    for (const c of constraints) {
+      if (c.mineCount === 0) {
+        for (const u of c.unknowns) {
+          safe.add(u);
+        }
+      } else if (c.mineCount === c.unknowns.size) {
+        for (const u of c.unknowns) {
+          mines.add(u);
+        }
+      }
+    }
+
+    // Subset analysis: compare constraint pairs for overlapping unknowns
+    for (let i = 0; i < constraints.length; i++) {
+      const a = constraints[i];
+      for (let j = 0; j < constraints.length; j++) {
+        if (i === j) {
+          continue;
+        }
+        const b = constraints[j];
+        if (a.unknowns.size > b.unknowns.size) {
+          continue;
+        }
+
+        // Check if a.unknowns ⊆ b.unknowns
+        let isSubset = true;
+        for (const u of a.unknowns) {
+          if (!b.unknowns.has(u)) {
+            isSubset = false;
+            break;
           }
-          for (const { row, col } of surroundingValues) {
-            const surroundingSquare = squares[row][col] as Square & {
-              value: number;
-            };
+        }
+        if (!isSubset) {
+          continue;
+        }
 
-            const surroundingUnrevealedSquares = this.nonRevealedSquaresAround(
-              surroundingSquare,
-              squares
-            );
+        const diffMines = b.mineCount - a.mineCount;
+        const diffUnknowns = [...b.unknowns].filter((u) => !a.unknowns.has(u));
 
-            const flagsAroundSurroundingSquare = this.flagsAroundSquare(
-              surroundingSquare,
-              squares
-            );
-
-            if (flagsAroundSurroundingSquare.length) {
-              for (const position of flagsAroundSurroundingSquare) {
-                if (!valuesIfMine.has(positionToString(position))) {
-                  valuesIfMine.set(positionToString(position), 1);
-                }
-              }
-            }
-
-            const { maybeMinesAround, unknownSurroundingUnrevealedSquares } =
-              surroundingUnrevealedSquares.reduce(
-                (acc, position) => {
-                  if (valuesIfMine.has(positionToString(position))) {
-                    Object.assign(
-                      acc,
-                      valuesIfMine.get(positionToString(position)) === 1
-                        ? {
-                            maybeMinesAround: acc.maybeMinesAround + 1,
-                          }
-                        : {
-                            maybeNonMinesAround: acc.maybeNonMinesAround + 1,
-                          }
-                    );
-                  }
-                  acc.unknownSurroundingUnrevealedSquares.push(position);
-
-                  return acc;
-                },
-                {
-                  maybeMinesAround: 0,
-                  maybeNonMinesAround: 0,
-                  unknownSurroundingUnrevealedSquares: [] as SquarePosition[],
-                }
-              );
-
-            const isImpossibleMine =
-              maybeMinesAround > surroundingSquare.value ||
-              maybeMinesAround + unknownSurroundingUnrevealedSquares.length <
-                surroundingSquare.value;
-
-            const hasPossibleMines =
-              maybeMinesAround + unknownSurroundingUnrevealedSquares.length ===
-              surroundingSquare.value;
-
-            const hasPossibleNonMines =
-              maybeMinesAround === surroundingSquare.value;
-
-            if (isImpossibleMine) {
-              nonMines.push(assumedMine);
-            } else if (hasPossibleNonMines) {
-              for (const unknownSquare of unknownSurroundingUnrevealedSquares) {
-                if (!valuesIfMine.has(positionToString(unknownSquare))) {
-                  valuesIfMine.set(positionToString(unknownSquare), 0);
-                }
-              }
-            } else if (hasPossibleMines) {
-              for (const unknownSquare of unknownSurroundingUnrevealedSquares) {
-                if (!valuesIfMine.has(positionToString(unknownSquare))) {
-                  valuesIfMine.set(positionToString(unknownSquare), 1);
-                }
-              }
-            }
+        if (diffMines === 0 && diffUnknowns.length > 0) {
+          for (const u of diffUnknowns) {
+            safe.add(u);
           }
-          const lastCheckedSquare = surroundingValues.pop() ?? {
-            row: 0,
-            col: 0,
+        } else if (
+          diffMines === diffUnknowns.length &&
+          diffUnknowns.length > 0
+        ) {
+          for (const u of diffUnknowns) {
+            mines.add(u);
+          }
+        }
+      }
+    }
+
+    return { mines, safe };
+  }
+
+  private getGuaranteedNonMines(
+    possibleNonMines: SquarePosition[],
+    squares: Squares
+  ): SquarePosition[] {
+    const nonMines: SquarePosition[] = [];
+
+    for (const assumedMine of possibleNonMines) {
+      const valuesIfMine = new Map<PositionKey, 0 | 1>().set(
+        posKey(assumedMine),
+        1
+      );
+      const checkedSurroundingSquares = new Set<PositionKey>();
+
+      const getSurroundingValues = (unrevealedSquare: Square) =>
+        // biome-ignore lint/suspicious/useIterableCallbackReturn: filter intentionally returns undefined for non-matches
+        unrevealedSquare.surroundings.filter(({ row, col }) => {
+          const square = squares[row][col];
+          if (
+            this.isRevealedNumberSquare(square) &&
+            square.value > 0 &&
+            !checkedSurroundingSquares.has(posKey(square.position))
+          ) {
+            checkedSurroundingSquares.add(posKey(square.position));
+            return true;
+          }
+        });
+
+      // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: solver algorithm is inherently complex
+      const checkSurroundingValues = (unrevealedSquare: Square) => {
+        const surroundingValues = getSurroundingValues(unrevealedSquare);
+        if (!surroundingValues.length) {
+          return;
+        }
+        for (const { row, col } of surroundingValues) {
+          const surroundingSquare = squares[row][col] as Square & {
+            value: number;
           };
 
-          checkSurroundingValues(
-            squares[lastCheckedSquare.row][lastCheckedSquare.col]
-          );
-        };
-
-        checkSurroundingValues(squares[assumedMine.row][assumedMine.col]);
-      }
-
-      return [...new Set(nonMines)];
-    };
-
-    const getGuaranteedMines = (squares: Squares) => {
-      const revealedNumberSquares = squares
-        .flat()
-        .filter(isRevealedNumberSquare);
-      const guaranteedMines = revealedNumberSquares.reduce<{
-        mines: SquarePosition[];
-        nonMines: SquarePosition[];
-        okSquares: Square[];
-      }>(
-        (acc, square) => {
-          if (
-            acc.okSquares.some(
-              ({ position }) =>
-                JSON.stringify(position) === JSON.stringify(square.position)
-            )
-          ) {
-            return acc;
-          }
-
-          const unrevealedSquaresAround = this.nonRevealedSquaresAround(
-            square,
+          const surroundingUnrevealedSquares = this.nonRevealedSquaresAround(
+            surroundingSquare,
             squares
           );
-          if (!unrevealedSquaresAround.length) {
-            return acc;
-          }
 
-          const hasGuaranteedMineAround =
-            square.value ===
-            unrevealedSquaresAround.length +
-              this.flagsAroundSquare(square, squares).length;
+          const flagsAroundSurroundingSquare = this.flagsAroundSquare(
+            surroundingSquare,
+            squares
+          );
 
-          if (hasGuaranteedMineAround) {
-            for (const position of unrevealedSquaresAround) {
-              if (
-                !acc.mines.some(
-                  (mine) => JSON.stringify(mine) === JSON.stringify(position)
-                )
-              ) {
-                acc.mines.push(position);
+          if (flagsAroundSurroundingSquare.length) {
+            for (const position of flagsAroundSurroundingSquare) {
+              if (!valuesIfMine.has(posKey(position))) {
+                valuesIfMine.set(posKey(position), 1);
               }
             }
-            acc.okSquares.push(square);
-          } else {
-            //FIXME: move this out from here
-            const possibleNonMines = unrevealedSquaresAround
-              .filter(
-                (position) =>
-                  !acc.nonMines.some(
-                    (mine) => JSON.stringify(mine) === JSON.stringify(position)
-                  )
-              )
-              .sort(({ row, col }) => squares[row][col].surroundings.length);
-            const guaranteedNonMines = getGuaranteedNonMines(possibleNonMines);
-            acc.nonMines.push(...guaranteedNonMines);
           }
 
-          return acc;
-        },
-        { mines: [], nonMines: [], okSquares: [] }
-      );
+          const { maybeMinesAround, unknownSurroundingUnrevealedSquares } =
+            surroundingUnrevealedSquares.reduce(
+              (acc, position) => {
+                if (valuesIfMine.has(posKey(position))) {
+                  Object.assign(
+                    acc,
+                    valuesIfMine.get(posKey(position)) === 1
+                      ? {
+                          maybeMinesAround: acc.maybeMinesAround + 1,
+                        }
+                      : {
+                          maybeNonMinesAround: acc.maybeNonMinesAround + 1,
+                        }
+                  );
+                }
+                acc.unknownSurroundingUnrevealedSquares.push(position);
 
-      if (!guaranteedMines.okSquares.length) {
-        return {
-          mines: guaranteedMines.mines,
-          nonMines: guaranteedMines.nonMines,
-          okSquares: revealedNumberSquares.filter(
-            (square) =>
-              this.flagsAroundSquare(square, squares).length === square.value &&
-              this.nonRevealedSquaresAround(square, squares).length
-          ),
+                return acc;
+              },
+              {
+                maybeMinesAround: 0,
+                maybeNonMinesAround: 0,
+                unknownSurroundingUnrevealedSquares: [] as SquarePosition[],
+              }
+            );
+
+          const isImpossibleMine =
+            maybeMinesAround > surroundingSquare.value ||
+            maybeMinesAround + unknownSurroundingUnrevealedSquares.length <
+              surroundingSquare.value;
+
+          const hasPossibleMines =
+            maybeMinesAround + unknownSurroundingUnrevealedSquares.length ===
+            surroundingSquare.value;
+
+          const hasPossibleNonMines =
+            maybeMinesAround === surroundingSquare.value;
+
+          if (isImpossibleMine) {
+            nonMines.push(assumedMine);
+          } else if (hasPossibleNonMines) {
+            for (const unknownSquare of unknownSurroundingUnrevealedSquares) {
+              if (!valuesIfMine.has(posKey(unknownSquare))) {
+                valuesIfMine.set(posKey(unknownSquare), 0);
+              }
+            }
+          } else if (hasPossibleMines) {
+            for (const unknownSquare of unknownSurroundingUnrevealedSquares) {
+              if (!valuesIfMine.has(posKey(unknownSquare))) {
+                valuesIfMine.set(posKey(unknownSquare), 1);
+              }
+            }
+          }
+        }
+        const lastCheckedSquare = surroundingValues.pop() ?? {
+          row: 0,
+          col: 0,
         };
-      }
 
-      return guaranteedMines;
-    };
+        checkSurroundingValues(
+          squares[lastCheckedSquare.row][lastCheckedSquare.col]
+        );
+      };
 
+      checkSurroundingValues(squares[assumedMine.row][assumedMine.col]);
+    }
+
+    return [...new Set(nonMines)];
+  }
+
+  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: solver algorithm is inherently complex
+  // biome-ignore lint/style/useConsistentMemberAccessibility: public method is part of class API
+  public isBoardSolvable(squares: Squares): boolean {
     const squaresClone = structuredClone(squares);
-    let guaranteedMines = getGuaranteedMines(squaresClone);
 
     Minesweeper.prettyPrintBoard(squaresClone, "initial");
     // biome-ignore lint/suspicious/noUnusedExpressions: dev-only performance timing
     import.meta.env.DEV && console.time("isBoardSolvable");
 
-    while (Object.values(guaranteedMines).flat().length) {
-      for (const { row, col } of guaranteedMines.mines) {
-        const mine = squaresClone[row][col];
-        this.toggleSquareFlag(mine.position, squaresClone);
-        // Minesweeper.prettyPrintBoard(squaresClone, `flagged ${JSON.stringify(mine.position)}`);
+    let progress = true;
+    while (progress) {
+      progress = false;
+
+      // Phase 1: Constraint-based deduction (simple + subset analysis)
+      const constraints = this.buildConstraints(squaresClone);
+      const { mines, safe } = this.deduceFromConstraints(constraints);
+
+      if (mines.size > 0 || safe.size > 0) {
+        progress = true;
+
+        for (const key of mines) {
+          const pos = parsePosKey(key);
+          this.toggleSquareFlag(pos, squaresClone);
+        }
+
+        for (const key of safe) {
+          const pos = parsePosKey(key);
+          this.revealSquare(pos, squaresClone);
+          Minesweeper.prettyPrintBoard(
+            squaresClone,
+            `clicked ${JSON.stringify(pos)}`
+          );
+        }
       }
 
-      for (const { row, col } of guaranteedMines.nonMines) {
-        const nonMine = squaresClone[row][col];
-        this.revealSquare(nonMine.position, squaresClone);
-        Minesweeper.prettyPrintBoard(
-          squaresClone,
-          `clicked ${JSON.stringify(nonMine.position)}`
+      // Phase 2: Trial-based reasoning for remaining unknowns
+      if (!progress) {
+        const remainingConstraints = this.buildConstraints(squaresClone);
+        const allUnknowns = new Set<PositionKey>();
+        for (const c of remainingConstraints) {
+          for (const u of c.unknowns) {
+            allUnknowns.add(u);
+          }
+        }
+
+        const trialNonMines = this.getGuaranteedNonMines(
+          [...allUnknowns].map(parsePosKey),
+          squaresClone
         );
-      }
 
-      for (const square of guaranteedMines.okSquares) {
-        this.revealSurroundingSquares(square.position, squaresClone);
+        if (trialNonMines.length) {
+          progress = true;
+          for (const pos of trialNonMines) {
+            this.revealSquare(pos, squaresClone);
+            Minesweeper.prettyPrintBoard(
+              squaresClone,
+              `clicked ${JSON.stringify(pos)}`
+            );
+          }
+        }
       }
-
-      guaranteedMines = getGuaranteedMines(squaresClone);
     }
 
     // biome-ignore lint/suspicious/noUnusedExpressions: dev-only performance timing
     import.meta.env.DEV && console.timeEnd("isBoardSolvable");
     Minesweeper.prettyPrintBoard(squaresClone, "final");
 
-    const result = this.isGameWon(squaresClone);
-
-    return result;
+    return this.isGameWon(squaresClone);
   }
 
   // biome-ignore lint/style/useConsistentMemberAccessibility: public method is part of class API
