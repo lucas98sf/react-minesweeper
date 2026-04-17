@@ -1,0 +1,17 @@
+$ tsc && vite build
+vite v8.0.8 building client environment for production...
+[2Ktransforming...
+warn - The `content` option in your Tailwind CSS configuration is missing or empty.
+warn - Configure your content sources or your generated CSS will be missing styles.
+warn - https://tailwindcss.com/docs/content-configuration
+✓ 94 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                          0.74 kB │ gzip:  0.39 kB
+dist/assets/mine-sweeper-Czx9OrZU.ttf   11.83 kB
+dist/assets/index-Ba-PWIPE.css           4.05 kB │ gzip:  1.60 kB
+dist/assets/browser-BPJzfTNu.js          0.20 kB │ gzip:  0.18 kB
+dist/assets/chunk-DECur_0Z.js            0.68 kB │ gzip:  0.41 kB
+dist/assets/index-Dc2q5ZMD.js          310.53 kB │ gzip: 95.87 kB
+
+✓ built in 260ms

@@ -1,0 +1,19 @@
+=== TASK 2 CLEANUP EVIDENCE ===
+
+@typescript-eslint: NOT FOUND (removed)
+autoprefixer: NOT FOUND (removed)
+postcss: NOT FOUND (removed)
+package-lock.json: GONE (deleted)
+pnpm: NOT FOUND (removed from deploy script)
+
+deploy script: "bun run build && bun run deploy:pages" (updated from pnpm)
+
+=== bun install output ===
+bun install v1.3.12 (700fc117)
+Saved lockfile
+
+$ husky install
+husky - install command is DEPRECATED
+
+23 packages installed [40.00ms]
+Removed: 4

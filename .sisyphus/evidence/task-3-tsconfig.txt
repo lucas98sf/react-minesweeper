@@ -1,0 +1,12 @@
+## Evidence: Task 3 - tsconfig moduleResolution update
+
+### Verification: grep results
+tsconfig.json:    "moduleResolution": "bundler",
+tsconfig.node.json:		"moduleResolution": "bundler",
+
+### TypeScript compilation check: PASSED
+npx tsc --noEmit returned no errors.
+
+### Changes made
+- tsconfig.json: "moduleResolution": "Node" → "bundler"
+- tsconfig.node.json: "moduleResolution": "Node" → "bundler"

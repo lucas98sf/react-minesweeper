@@ -1,6 +1,7 @@
 {
-	"recommendations": [
-		"biomejs.biome",
-		"eliostruyf.vscode-typescript-exportallmodules"
-	]
+  "recommendations": [
+    "biomejs.biome",
+    "eliostruyf.vscode-typescript-exportallmodules",
+    "bradlc.vscode-tailwindcss"
+  ]
 }

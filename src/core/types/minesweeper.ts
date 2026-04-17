@@ -1,58 +1,55 @@
 import {
-	MAX_HEIGHT,
-	MAX_WIDTH,
-	MIN_HEIGHT,
-	MIN_WIDTH,
+  MAX_HEIGHT,
+  MAX_WIDTH,
+  type MIN_HEIGHT,
+  type MIN_WIDTH,
 } from "~/config/constants";
 
-import { Add, IntRange } from "./utils";
+import type { Add, IntRange } from "./utils";
 
-export type SquarePosition<
-	X extends number = typeof MAX_WIDTH,
-	Y extends number = typeof MAX_HEIGHT,
-> = {
-	readonly row: IntRange<0, X>;
-	readonly col: IntRange<0, Y>;
-};
+export interface SquarePosition<
+  X extends number = typeof MAX_WIDTH,
+  Y extends number = typeof MAX_HEIGHT,
+> {
+  readonly col: IntRange<0, Y>;
+  readonly row: IntRange<0, X>;
+}
 
 export type SquareValue = null | IntRange<0, 9> | "mine";
 
-export type Square = {
-	readonly surroundings: SquarePosition[];
-	readonly position: SquarePosition;
-	value?: SquareValue;
-	state: {
-		revealed: boolean;
-		flagged: boolean;
-	};
-};
+export interface Square {
+  readonly position: SquarePosition;
+  state: {
+    revealed: boolean;
+    flagged: boolean;
+  };
+  readonly surroundings: SquarePosition[];
+  value?: SquareValue;
+}
 
 export type Squares = Square[][];
 
 const maxMines = MAX_HEIGHT * MAX_WIDTH - 1;
 
-export type BoardConfig = {
-	guessFree: boolean;
-	minesNumber: typeof maxMines;
-	width: IntRange<typeof MIN_WIDTH, Add<1, typeof MAX_WIDTH>>;
-	height: IntRange<typeof MIN_HEIGHT, Add<1, typeof MAX_HEIGHT>>;
-	randomizer: () => number;
-};
+export interface BoardConfig {
+  guessFree: boolean;
+  height: IntRange<typeof MIN_HEIGHT, Add<1, typeof MAX_HEIGHT>>;
+  minesNumber: typeof maxMines;
+  randomizer: () => number;
+  width: IntRange<typeof MIN_WIDTH, Add<1, typeof MAX_WIDTH>>;
+}
 
-export type GameState = {
-	gameOver: boolean;
-	result: "win" | "lose" | null;
-	isFirstMove: boolean;
-};
+export interface GameState {
+  gameOver: boolean;
+  isFirstMove: boolean;
+  result: "win" | "lose" | null;
+}
 
-export type BoardState = {
-	readonly config: BoardConfig;
-	readonly squares: Squares;
-	readonly flagsLeft: typeof maxMines;
-};
+export interface BoardState {
+  readonly config: BoardConfig;
+  readonly flagsLeft: typeof maxMines;
+  readonly squares: Squares;
+}
 
-export const isSquarePosition = (
-	obj: Record<string, unknown>,
-): obj is SquarePosition => {
-	return "row" in obj && "col" in obj;
-};
+export const isSquarePosition = (obj: unknown): obj is SquarePosition =>
+  typeof obj === "object" && obj !== null && "row" in obj && "col" in obj;

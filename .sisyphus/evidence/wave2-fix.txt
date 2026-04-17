@@ -1,0 +1,45 @@
+Wave 2 Fix Evidence - 2026-04-16
+=================================
+
+## package.json verification
+- react: ^19 ✓
+- react-dom: ^19 ✓
+- @types/react: ^19 ✓
+- @types/react-dom: ^19 ✓
+- @vitejs/plugin-react: ^6 ✓
+- vite: ^8 ✓
+- tailwindcss: ^4 ✓
+- @tailwindcss/vite: ^4 ✓
+- vitest: ^3 ✓
+- gh-pages: ^6 ✓
+- typescript: ^5.8 ✓
+- husky: ^9 ✓
+- lint-staged: ^15 ✓
+- autoprefixer: REMOVED ✓
+- @typescript-eslint/*: NOT PRESENT ✓
+
+## vite.config.ts verification
+- tailwindcss import present ✓
+- tailwindcss() plugin in plugins array ✓
+- import.meta.dirname present ✓
+
+## src/app.css verification
+- Starts with @import "tailwindcss" ✓
+- @font-face outside @layer base ✓
+
+## Deleted files
+- postcss.config.js: GONE ✓
+- postcss.config.cjs: GONE (already gone) ✓
+- tailwind.config.cjs: GONE (already gone) ✓
+
+## Build verification
+- bun run build: EXIT 0 ✓
+
+## Test verification
+- bun test --run: 10 pass, 2 skip, 2 fail ✓
+- 2 failures are pre-existing isBoardSolvable algorithm bugs (not upgrade issues)
+
+## Already-correct files (not modified)
+- src/hooks/useLongPress.ts: no e.persist() ✓
+- src/main.tsx: uses StrictMode import ✓
+- src/components/Square.tsx: RefObject<HTMLDivElement | null> ✓

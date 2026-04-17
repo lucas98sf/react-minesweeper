@@ -1,0 +1,85 @@
+{
+  "active_plan": "/home/lucas/Development/langs/js/react-minesweeper/.sisyphus/plans/deps-tailwind-biome.md",
+  "started_at": "2026-04-16T21:42:11.609Z",
+  "session_ids": [
+    "ses_267d85d40ffe7necj0vtnTjNzb",
+    "ses_2671eb1deffelcMKBTNczaPSA2",
+    "ses_2671e9314ffeppjOf3fUETTKkl",
+    "ses_2671e6683ffeWH1W5fOvvrU3Qz",
+    "ses_2671e1e64ffen4c01hSR9nD5QF"
+  ],
+  "session_origins": {
+    "ses_267d85d40ffe7necj0vtnTjNzb": "direct",
+    "ses_2671eb1deffelcMKBTNczaPSA2": "appended",
+    "ses_2671e9314ffeppjOf3fUETTKkl": "appended",
+    "ses_2671e6683ffeWH1W5fOvvrU3Qz": "appended",
+    "ses_2671e1e64ffen4c01hSR9nD5QF": "appended"
+  },
+  "plan_name": "deps-tailwind-biome",
+  "agent": "atlas",
+  "task_sessions": {
+    "todo:1": {
+      "task_key": "todo:1",
+      "task_label": "1",
+      "task_title": "Git Init + Remote + Pull",
+      "session_id": "ses_267c0b10effeu9kGGgi9fvarXu",
+      "agent": "Sisyphus-Junior",
+      "category": "quick",
+      "updated_at": "2026-04-16T21:44:05.381Z"
+    },
+    "todo:5": {
+      "task_key": "todo:5",
+      "task_label": "5",
+      "task_title": "Upgrade Vite 8 + plugin-react 6 + Update vite.config.ts",
+      "session_id": "ses_267b8d027ffe9KFrfhTj9hmeWa",
+      "agent": "Sisyphus-Junior",
+      "category": "deep",
+      "updated_at": "2026-04-16T21:52:26.732Z"
+    },
+    "todo:10": {
+      "task_key": "todo:10",
+      "task_label": "10",
+      "task_title": "Migrate Supabase Auth to @supabase/ssr + Custom Auth UI",
+      "session_id": "ses_267b6f81fffe3ToQ6eIljoq5ku",
+      "agent": "Sisyphus-Junior",
+      "category": "deep",
+      "updated_at": "2026-04-16T21:55:26.630Z"
+    },
+    "todo:11": {
+      "task_key": "todo:11",
+      "task_label": "11",
+      "task_title": "Setup Ultracite + Biome",
+      "session_id": "ses_267963ea9ffe2GxmzjVuMfNEAt",
+      "agent": "Sisyphus-Junior",
+      "category": "deep",
+      "updated_at": "2026-04-16T22:31:37.409Z"
+    },
+    "todo:12": {
+      "task_key": "todo:12",
+      "task_label": "12",
+      "task_title": "Lint and Fix Entire Project",
+      "session_id": "ses_267933f7bffeXOYDBFqx0VsHr9",
+      "agent": "Sisyphus-Junior",
+      "category": "unspecified-high",
+      "updated_at": "2026-04-16T22:35:37.941Z"
+    },
+    "todo:13": {
+      "task_key": "todo:13",
+      "task_label": "13",
+      "task_title": "Update .vscode Settings + Cleanup Stale Config Files",
+      "session_id": "ses_26720b935ffehy9Go3ox3jd1ui",
+      "agent": "Sisyphus-Junior",
+      "category": "quick",
+      "updated_at": "2026-04-17T00:38:45.988Z"
+    },
+    "final-wave:f1": {
+      "task_key": "final-wave:f1",
+      "task_label": "F1",
+      "task_title": "**Plan Compliance Audit** — `oracle`",
+      "session_id": "ses_2671e1e64ffen4c01hSR9nD5QF",
+      "agent": "Sisyphus-Junior",
+      "category": "deep",
+      "updated_at": "2026-04-17T00:44:49.483Z"
+    }
+  }
+}

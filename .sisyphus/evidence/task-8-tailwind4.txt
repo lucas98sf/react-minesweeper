@@ -1,0 +1,20 @@
+Task 8: Tailwind CSS v3 → v4 Migration
+==========================================
+
+Checklist:
+- [x] tailwindcss version is ^4 in package.json devDependencies → "^4" (resolved to 4.2.2)
+- [x] @tailwindcss/vite is in package.json devDependencies → "^4.2.2"
+- [x] src/app.css first line is `@import "tailwindcss";`
+- [x] No @tailwind base/components/utilities directives remain in app.css
+- [x] postcss.config.cjs is deleted
+- [x] tailwind.config.cjs is deleted
+- [x] vite.config.ts has tailwindcss() plugin (after react(), before Unfonts)
+- [x] vite build exits 0 (tsc has pre-existing React 19 ref type errors unrelated to this migration)
+
+Changes made:
+1. `bun add -D tailwindcss@^4 @tailwindcss/vite` → installed tailwindcss@4.2.2, @tailwindcss/vite@4.2.2
+2. vite.config.ts: Added `import tailwindcss from "@tailwindcss/vite"` and `tailwindcss()` plugin after `react()`
+3. src/app.css: Replaced `@tailwind base/components/utilities` with `@import "tailwindcss"`, moved `@font-face` out of `@layer base` (it's a global at-rule)
+4. Deleted postcss.config.cjs and tailwind.config.cjs
+
+Note: `bun run build` fails due to pre-existing TypeScript errors in Board.tsx (React 19 ref type changes), but `vite build` succeeds with correct Tailwind v4 CSS output.

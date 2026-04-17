@@ -1,0 +1,10 @@
+=== Task 9 Evidence: Minor Dependency Upgrades ===
+
+gh-pages: ^6 (was ^4.0.0)
+typescript: 5.8.3 (was ^5.3.3) - pinned to 5.8.3 to avoid TS 5.9 strict ref types breaking build
+unplugin-fonts: ^1.1.1 (already at latest v1, Vite 8 compatible)
+
+Build: bun run build - PASSED (✓ built in 346ms)
+
+Note: TypeScript 5.9 introduced stricter RefObject types that broke Board.tsx Square component 
+prop types. Pinned to 5.8.3 which satisfies ^5.8 requirement.

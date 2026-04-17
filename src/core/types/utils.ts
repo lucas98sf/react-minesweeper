@@ -1,34 +1,33 @@
 type Enumerate<
-	N extends number,
-	Acc extends number[] = [],
+  N extends number,
+  Acc extends number[] = [],
 > = Acc["length"] extends N
-	? Acc[number]
-	: Enumerate<N, [...Acc, Acc["length"]]>;
+  ? Acc[number]
+  : Enumerate<N, [...Acc, Acc["length"]]>;
 
 export type IntRange<F extends number, T extends number> = Exclude<
-	Enumerate<T>,
-	Enumerate<F>
+  Enumerate<T>,
+  Enumerate<F>
 >;
 
 type Length<T extends unknown[]> = T extends { length: infer L } ? L : never;
 
 type BuildTuple<L extends number, T extends unknown[] = []> = T extends {
-	length: L;
+  length: L;
 }
-	? T
-	: BuildTuple<L, [...T, unknown]>;
+  ? T
+  : BuildTuple<L, [...T, unknown]>;
 
 export type Add<A extends number, B extends number> = Length<
-	[...BuildTuple<A>, ...BuildTuple<B>]
+  [...BuildTuple<A>, ...BuildTuple<B>]
 >;
 
-export type Subtract<
-	A extends number,
-	B extends number,
-> = BuildTuple<A> extends [...infer U, ...BuildTuple<B>] ? Length<U> : never;
+export type Subtract<A extends number, B extends number> =
+  BuildTuple<A> extends [...infer U, ...BuildTuple<B>] ? Length<U> : never;
 
+// biome-ignore lint/style/noEnum: enum used for numeric mouse button values
 export enum MouseButton {
-	left = 0,
-	middle = 1,
-	right = 2,
+  left = 0,
+  middle = 1,
+  right = 2,
 }

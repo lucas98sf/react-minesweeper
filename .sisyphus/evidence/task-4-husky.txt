@@ -1,0 +1,23 @@
+=== Husky v9 Upgrade Evidence ===
+
+=== .husky/pre-commit ===
+bunx lint-staged
+
+=== .husky/_/ status ===
+GONE
+
+=== bun run prepare (initial, exits 0) ===
+$ husky
+
+=== package.json versions ===
+husky: ^9
+lint-staged: ^15
+prepare script: "husky"
+
+=== Verification Checklist ===
+- [x] husky version is ^9 in package.json devDependencies
+- [x] lint-staged version is ^15 in package.json devDependencies
+- [x] .husky/pre-commit contains only "bunx lint-staged" (no shebang, no wrapper)
+- [x] .husky/_/ directory is deleted
+- [x] package.json prepare script is "husky" (not "husky install")
+- [x] bun run prepare exits 0
